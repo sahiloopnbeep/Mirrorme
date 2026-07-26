@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mirror Me - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #4b6cb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #3a5ca9;
+        }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .error {
+            background: #ffeaea;
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Mirror Me</h2>
+        <p>Enter your email to receive a magic login link</p>
+
+        <input type="email" id="emailInput" placeholder="your@email.com">
+        <button onclick="sendMagicLink()">Send Magic Link</button>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        // Supabase configuration – you will replace these with your actual keys
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        async function sendMagicLink() {
+            const email = document.getElementById('emailInput').value;
+            const messageDiv = document.getElementById('message');
+
+            if (!email) {
+                messageDiv.innerHTML = '<div class="message error">Please enter your email</div>';
+                return;
+            }
+
+            messageDiv.innerHTML = '<div class="message">Sending...</div>';
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/auth/v1/otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        redirect_to: 'https://mirrorme-mwh9a3sb3-sahitya-s-s-projects.vercel.app/welcome.html'
+                    })
+                });
+
+                if (response.ok) {
+                    messageDiv.innerHTML = '<div class="message success">✅ Magic link sent! Check your email.</div>';
+                } else {
+                    const error = await response.json();
+                    messageDiv.innerHTML = `<div class="message error">❌ Error: ${error.message}</div>`;
+                }
+            } catch (err) {
+                messageDiv.innerHTML = `<div class="message error">❌ Error: ${err.message}</div>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
