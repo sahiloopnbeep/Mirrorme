@@ -65,8 +65,7 @@
 
     <script>
         const SUPABASE_URL = 'const SUPABASE_URL = 'https://iizpxuvojsfuulljmhkl.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpenB4dXZvanNmdXVsbGptaGtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNDQyNzIsImV4cCI6MjA4ODgyMDI3Mn0.vZb8UW3ZCM6KunotRV3Yn0y9ISgmVJX6C6dU-eGm0oc';
-
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
         async function sendMagicLink() {
             const email = document.getElementById('emailInput').value;
             const messageDiv = document.getElementById('message');
@@ -83,7 +82,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'apikey': SUPABASE_ANON_KEY
+                        'apikey': SUPABASE_PUBLISHABLE_KEY
                     },
                     body: JSON.stringify({
                         email: email,
