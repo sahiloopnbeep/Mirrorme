@@ -1,106 +1,252 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Mirror Me - Login</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mirror Me – Login</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
             padding: 20px;
-            background: #f8fafc;
         }
         .card {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        input {
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 20, 50, 0.08);
+            padding: 40px 36px;
+            max-width: 420px;
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid #e9edf4;
         }
-        button {
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a2b4c;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+        .logo span { color: #e67e22; }
+        .subhead {
+            font-size: 15px;
+            color: #5b6f8c;
+            margin-bottom: 28px;
+            border-left: 4px solid #e67e22;
+            padding-left: 14px;
+            background: #fef9f4;
+            border-radius: 0 8px 8px 0;
+            line-height: 1.4;
+        }
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2a44;
+            display: block;
+            margin-bottom: 6px;
+        }
+        input[type="email"] {
             width: 100%;
-            padding: 10px;
-            background: #4b6cb7;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: 1.5px solid #dce1ec;
+            border-radius: 12px;
+            background: white;
+            transition: 0.2s;
+            outline: none;
+            margin-bottom: 6px;
+        }
+        input[type="email"]:focus {
+            border-color: #e67e22;
+            box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.08);
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 15px 0;
+            background: #e67e22;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
             font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
         }
-        button:hover {
-            background: #3a5ca9;
+        .btn-primary:hover { background: #cf711f; transform: scale(1.01); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-test {
+            width: 100%;
+            padding: 10px 0;
+            background: transparent;
+            color: #e67e22;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
         }
-        .message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 5px;
+        .btn-test:hover { background: #fef9f4; border-color: #e67e22; }
+        .message-box {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
         }
-        .success {
-            background: #e8f5e9;
-            color: #2e7d32;
+        .message-box.show { display: block; }
+        .message-box.success { background: #e6f7ed; color: #0b6e4f; border: 1px solid #b8e0cf; }
+        .message-box.error { background: #ffe9eb; color: #b33645; border: 1px solid #fccfd4; }
+        .message-box.info { background: #fef9f4; color: #7a4a1a; border: 1px solid #fce4c5; }
+        .message-box .detail {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            background: rgba(0,0,0,0.03);
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+            word-break: break-all;
+            white-space: pre-wrap;
         }
-        .error {
-            background: #ffeaea;
-            color: #c0392b;
+        .footer-note { margin-top: 20px; font-size: 12px; color: #8a9bb8; text-align: center; }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+<div class="card">
+    <div class="logo">Mirror <span>Me</span></div>
+    <div class="subhead">🔐 Enter your email to receive a secure magic login link</div>
+    <form id="loginForm" onsubmit="return false;">
+        <label for="emailInput">Email address</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" required />
+        <button type="button" class="btn-primary" id="sendBtn" onclick="sendMagicLink()">Send Magic Link</button>
+        <button type="button" class="btn-test" onclick="testConnection()">🔍 Test Supabase Connection</button>
+    </form>
+    <div id="messageBox" class="message-box"></div>
+    <div class="footer-note">You'll receive an email with a one‑click login link.</div>
+</div>
 
-    <div class="card">
-        <h2>Mirror Me</h2>
-        <p>Enter your email to receive a magic login link</p>
+<script>
+    const SUPABASE_URL = 'https://iizpxvvojsfuulljmhkl.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
+    const REDIRECT_URL = 'https://mirrorme-drab.vercel.app/welcome.html';
 
-        <input type="email" id="emailInput" placeholder="your@email.com">
-        <button onclick="sendMagicLink()">Send Magic Link</button>
+    const sendBtn = document.getElementById('sendBtn');
+    const emailInput = document.getElementById('emailInput');
+    const messageBox = document.getElementById('messageBox');
 
-        <div id="message"></div>
-    </div>
+    function showMessage(text, type = 'info', detail = '') {
+        messageBox.className = 'message-box show ' + type;
+        messageBox.innerHTML = text + (detail ? `<div class="detail">${detail}</div>` : '');
+    }
 
-    <script>
-        const SUPABASE_URL = 'const SUPABASE_URL = 'https://iizpxuvojsfuulljmhkl.supabase.co';
-        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
-        async function sendMagicLink() {
-            const email = document.getElementById('emailInput').value;
-            const messageDiv = document.getElementById('message');
+    function hideMessage() {
+        messageBox.className = 'message-box';
+        messageBox.innerHTML = '';
+    }
 
-            if (!email) {
-                messageDiv.innerHTML = '<div class="message error">Please enter your email</div>';
-                return;
-            }
+    function setLoading(loading) {
+        sendBtn.disabled = loading;
+        sendBtn.innerHTML = loading ? `<span class="spinner"></span>Sending...` : 'Send Magic Link';
+    }
 
-            messageDiv.innerHTML = '<div class="message">Sending...</div>';
-
-            try {
-                const response = await fetch(`${SUPABASE_URL}/auth/v1/otp`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_PUBLISHABLE_KEY
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        redirect_to: 'https://mirrorme-drab.vercel.app'
-                    })
-                });
-
-                if (response.ok) {
-                    messageDiv.innerHTML = '<div class="message success">✅ Magic link sent! Check your email.</div>';
-                } else {
-                    const error = await response.json();
-                    messageDiv.innerHTML = `<div class="message error">❌ Error: ${error.message}</div>`;
-                }
-            } catch (err) {
-                messageDiv.innerHTML = `<div class="message error">❌ Error: ${err.message}</div>`;
-            }
+    async function sendMagicLink() {
+        const email = emailInput.value.trim();
+        if (!email) {
+            showMessage('❌ Please enter your email address.', 'error');
+            return;
         }
-    </script>
+        if (!email.includes('@') || !email.includes('.')) {
+            showMessage('❌ Please enter a valid email address.', 'error');
+            return;
+        }
+        hideMessage();
+        setLoading(true);
+        try {
+            const response = await fetch(`${SUPABASE_URL}/auth/v1/otp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SUPABASE_PUBLISHABLE_KEY
+                },
+                body: JSON.stringify({
+                    email: email,
+                    redirect_to: REDIRECT_URL
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                showMessage('✅ Magic link sent! Check your email inbox and spam folder.', 'success');
+                console.log('✅ Magic link sent to:', email);
+            } else {
+                const errorMsg = data.message || data.error || 'Unknown error';
+                const detail = `Status: ${response.status}\nCode: ${data.code || 'N/A'}\nMessage: ${errorMsg}`;
+                showMessage('❌ Supabase returned an error.', 'error', detail);
+                console.error('❌ Supabase error:', data);
+            }
+        } catch (err) {
+            showMessage('❌ Network error – could not reach Supabase.', 'error', `Error: ${err.message}`);
+            console.error('❌ Fetch error:', err);
+        }
+        setLoading(false);
+    }
 
+    async function testConnection() {
+        hideMessage();
+        showMessage('⏳ Testing connection to Supabase...', 'info');
+        try {
+            const response = await fetch(`${SUPABASE_URL}/auth/v1/otp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SUPABASE_PUBLISHABLE_KEY
+                },
+                body: JSON.stringify({
+                    email: 'test@example.com',
+                    redirect_to: REDIRECT_URL
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                showMessage('✅ Supabase is reachable and responding correctly.', 'success', `Status: ${response.status}`);
+            } else {
+                showMessage('⚠️ Supabase responded, but with an error.', 'error', `Status: ${response.status}\nMessage: ${data.message || data.error || 'Unknown'}`);
+            }
+        } catch (err) {
+            showMessage('❌ Could not reach Supabase – check your URL or network.', 'error', `Error: ${err.message}`);
+        }
+    }
+
+    emailInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMagicLink();
+        }
+    });
+
+    console.log('Mirror Me Login Loaded');
+    console.log('Supabase URL:', SUPABASE_URL);
+    console.log('Redirect URL:', REDIRECT_URL);
+    console.log('Key (first 12 chars):', SUPABASE_PUBLISHABLE_KEY ? SUPABASE_PUBLISHABLE_KEY.slice(0, 12) + '...' : 'MISSING');
+</script>
 </body>
 </html>
