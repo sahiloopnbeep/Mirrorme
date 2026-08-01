@@ -29,6 +29,7 @@
             font-size: 28px;
             font-weight: 700;
             color: #1a2b4c;
+            letter-spacing: -0.5px;
             margin-bottom: 6px;
         }
         .logo span { color: #e67e22; }
@@ -77,8 +78,8 @@
             transition: 0.2s;
             margin-top: 8px;
         }
-        .btn-primary:hover { background: #cf711f; }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-primary:hover { background: #cf711f; transform: scale(1.01); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .message-box {
             margin-top: 18px;
             padding: 14px 16px;
@@ -100,7 +101,7 @@
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
@@ -124,7 +125,7 @@
     </div>
     <script>
         var SUPABASE_URL = 'https://iizpxuvojsfuulljmhkl.supabase.co';
-        var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
+        var SUPABASE_ANON_KEY = 'YOUR_PUBLISHABLE_KEY_HERE';
         var REDIRECT_URL = 'https://www.dietologicsworkspace.com/member-portal';
 
         var sendBtn = document.getElementById('sendBtn');
@@ -143,11 +144,7 @@
 
         function setLoading(loading) {
             sendBtn.disabled = loading;
-            if (loading) {
-                sendBtn.innerHTML = '<span class="spinner"></span>Sending...';
-            } else {
-                sendBtn.innerHTML = 'Sign in with Magic Link';
-            }
+            sendBtn.innerHTML = loading ? '<span class="spinner"></span>Sending...' : 'Sign in with Magic Link';
         }
 
         function sendMagicLink() {
@@ -173,7 +170,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'apikey': SUPABASE_PUBLISHABLE_KEY
+                    'apikey': SUPABASE_ANON_KEY
                 },
                 body: body
             })
@@ -186,7 +183,7 @@
                 if (result.status === 200 || result.status === 201) {
                     showMessage('Magic link sent! Check your email.', 'success');
                 } else {
-                    var errorMsg = result.data.message || result.data.error || 'Something went wrong.';
+                    var errorMsg = result.data.message || result.data.error || 'Something went wrong. Please try again.';
                     showMessage(errorMsg, 'error');
                 }
                 setLoading(false);
