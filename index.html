@@ -3,122 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mirror Me – Sign In</title>
+    <title>Mirror Me – Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial; background: #f4f7fc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; max-width: 400px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .logo { font-size: 28px; font-weight: bold; color: #1a2b4c; }
-        .logo span { color: #e67e22; }
-        input { width: 100%; padding: 14px; border: 1.5px solid #dce1ec; border-radius: 12px; margin: 10px 0; }
-        button { width: 100%; padding: 15px; background: #e67e22; color: white; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; }
-        button:hover { background: #cf711f; }
-        .msg { margin-top: 15px; padding: 14px; border-radius: 12px; display: none; }
-        .msg.show { display: block; }
-        .msg.success { background: #e6f7ed; color: #0b6e4f; }
-        .msg.error { background: #ffe9eb; color: #b33645; }
-        .footer-note { margin-top: 20px; font-size: 12px; color: #8a9bb8; text-align: center; }
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            vertical-align: middle;
-            margin-right: 8px;
+        body {
+            background: radial-gradient(circle at center, #1a202c 0%, #080b11 100%);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .dashboard {
+            display: flex;
+            gap: 30px;
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 260px;
+        }
+        .refresh-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .refresh-row .last-updated {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.5);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+        }
+        .data-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+        }
+        .data-btn:hover {
+            transform: translateX(4px);
+            border-color: rgba(255, 255, 255, 0.35);
+            background: rgba(18, 24, 38, 0.9);
+        }
+        .data-btn .btn-icon { width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .data-btn .btn-icon svg { width: 100%; height: 100%; }
+        .data-btn .btn-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+            flex: 1;
+            text-align: left;
+        }
+        .data-btn .btn-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .data-btn .btn-unit {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-left: 2px;
+        }
+        .btn-gut { border-left: 4px solid #00E5FF; }
+        .btn-gut .btn-value { color: #00E5FF; }
+        .btn-metabolism { border-left: 4px solid #00FF87; }
+        .btn-metabolism .btn-value { color: #00FF87; }
+        .btn-muscular { border-left: 4px solid #FFD000; }
+        .btn-muscular .btn-value { color: #FFD000; }
+        .btn-stress { border-left: 4px solid #FF1744; }
+        .btn-stress .btn-value { color: #FF1744; }
+        .data-btn.active {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 24px rgba(255, 255, 255, 0.08);
+            background: rgba(18, 24, 38, 0.95);
+        }
+        .right-panel {
+            flex: 1;
+            min-height: 400px;
+            background: rgba(10, 14, 23, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .right-panel .placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.95rem;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .right-panel .placeholder .icon { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+        .treemap { display: none; width: 100%; }
+        .treemap.show { display: block; }
+        .treemap h3 {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 12px;
+        }
+        .treemap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .treemap-item {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 18px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.2s;
+        }
+        .treemap-item:hover { background: rgba(255, 255, 255, 0.08); }
+        .treemap-item .label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.35);
+            font-weight: 600;
+        }
+        .treemap-item .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 4px;
+            word-break: break-word;
+        }
+        .treemap-item .detail {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 6px;
+        }
+        .treemap-close {
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+            align-self: center;
+        }
+        .treemap-close:hover { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); }
+        .loading-text { color: rgba(255, 255, 255, 0.3); font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="logo">Mirror <span>Me</span></div>
-        <p>Enter your email to sign in</p>
-        <input type="email" id="emailInput" placeholder="you@example.com">
-        <button id="sendBtn">Sign in with Magic Link</button>
-        <div id="messageBox" class="msg"></div>
-        <div class="footer-note">You'll receive a one-click sign-in link via email.</div>
+    <div class="dashboard">
+        <div class="left-panel">
+            <div class="refresh-row">
+                <button class="refresh-btn" onclick="fetchDashboardData()">↻ Refresh</button>
+                <span class="last-updated" id="lastUpdated">Last updated: —</span>
+            </div>
+            <button class="data-btn btn-gut" data-metric="gut" id="btnGut">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v2" />
+                        <path d="M12 4c-3.5 0-5 1.5-5 3.5S8.5 11 12 11s5 1.5 5 3.5S15.5 18 12 18" />
+                        <path d="M8 7.5c-2.5 0-4 1.2-4 3s1.5 3 4 3 4 1.2 4 3-1.5 3-4 3" />
+                        <path d="M16 10.5c2.5 0 4 1.2 4 3-1.5 3-4 3" />
+                        <path d="M12 18v4" />
+                    </svg>
+                </span>
+                <span class="btn-label">Gut Health</span>
+                <span class="btn-value"><span id="gutScore">—</span><span class="btn-unit">%</span></span>
+            </button>
+            <button class="data-btn btn-metabolism" data-metric="metabolism" id="btnMetabolism">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                </span>
+                <span class="btn-label">Metabolism</span>
+                <span class="btn-value"><span id="metabolismScore">—</span><span class="btn-unit">%</span></span>
+            </button>
+            <button class="data-btn btn-muscular" data-metric="muscular" id="btnMuscular">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.5 5c-.83 0-1.5.67-1.5 1.5V9h-1c-1.1 0-2 .9-2 2v.5c-1.18-.76-2.61-1.12-4.11-.86-2.07.36-3.77 1.95-4.23 4C7.23 16.5 8.5 18 10.5 18h8c1.38 0 2.5-1.12 2.5-2.5V6.5c0-.83-.67-1.5-1.5-1.5zM7.5 13.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S6 15.83 6 15s.67-1.5 1.5-1.5z" />
+                        <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M3 19c2-3 4.5-4 7.5-4" />
+                    </svg>
+                </span>
+                <span class="btn-label">Muscular</span>
+                <span class="btn-value"><span id="muscularScore">—</span><span class="btn-unit">%</span></span>
+            </button>
+            <button class="data-btn btn-stress" data-metric="stress" id="btnStress">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v3m0 14v3" />
+                        <path d="M8 6h8l-7 4 7 4-7 4h8" />
+                    </svg>
+                </span>
+                <span class="btn-label">Stress Resilience</span>
+                <span class="btn-value"><span id="stressScore">—</span><span class="btn-unit">%</span></span>
+            </button>
+        </div>
+        <div class="right-panel" id="rightPanel">
+            <div class="placeholder" id="placeholder">
+                <span class="icon">🧘</span>
+                Select a metric to view your detailed health treemap.
+            </div>
+            <div class="treemap" id="treemap">
+                <h3 id="treemapTitle">Gut Health — Breakdown</h3>
+                <div class="treemap-grid" id="treemapGrid"></div>
+                <button class="treemap-close" onclick="closeTreemap()">← Close Treemap</button>
+            </div>
+        </div>
     </div>
-
     <script>
         var SUPABASE_URL = 'https://iizpxuvojsfuulljmhkl.supabase.co';
         var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
-        var REDIRECT_URL = 'https://www.dietologicsworkspace.com/member-portal';
 
-        var sendBtn = document.getElementById('sendBtn');
-        var emailInput = document.getElementById('emailInput');
-        var messageBox = document.getElementById('messageBox');
+        var metricConfig = {
+            gut: {
+                label: 'Gut Health',
+                color: '#00E5FF',
+                scoreCol: 'gut_health_score',
+                treemap: [
+                    { label: 'Insights', col: 'gut_health_insights' },
+                    { label: 'Clinical Insights', col: 'gut_clinical_insights' },
+                    { label: 'Recommended Action', col: 'gut_action' }
+                ]
+            },
+            metabolism: {
+                label: 'Metabolism',
+                color: '#00FF87',
+                scoreCol: 'metabolic_score',
+                treemap: [
+                    { label: 'Interpretation', col: 'metabolic_interpretation' },
+                    { label: 'Clinical Insights', col: 'metabolic_clinical' },
+                    { label: 'Recommended Action', col: 'metabolic_action' }
+                ]
+            },
+            muscular: {
+                label: 'Muscular',
+                color: '#FFD000',
+                scoreCol: 'musculoskeletal_score',
+                treemap: [
+                    { label: 'Interpretation', col: 'musculoskeletal_interpretation' },
+                    { label: 'Clinical Insights', col: 'muscle_clinical' },
+                    { label: 'Recommended Action', col: 'muscle_action' }
+                ]
+            },
+            stress: {
+                label: 'Stress Resilience',
+                color: '#FF1744',
+                scoreCol: 'stress_resilience_score',
+                treemap: [
+                    { label: 'Interpretation', col: 'stress_interpretation' },
+                    { label: 'Clinical Insights', col: 'stress_clinical' },
+                    { label: 'Recommended Action', col: 'stress_action' }
+                ]
+            }
+        };
 
-        function showMessage(text, type) {
-            messageBox.className = 'msg show ' + type;
-            messageBox.innerHTML = text;
+        var currentMemberData = null;
+        var activeMetric = null;
+
+        var gutScoreEl = document.getElementById('gutScore');
+        var metabolismScoreEl = document.getElementById('metabolismScore');
+        var muscularScoreEl = document.getElementById('muscularScore');
+        var stressScoreEl = document.getElementById('stressScore');
+        var lastUpdatedEl = document.getElementById('lastUpdated');
+        var placeholder = document.getElementById('placeholder');
+        var treemap = document.getElementById('treemap');
+        var treemapTitle = document.getElementById('treemapTitle');
+        var treemapGrid = document.getElementById('treemapGrid');
+
+        function getLoggedInEmail() {
+            var token = localStorage.getItem('supabase.auth.token');
+            if (!token) return null;
+            try {
+                var parsed = JSON.parse(token);
+                var user = parsed.currentUser || parsed.user;
+                if (user && user.email) return user.email;
+                var parts = parsed.access_token ? parsed.access_token.split('.') : null;
+                if (parts && parts.length === 3) {
+                    var payload = JSON.parse(atob(parts[1]));
+                    if (payload.email) return payload.email;
+                }
+                return null;
+            } catch (e) {
+                console.warn('Could not parse session token:', e);
+                return null;
+            }
         }
 
-        function hideMessage() {
-            messageBox.className = 'msg';
-            messageBox.innerHTML = '';
-        }
-
-        function setLoading(loading) {
-            sendBtn.disabled = loading;
-            sendBtn.innerHTML = loading ? '<span class="spinner"></span>Sending...' : 'Sign in with Magic Link';
-        }
-
-        function sendMagicLink() {
-            var email = emailInput.value.trim();
+        function fetchDashboardData() {
+            var email = getLoggedInEmail();
             if (!email) {
-                showMessage('Please enter your email.', 'error');
+                console.error('No logged-in user found. Redirecting to login...');
+                window.location.href = '/login.html';
                 return;
             }
-            if (email.indexOf('@') === -1 || email.indexOf('.') === -1) {
-                showMessage('Enter a valid email address.', 'error');
-                return;
-            }
-            hideMessage();
-            setLoading(true);
-
-            var body = JSON.stringify({
-                email: email,
-                redirect_to: REDIRECT_URL
-            });
-
-            fetch(SUPABASE_URL + '/auth/v1/otp', {
-                method: 'POST',
+            console.log('Fetching data for:', email);
+            var url = SUPABASE_URL + '/rest/v1/member_calculations?email=eq.' + encodeURIComponent(email);
+            fetch(url, {
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_PUBLISHABLE_KEY
-                },
-                body: body
-            })
-            .then(function(response) {
-                return response.json().then(function(data) {
-                    return { status: response.status, data: data };
-                });
-            })
-            .then(function(result) {
-                setLoading(false);
-                if (result.status === 200 || result.status === 201) {
-                    showMessage('Magic link sent! Check your email.', 'success');
-                } else {
-                    var msg = result.data.message || result.data.error || 'Something went wrong.';
-                    showMessage(msg, 'error');
+                    'apikey': SUPABASE_PUBLISHABLE_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_PUBLISHABLE_KEY
                 }
             })
-            .catch(function() {
-                setLoading(false);
-                showMessage('Network error. Please try again.', 'error');
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data && data.length > 0) {
+                    currentMemberData = data[0];
+                    updateUI(currentMemberData);
+                    lastUpdatedEl.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+                } else {
+                    console.warn('No data found for email:', email);
+                    clearUI();
+                }
+            })
+            .catch(function(error) {
+                console.error('Error fetching data:', error);
+                clearUI();
             });
         }
 
-        sendBtn.addEventListener('click', sendMagicLink);
-        emailInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMagicLink();
+        function updateUI(data) {
+            gutScoreEl.textContent = data.gut_health_score !== null && data.gut_health_score !== undefined ? data.gut_health_score : '-';
+            metabolismScoreEl.textContent = data.metabolic_score !== null && data.metabolic_score !== undefined ? data.metabolic_score : '-';
+            muscularScoreEl.textContent = data.musculoskeletal_score !== null && data.musculoskeletal_score !== undefined ? data.musculoskeletal_score : '-';
+            stressScoreEl.textContent = data.stress_resilience_score !== null && data.stress_resilience_score !== undefined ? data.stress_resilience_score : '-';
+            if (activeMetric) {
+                showTreemap(activeMetric, data);
             }
+        }
+
+        function clearUI() {
+            gutScoreEl.textContent = '-';
+            metabolismScoreEl.textContent = '-';
+            muscularScoreEl.textContent = '-';
+            stressScoreEl.textContent = '-';
+            lastUpdatedEl.textContent = 'Last updated: —';
+        }
+
+        function showTreemap(metricKey, data) {
+            var config = metricConfig[metricKey];
+            if (!config) return;
+            activeMetric = metricKey;
+            var itemsHtml = '';
+            var treemapFields = config.treemap;
+            var scoreValue = data[config.scoreCol];
+            var scoreDisplay = scoreValue !== null && scoreValue !== undefined ? scoreValue + '%' : '-';
+            itemsHtml += '<div class="treemap-item">';
+            itemsHtml += '<div class="label">Score</div>';
+            itemsHtml += '<div class="value" style="color:' + config.color + ';">' + scoreDisplay + '</div>';
+            itemsHtml += '<div class="detail">Current value</div>';
+            itemsHtml += '</div>';
+            treemapFields.forEach(function(field) {
+                var value = data[field.col];
+                var displayValue = value !== null && value !== undefined && value !== '' ? value : '-';
+                itemsHtml += '<div class="treemap-item">';
+                itemsHtml += '<div class="label">' + field.label + '</div>';
+                itemsHtml += '<div class="value" style="color:' + config.color + '; font-size:1rem;">' + displayValue + '</div>';
+                itemsHtml += '<div class="detail">—</div>';
+                itemsHtml += '</div>';
+            });
+            treemapGrid.innerHTML = itemsHtml;
+            treemapTitle.textContent = config.label + ' — Breakdown';
+            placeholder.style.display = 'none';
+            treemap.classList.add('show');
+        }
+
+        function closeTreemap() {
+            treemap.classList.remove('show');
+            placeholder.style.display = 'block';
+            activeMetric = null;
+            document.querySelectorAll('.data-btn').forEach(function(b) {
+                b.classList.remove('active');
+            });
+        }
+
+        document.querySelectorAll('.data-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var metric = this.getAttribute('data-metric');
+                if (!currentMemberData) {
+                    fetchDashboardData();
+                    return;
+                }
+                document.querySelectorAll('.data-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                showTreemap(metric, currentMemberData);
+            });
         });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            fetchDashboardData();
+        });
+
+        window.fetchDashboardData = fetchDashboardData;
+        window.closeTreemap = closeTreemap;
     </script>
 </body>
 </html>
