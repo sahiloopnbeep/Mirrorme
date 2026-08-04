@@ -321,11 +321,6 @@
                 var parsed = JSON.parse(token);
                 var user = parsed.currentUser || parsed.user;
                 if (user && user.email) return user.email;
-                var parts = parsed.access_token ? parsed.access_token.split('.') : null;
-                if (parts && parts.length === 3) {
-                    var payload = JSON.parse(atob(parts[1]));
-                    if (payload.email) return payload.email;
-                }
                 return null;
             } catch (e) {
                 console.warn('Could not parse session token:', e);
