@@ -1,13 +1,10 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Mirror Me – Dashboard</title>
 
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +16,6 @@
     >
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -27,54 +23,37 @@
         }
 
         body {
-            background: radial-gradient(
-                circle at center,
-                #1a202c 0%,
-                #080b11 100%
-            );
-
+            background: radial-gradient(circle at center, #1a202c 0%, #080b11 100%);
             font-family: 'Inter', sans-serif;
-
             display: flex;
             justify-content: center;
             align-items: center;
-
             min-height: 100vh;
-
             padding: 20px;
         }
 
         .dashboard {
             display: flex;
             gap: 30px;
-
             max-width: 1100px;
             width: 100%;
-
             background: rgba(0, 0, 0, 0.4);
-
             padding: 24px;
-
             border-radius: 16px;
-
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .left-panel {
             display: flex;
             flex-direction: column;
-
             gap: 16px;
-
             min-width: 260px;
         }
 
         .refresh-row {
             display: flex;
             align-items: center;
-
             gap: 12px;
-
             margin-bottom: 8px;
         }
 
@@ -85,19 +64,12 @@
 
         .refresh-btn {
             background: rgba(255, 255, 255, 0.06);
-
             border: 1px solid rgba(255, 255, 255, 0.08);
-
             color: rgba(255, 255, 255, 0.5);
-
             padding: 6px 14px;
-
             border-radius: 6px;
-
             font-size: 0.7rem;
-
             cursor: pointer;
-
             transition: 0.2s;
         }
 
@@ -108,49 +80,32 @@
 
         .data-btn {
             position: relative;
-
             display: flex;
             align-items: center;
-
             gap: 12px;
-
             padding: 14px 18px;
-
             border-radius: 10px;
-
             background: rgba(10, 14, 23, 0.85);
-
             backdrop-filter: blur(16px);
-
             border: 1px solid rgba(255, 255, 255, 0.12);
-
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-
             color: #ffffff;
-
             cursor: pointer;
-
             user-select: none;
-
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-
             width: 100%;
         }
 
         .data-btn:hover {
             transform: translateX(4px);
-
             border-color: rgba(255, 255, 255, 0.35);
-
             background: rgba(18, 24, 38, 0.9);
         }
 
         .data-btn .btn-icon {
             width: 28px;
             height: 28px;
-
             flex-shrink: 0;
-
             display: flex;
             align-items: center;
             justify-content: center;
@@ -163,33 +118,23 @@
 
         .data-btn .btn-label {
             font-size: 0.75rem;
-
             font-weight: 700;
-
             letter-spacing: 0.05em;
-
             text-transform: uppercase;
-
             color: rgba(255, 255, 255, 0.6);
-
             flex: 1;
-
             text-align: left;
         }
 
         .data-btn .btn-value {
             font-family: 'JetBrains Mono', monospace;
-
             font-weight: 700;
-
             font-size: 1.1rem;
         }
 
         .data-btn .btn-unit {
             font-size: 0.6rem;
-
             color: rgba(255, 255, 255, 0.3);
-
             margin-left: 2px;
         }
 
@@ -227,58 +172,40 @@
 
         .data-btn.active {
             border-color: rgba(255, 255, 255, 0.5);
-
-            box-shadow:
-                0 0 24px rgba(255, 255, 255, 0.08);
-
+            box-shadow: 0 0 24px rgba(255, 255, 255, 0.08);
             background: rgba(18, 24, 38, 0.95);
         }
 
         .right-panel {
             flex: 1;
-
             min-height: 400px;
-
             background: rgba(10, 14, 23, 0.7);
-
             backdrop-filter: blur(12px);
-
             border-radius: 12px;
-
             border: 1px solid rgba(255, 255, 255, 0.08);
-
             padding: 24px;
-
             display: flex;
             flex-direction: column;
-
             align-items: center;
             justify-content: center;
-
             transition: all 0.3s ease;
         }
 
         .right-panel .placeholder {
             color: rgba(255, 255, 255, 0.3);
-
             font-size: 0.95rem;
-
             text-align: center;
-
             line-height: 1.6;
         }
 
         .right-panel .placeholder .icon {
             font-size: 2.5rem;
-
             display: block;
-
             margin-bottom: 12px;
         }
 
         .treemap {
             display: none;
-
             width: 100%;
         }
 
@@ -288,41 +215,26 @@
 
         .treemap h3 {
             color: rgba(255, 255, 255, 0.8);
-
             font-weight: 600;
-
             font-size: 1rem;
-
             letter-spacing: 0.05em;
-
             text-transform: uppercase;
-
             margin-bottom: 16px;
-
-            border-bottom:
-                1px solid rgba(255, 255, 255, 0.06);
-
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding-bottom: 12px;
         }
 
         .treemap-grid {
             display: grid;
-
             grid-template-columns: 1fr 1fr;
-
             gap: 14px;
         }
 
         .treemap-item {
             background: rgba(255, 255, 255, 0.04);
-
             border-radius: 10px;
-
             padding: 18px 16px;
-
-            border:
-                1px solid rgba(255, 255, 255, 0.06);
-
+            border: 1px solid rgba(255, 255, 255, 0.06);
             transition: 0.2s;
         }
 
@@ -332,73 +244,45 @@
 
         .treemap-item .label {
             font-size: 0.65rem;
-
             text-transform: uppercase;
-
             letter-spacing: 0.05em;
-
             color: rgba(255, 255, 255, 0.35);
-
             font-weight: 600;
         }
 
         .treemap-item .value {
             font-family: 'JetBrains Mono', monospace;
-
             font-size: 1.4rem;
-
             font-weight: 700;
-
             margin-top: 4px;
-
             word-break: break-word;
         }
 
         .treemap-item .detail {
             font-size: 0.7rem;
-
             color: rgba(255, 255, 255, 0.3);
-
             margin-top: 6px;
         }
 
         .treemap-close {
             margin-top: 20px;
-
             padding: 10px 24px;
-
             background: rgba(255, 255, 255, 0.06);
-
-            border:
-                1px solid rgba(255, 255, 255, 0.08);
-
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 8px;
-
             color: rgba(255, 255, 255, 0.4);
-
             cursor: pointer;
-
             font-size: 0.8rem;
-
             transition: 0.2s;
-
             align-self: center;
         }
 
         .treemap-close:hover {
             background: rgba(255, 255, 255, 0.1);
-
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .loading-text {
-            color: rgba(255, 255, 255, 0.3);
-
-            font-size: 0.9rem;
-        }
-
         @media (max-width: 760px) {
-
             .dashboard {
                 flex-direction: column;
             }
@@ -410,9 +294,7 @@
             .right-panel {
                 min-height: 350px;
             }
-
         }
-
     </style>
 </head>
 
@@ -423,7 +305,6 @@
     <div class="left-panel">
 
         <div class="refresh-row">
-
             <button
                 class="refresh-btn"
                 onclick="fetchDashboardData()"
@@ -437,18 +318,13 @@
             >
                 Last updated: —
             </span>
-
         </div>
-
 
         <button
             class="data-btn btn-gut"
             data-metric="gut"
-            id="btnGut"
         >
-
             <span class="btn-icon">
-
                 <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -457,19 +333,12 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-
                     <path d="M12 2v2" />
-
                     <path d="M12 4c-3.5 0-5 1.5-5 3.5S8.5 11 12 11s5 1.5 5 3.5S15.5 18 12 18" />
-
                     <path d="M8 7.5c-2.5 0-4 1.2-4 3s1.5 3 4 3 4 1.2 4 3-1.5 3-4 3" />
-
                     <path d="M16 10.5c2.5 0 4 1.2 4 3-1.5 3-4 3" />
-
                     <path d="M12 18v4" />
-
                 </svg>
-
             </span>
 
             <span class="btn-label">
@@ -480,18 +349,13 @@
                 <span id="gutScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
-
         </button>
-
 
         <button
             class="data-btn btn-metabolism"
             data-metric="metabolism"
-            id="btnMetabolism"
         >
-
             <span class="btn-icon">
-
                 <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -500,11 +364,8 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-
                     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-
                 </svg>
-
             </span>
 
             <span class="btn-label">
@@ -515,18 +376,13 @@
                 <span id="metabolismScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
-
         </button>
-
 
         <button
             class="data-btn btn-muscular"
             data-metric="muscular"
-            id="btnMuscular"
         >
-
             <span class="btn-icon">
-
                 <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -535,19 +391,9 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-
                     <path d="M20.5 5c-.83 0-1.5.67-1.5 1.5V9h-1c-1.1 0-2 .9-2 2v.5c-1.18-.76-2.61-1.12-4.11-.86-2.07.36-3.77 1.95-4.23 4C7.23 16.5 8.5 18 10.5 18h8c1.38 0 2.5-1.12 2.5-2.5V6.5c0-.83-.67-1.5-1.5-1.5zM7.5 13.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S6 15.83 6 15s.67-1.5 1.5-1.5z" />
-
-                    <path
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        d="M3 19c2-3 4.5-4 7.5-4"
-                    />
-
+                    <path d="M3 19c2-3 4.5-4 7.5-4" />
                 </svg>
-
             </span>
 
             <span class="btn-label">
@@ -558,18 +404,13 @@
                 <span id="muscularScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
-
         </button>
-
 
         <button
             class="data-btn btn-stress"
             data-metric="stress"
-            id="btnStress"
         >
-
             <span class="btn-icon">
-
                 <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -578,13 +419,9 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-
                     <path d="M12 2v3m0 14v3" />
-
                     <path d="M8 6h8l-7 4 7 4-7 4h8" />
-
                 </svg>
-
             </span>
 
             <span class="btn-label">
@@ -595,11 +432,9 @@
                 <span id="stressScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
-
         </button>
 
     </div>
-
 
     <div
         class="right-panel"
@@ -610,13 +445,9 @@
             class="placeholder"
             id="placeholder"
         >
-
             <span class="icon">🧘</span>
-
             Select a metric to view your detailed health treemap.
-
         </div>
-
 
         <div
             class="treemap"
@@ -645,733 +476,447 @@
 
 </div>
 
-
 <script>
 
-    /*
-     * =========================================================
-     * MIRROR ME — AUTHENTICATION + DASHBOARD
-     * =========================================================
-     */
+const SUPABASE_URL =
+    'https://iizpxuvojsfuulljmhkl.supabase.co';
 
-    const SUPABASE_URL =
-        'https://iizpxuvojsfuulljmhkl.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY =
+    'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
 
-    const SUPABASE_PUBLISHABLE_KEY =
-        'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+            auth: {
+                flowType: 'pkce',
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        }
+    );
 
+const metricConfig = {
 
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY,
+    gut: {
+        label: 'Gut Health',
+        color: '#00E5FF',
+        scoreCol: 'gut_health_score',
+        treemap: [
             {
-                auth: {
-                    persistSession: true,
-                    autoRefreshToken: true,
-                    detectSessionInUrl: true
-                }
+                label: 'Insights',
+                col: 'gut_health_insights'
+            },
+            {
+                label: 'Clinical Insights',
+                col: 'gut_clinical_insights'
+            },
+            {
+                label: 'Recommended Action',
+                col: 'gut_action'
             }
+        ]
+    },
+
+    metabolism: {
+        label: 'Metabolism',
+        color: '#00FF87',
+        scoreCol: 'metabolic_score',
+        treemap: [
+            {
+                label: 'Interpretation',
+                col: 'metabolic_interpretation'
+            },
+            {
+                label: 'Clinical Insights',
+                col: 'metabolic_clinical'
+            },
+            {
+                label: 'Recommended Action',
+                col: 'metabolic_action'
+            }
+        ]
+    },
+
+    muscular: {
+        label: 'Muscular',
+        color: '#FFD000',
+        scoreCol: 'musculoskeletal_score',
+        treemap: [
+            {
+                label: 'Interpretation',
+                col: 'musculoskeletal_interpretation'
+            },
+            {
+                label: 'Clinical Insights',
+                col: 'muscle_clinical'
+            },
+            {
+                label: 'Recommended Action',
+                col: 'muscle_action'
+            }
+        ]
+    },
+
+    stress: {
+        label: 'Stress Resilience',
+        color: '#FF1744',
+        scoreCol: 'stress_resilience_score',
+        treemap: [
+            {
+                label: 'Interpretation',
+                col: 'stress_interpretation'
+            },
+            {
+                label: 'Clinical Insights',
+                col: 'stress_clinical'
+            },
+            {
+                label: 'Recommended Action',
+                col: 'stress_action'
+            }
+        ]
+    }
+
+};
+
+let currentMemberData = null;
+let activeMetric = null;
+
+const gutScoreEl =
+    document.getElementById('gutScore');
+
+const metabolismScoreEl =
+    document.getElementById('metabolismScore');
+
+const muscularScoreEl =
+    document.getElementById('muscularScore');
+
+const stressScoreEl =
+    document.getElementById('stressScore');
+
+const lastUpdatedEl =
+    document.getElementById('lastUpdated');
+
+const placeholder =
+    document.getElementById('placeholder');
+
+const treemap =
+    document.getElementById('treemap');
+
+const treemapTitle =
+    document.getElementById('treemapTitle');
+
+const treemapGrid =
+    document.getElementById('treemapGrid');
+
+async function getCurrentUser() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getSession();
+
+    if (error) {
+        console.error(error);
+        return null;
+    }
+
+    if (!data.session) {
+        return null;
+    }
+
+    return data.session.user;
+}
+
+async function fetchDashboardData() {
+
+    const user =
+        await getCurrentUser();
+
+    if (!user) {
+
+        window.location.replace(
+            '/login.html'
         );
 
+        return;
+    }
 
-    /*
-     * Dashboard configuration
-     */
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from('member_calculations')
+        .select('*')
+        .eq('email', user.email)
+        .limit(1);
 
-    var metricConfig = {
+    if (error) {
 
-        gut: {
-
-            label: 'Gut Health',
-
-            color: '#00E5FF',
-
-            scoreCol: 'gut_health_score',
-
-            treemap: [
-
-                {
-                    label: 'Insights',
-                    col: 'gut_health_insights'
-                },
-
-                {
-                    label: 'Clinical Insights',
-                    col: 'gut_clinical_insights'
-                },
-
-                {
-                    label: 'Recommended Action',
-                    col: 'gut_action'
-                }
-
-            ]
-
-        },
-
-
-        metabolism: {
-
-            label: 'Metabolism',
-
-            color: '#00FF87',
-
-            scoreCol: 'metabolic_score',
-
-            treemap: [
-
-                {
-                    label: 'Interpretation',
-                    col: 'metabolic_interpretation'
-                },
-
-                {
-                    label: 'Clinical Insights',
-                    col: 'metabolic_clinical'
-                },
-
-                {
-                    label: 'Recommended Action',
-                    col: 'metabolic_action'
-                }
-
-            ]
-
-        },
-
-
-        muscular: {
-
-            label: 'Muscular',
-
-            color: '#FFD000',
-
-            scoreCol: 'musculoskeletal_score',
-
-            treemap: [
-
-                {
-                    label: 'Interpretation',
-                    col: 'musculoskeletal_interpretation'
-                },
-
-                {
-                    label: 'Clinical Insights',
-                    col: 'muscle_clinical'
-                },
-
-                {
-                    label: 'Recommended Action',
-                    col: 'muscle_action'
-                }
-
-            ]
-
-        },
-
-
-        stress: {
-
-            label: 'Stress Resilience',
-
-            color: '#FF1744',
-
-            scoreCol: 'stress_resilience_score',
-
-            treemap: [
-
-                {
-                    label: 'Interpretation',
-                    col: 'stress_interpretation'
-                },
-
-                {
-                    label: 'Clinical Insights',
-                    col: 'stress_clinical'
-                },
-
-                {
-                    label: 'Recommended Action',
-                    col: 'stress_action'
-                }
-
-            ]
-
-        }
-
-    };
-
-
-    var currentMemberData = null;
-
-    var activeMetric = null;
-
-
-    var gutScoreEl =
-        document.getElementById('gutScore');
-
-    var metabolismScoreEl =
-        document.getElementById('metabolismScore');
-
-    var muscularScoreEl =
-        document.getElementById('muscularScore');
-
-    var stressScoreEl =
-        document.getElementById('stressScore');
-
-    var lastUpdatedEl =
-        document.getElementById('lastUpdated');
-
-    var placeholder =
-        document.getElementById('placeholder');
-
-    var treemap =
-        document.getElementById('treemap');
-
-    var treemapTitle =
-        document.getElementById('treemapTitle');
-
-    var treemapGrid =
-        document.getElementById('treemapGrid');
-
-
-    /*
-     * =========================================================
-     * GET CURRENT SUPABASE USER
-     * =========================================================
-     */
-
-    async function getLoggedInUser() {
-
-        const {
-            data,
+        console.error(
+            'Dashboard data error:',
             error
-        } = await supabaseClient.auth.getSession();
-
-
-        if (error) {
-
-            console.error(
-                'Unable to read Supabase session:',
-                error
-            );
-
-            return null;
-        }
-
-
-        if (!data.session) {
-
-            return null;
-        }
-
-
-        return data.session.user;
-    }
-
-
-    /*
-     * =========================================================
-     * LOAD DASHBOARD DATA
-     * =========================================================
-     */
-
-    async function fetchDashboardData() {
-
-        const user =
-            await getLoggedInUser();
-
-
-        /*
-         * No valid session.
-         * Send the user to login.
-         */
-
-        if (!user) {
-
-            console.warn(
-                'No active Mirror Me session.'
-            );
-
-            window.location.href =
-                '/login.html';
-
-            return;
-        }
-
-
-        const email =
-            user.email;
-
-
-        console.log(
-            'Logged-in Mirror Me user:',
-            email
         );
 
+        clearUI();
 
-        /*
-         * Query the member's data.
-         */
-
-        const url =
-            SUPABASE_URL +
-            '/rest/v1/member_calculations?email=eq.' +
-            encodeURIComponent(email);
-
-
-        try {
-
-            const response =
-                await fetch(
-                    url,
-                    {
-                        method: 'GET',
-
-                        headers: {
-
-                            'apikey':
-                                SUPABASE_PUBLISHABLE_KEY,
-
-                            'Authorization':
-                                'Bearer ' +
-                                SUPABASE_PUBLISHABLE_KEY
-
-                        }
-
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    'HTTP ' +
-                    response.status
-                );
-            }
-
-
-            const data =
-                await response.json();
-
-
-            if (
-                data &&
-                data.length > 0
-            ) {
-
-                currentMemberData =
-                    data[0];
-
-
-                updateUI(
-                    currentMemberData
-                );
-
-
-                lastUpdatedEl.textContent =
-                    'Last updated: ' +
-                    new Date().toLocaleTimeString();
-
-            } else {
-
-                console.warn(
-                    'No member data found for:',
-                    email
-                );
-
-                clearUI();
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                'Error fetching member data:',
-                error
-            );
-
-            clearUI();
-
-        }
-
+        return;
     }
 
+    if (data && data.length > 0) {
 
-    /*
-     * =========================================================
-     * UPDATE SCORE UI
-     * =========================================================
-     */
+        currentMemberData =
+            data[0];
 
-    function updateUI(data) {
-
-        gutScoreEl.textContent =
-            data.gut_health_score !== null &&
-            data.gut_health_score !== undefined
-                ? data.gut_health_score
-                : '-';
-
-
-        metabolismScoreEl.textContent =
-            data.metabolic_score !== null &&
-            data.metabolic_score !== undefined
-                ? data.metabolic_score
-                : '-';
-
-
-        muscularScoreEl.textContent =
-            data.musculoskeletal_score !== null &&
-            data.musculoskeletal_score !== undefined
-                ? data.musculoskeletal_score
-                : '-';
-
-
-        stressScoreEl.textContent =
-            data.stress_resilience_score !== null &&
-            data.stress_resilience_score !== undefined
-                ? data.stress_resilience_score
-                : '-';
-
-
-        if (activeMetric) {
-
-            showTreemap(
-                activeMetric,
-                data
-            );
-
-        }
-
-    }
-
-
-    /*
-     * =========================================================
-     * CLEAR UI
-     * =========================================================
-     */
-
-    function clearUI() {
-
-        gutScoreEl.textContent = '-';
-
-        metabolismScoreEl.textContent = '-';
-
-        muscularScoreEl.textContent = '-';
-
-        stressScoreEl.textContent = '-';
+        updateUI(
+            currentMemberData
+        );
 
         lastUpdatedEl.textContent =
-            'Last updated: —';
+            'Last updated: ' +
+            new Date().toLocaleTimeString();
+
+    } else {
+
+        clearUI();
 
     }
 
+}
 
-    /*
-     * =========================================================
-     * TREEMAP
-     * =========================================================
-     */
+function updateUI(data) {
 
-    function showTreemap(
-        metricKey,
-        data
-    ) {
+    gutScoreEl.textContent =
+        data.gut_health_score ??
+        '-';
 
-        var config =
-            metricConfig[metricKey];
+    metabolismScoreEl.textContent =
+        data.metabolic_score ??
+        '-';
 
+    muscularScoreEl.textContent =
+        data.musculoskeletal_score ??
+        '-';
 
-        if (!config) {
+    stressScoreEl.textContent =
+        data.stress_resilience_score ??
+        '-';
 
-            return;
-        }
+    if (activeMetric) {
 
+        showTreemap(
+            activeMetric,
+            data
+        );
 
-        activeMetric =
-            metricKey;
+    }
 
+}
 
-        var itemsHtml = '';
+function clearUI() {
 
+    gutScoreEl.textContent =
+        '-';
 
-        var treemapFields =
-            config.treemap;
+    metabolismScoreEl.textContent =
+        '-';
 
+    muscularScoreEl.textContent =
+        '-';
 
-        var scoreValue =
-            data[config.scoreCol];
+    stressScoreEl.textContent =
+        '-';
 
+    lastUpdatedEl.textContent =
+        'Last updated: —';
 
-        var scoreDisplay =
-            scoreValue !== null &&
-            scoreValue !== undefined
-                ? scoreValue + '%'
-                : '-';
+}
 
+function showTreemap(
+    metricKey,
+    data
+) {
 
-        itemsHtml +=
-            '<div class="treemap-item">' +
+    const config =
+        metricConfig[metricKey];
 
+    if (!config) {
+        return;
+    }
+
+    activeMetric =
+        metricKey;
+
+    let itemsHtml = '';
+
+    const scoreValue =
+        data[config.scoreCol];
+
+    const scoreDisplay =
+        scoreValue !== null &&
+        scoreValue !== undefined
+            ? scoreValue + '%'
+            : '-';
+
+    itemsHtml +=
+        '<div class="treemap-item">' +
+        '<div class="label">Score</div>' +
+        '<div class="value" style="color:' +
+        config.color +
+        ';">' +
+        scoreDisplay +
+        '</div>' +
+        '<div class="detail">Current value</div>' +
+        '</div>';
+
+    config.treemap.forEach(
+        function(field) {
+
+            const value =
+                data[field.col];
+
+            const displayValue =
+                value !== null &&
+                value !== undefined &&
+                value !== ''
+                    ? value
+                    : '-';
+
+            itemsHtml +=
+                '<div class="treemap-item">' +
                 '<div class="label">' +
-                    'Score' +
+                field.label +
                 '</div>' +
-
                 '<div class="value" style="color:' +
-                    config.color +
-                ';">' +
-                    scoreDisplay +
+                config.color +
+                '; font-size:1rem;">' +
+                displayValue +
                 '</div>' +
+                '<div class="detail">—</div>' +
+                '</div>';
 
-                '<div class="detail">' +
-                    'Current value' +
-                '</div>' +
+        }
+    );
 
-            '</div>';
+    treemapGrid.innerHTML =
+        itemsHtml;
 
+    treemapTitle.textContent =
+        config.label +
+        ' — Breakdown';
 
-        treemapFields.forEach(
-            function(field) {
+    placeholder.style.display =
+        'none';
 
-                var value =
-                    data[field.col];
+    treemap.classList.add(
+        'show'
+    );
 
+}
 
-                var displayValue =
-                    value !== null &&
-                    value !== undefined &&
-                    value !== ''
-                        ? value
-                        : '-';
+function closeTreemap() {
 
+    treemap.classList.remove(
+        'show'
+    );
 
-                itemsHtml +=
-                    '<div class="treemap-item">' +
+    placeholder.style.display =
+        'block';
 
-                        '<div class="label">' +
-                            field.label +
-                        '</div>' +
-
-                        '<div class="value" style="color:' +
-                            config.color +
-                            '; font-size:1rem;">' +
-                            displayValue +
-                        '</div>' +
-
-                        '<div class="detail">' +
-                            '—' +
-                        '</div>' +
-
-                    '</div>';
-
-            }
-        );
-
-
-        treemapGrid.innerHTML =
-            itemsHtml;
-
-
-        treemapTitle.textContent =
-            config.label +
-            ' — Breakdown';
-
-
-        placeholder.style.display =
-            'none';
-
-
-        treemap.classList.add(
-            'show'
-        );
-
-    }
-
-
-    /*
-     * =========================================================
-     * CLOSE TREEMAP
-     * =========================================================
-     */
-
-    function closeTreemap() {
-
-        treemap.classList.remove(
-            'show'
-        );
-
-
-        placeholder.style.display =
-            'block';
-
-
-        activeMetric = null;
-
-
-        document
-            .querySelectorAll('.data-btn')
-            .forEach(
-                function(button) {
-
-                    button.classList.remove(
-                        'active'
-                    );
-
-                }
-            );
-
-    }
-
-
-    /*
-     * =========================================================
-     * BUTTONS
-     * =========================================================
-     */
+    activeMetric = null;
 
     document
         .querySelectorAll('.data-btn')
         .forEach(
             function(button) {
 
-                button.addEventListener(
-                    'click',
-                    function() {
-
-                        var metric =
-                            this.getAttribute(
-                                'data-metric'
-                            );
-
-
-                        if (!currentMemberData) {
-
-                            fetchDashboardData();
-
-                            return;
-                        }
-
-
-                        document
-                            .querySelectorAll('.data-btn')
-                            .forEach(
-                                function(button) {
-
-                                    button.classList.remove(
-                                        'active'
-                                    );
-
-                                }
-                            );
-
-
-                        this.classList.add(
-                            'active'
-                        );
-
-
-                        showTreemap(
-                            metric,
-                            currentMemberData
-                        );
-
-                    }
+                button.classList.remove(
+                    'active'
                 );
 
             }
         );
 
+}
 
-    /*
-     * =========================================================
-     * INITIAL AUTHENTICATION CHECK
-     * =========================================================
-     */
+document
+    .querySelectorAll('.data-btn')
+    .forEach(
+        function(button) {
 
-    window.addEventListener(
-        'DOMContentLoaded',
-        async function() {
+            button.addEventListener(
+                'click',
+                function() {
 
-            console.log(
-                'Mirror Me dashboard starting...'
+                    const metric =
+                        this.getAttribute(
+                            'data-metric'
+                        );
+
+                    if (!currentMemberData) {
+                        return;
+                    }
+
+                    document
+                        .querySelectorAll('.data-btn')
+                        .forEach(
+                            function(button) {
+
+                                button.classList.remove(
+                                    'active'
+                                );
+
+                            }
+                        );
+
+                    this.classList.add(
+                        'active'
+                    );
+
+                    showTreemap(
+                        metric,
+                        currentMemberData
+                    );
+
+                }
             );
-
-
-            const user =
-                await getLoggedInUser();
-
-
-            if (!user) {
-
-                console.log(
-                    'No session. Sending to login.'
-                );
-
-
-                window.location.href =
-                    '/login.html';
-
-
-                return;
-            }
-
-
-            console.log(
-                'Authenticated as:',
-                user.email
-            );
-
-
-            await fetchDashboardData();
 
         }
     );
 
+window.fetchDashboardData =
+    fetchDashboardData;
 
-    /*
-     * =========================================================
-     * AUTH STATE LISTENER
-     * =========================================================
-     */
+window.closeTreemap =
+    closeTreemap;
 
-    supabaseClient.auth.onAuthStateChange(
-        function(event, session) {
+window.addEventListener(
+    'DOMContentLoaded',
+    async function() {
 
-            console.log(
-                'Mirror Me auth event:',
-                event
+        await fetchDashboardData();
+
+    }
+);
+
+supabaseClient.auth.onAuthStateChange(
+    function(event) {
+
+        if (event === 'SIGNED_OUT') {
+
+            window.location.replace(
+                '/login.html'
             );
 
-
-            if (
-                event === 'SIGNED_OUT'
-            ) {
-
-                window.location.href =
-                    '/login.html';
-
-            }
-
         }
-    );
 
-
-    /*
-     * Make functions available
-     * to the HTML buttons.
-     */
-
-    window.fetchDashboardData =
-        fetchDashboardData;
-
-    window.closeTreemap =
-        closeTreemap;
+    }
+);
 
 </script>
 
 </body>
 </html>
-```
