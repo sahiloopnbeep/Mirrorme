@@ -1,12 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mirror Me – Sign In</title>
-
-    <!-- Supabase JavaScript library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -136,24 +133,6 @@
             color: #8a9bb8;
             text-align: center;
         }
-
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
     </style>
 </head>
 
@@ -181,7 +160,7 @@
             placeholder="you@example.com"
             autocomplete="email"
             required
-        />
+        >
 
         <button
             type="submit"
@@ -206,227 +185,106 @@
 
 <script>
 
-    /*
-     * =========================================================
-     * MIRROR ME — SUPABASE AUTHENTICATION
-     * =========================================================
-     */
+const SUPABASE_URL =
+    'https://iizpxuvojsfuulljmhkl.supabase.co';
 
-    const SUPABASE_URL =
-        'https://iizpxuvojsfuulljmhkl.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY =
+    'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
 
-    const SUPABASE_PUBLISHABLE_KEY =
-        'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
+const REDIRECT_URL =
+    'https://mirrorme-drab.vercel.app/authentication.html';
 
-    /*
-     * IMPORTANT:
-     * This is your production Vercel domain.
-     */
-    const REDIRECT_URL =
-        'https://mirrorme-drab.vercel.app/';
-
-
-    /*
-     * Create the Supabase client.
-     *
-     * persistSession = true
-     * means Supabase keeps the login session
-     * in the browser.
-     *
-     * detectSessionInUrl = true
-     * allows Supabase to process the
-     * authentication information returned
-     * by the Magic Link.
-     */
-
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY,
-            {
-                auth: {
-                    persistSession: true,
-                    autoRefreshToken: true,
-                    detectSessionInUrl: true
-                }
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+            auth: {
+                flowType: 'pkce',
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
             }
-        );
-
-
-    const loginForm =
-        document.getElementById('loginForm');
-
-    const emailInput =
-        document.getElementById('emailInput');
-
-    const sendBtn =
-        document.getElementById('sendBtn');
-
-    const messageBox =
-        document.getElementById('messageBox');
-
-
-    function showMessage(text, type) {
-
-        messageBox.className =
-            'message-box show ' + type;
-
-        messageBox.textContent = text;
-    }
-
-
-    function setLoading(loading) {
-
-        sendBtn.disabled = loading;
-
-        if (loading) {
-
-            sendBtn.innerHTML =
-                '<span class="spinner"></span>Sending...';
-
-        } else {
-
-            sendBtn.textContent =
-                'Sign in with Magic Link';
         }
-    }
+    );
 
+const loginForm =
+    document.getElementById('loginForm');
 
-    /*
-     * If the user is already logged in,
-     * don't show the login page again.
-     */
+const emailInput =
+    document.getElementById('emailInput');
 
-    async function checkExistingSession() {
+const sendBtn =
+    document.getElementById('sendBtn');
 
-        const { data, error } =
-            await supabaseClient.auth.getSession();
+const messageBox =
+    document.getElementById('messageBox');
 
-        if (error) {
+function showMessage(text, type) {
 
-            console.error(
-                'Session check error:',
-                error
+    messageBox.className =
+        'message-box show ' + type;
+
+    messageBox.textContent =
+        text;
+}
+
+loginForm.addEventListener(
+    'submit',
+    async function(event) {
+
+        event.preventDefault();
+
+        const email =
+            emailInput.value.trim();
+
+        if (!email) {
+
+            showMessage(
+                'Please enter your email address.',
+                'error'
             );
 
             return;
         }
 
-        if (data.session) {
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Sending...';
 
-            window.location.href =
-                REDIRECT_URL;
-        }
-    }
+        const { error } =
+            await supabaseClient.auth.signInWithOtp({
 
+                email: email,
 
-    /*
-     * Send Magic Link.
-     */
+                options: {
+                    emailRedirectTo: REDIRECT_URL
+                }
 
-    loginForm.addEventListener(
-        'submit',
-        async function(event) {
+            });
 
-            event.preventDefault();
+        sendBtn.disabled = false;
+        sendBtn.textContent =
+            'Sign in with Magic Link';
 
-            const email =
-                emailInput.value.trim();
-
-            if (!email) {
-
-                showMessage(
-                    'Please enter your email address.',
-                    'error'
-                );
-
-                return;
-            }
-
-
-            setLoading(true);
-
-
-            const { error } =
-                await supabaseClient.auth.signInWithOtp({
-
-                    email: email,
-
-                    options: {
-
-                        emailRedirectTo:
-                            REDIRECT_URL
-
-                    }
-
-                });
-
-
-            setLoading(false);
-
-
-            if (error) {
-
-                console.error(
-                    'Magic Link error:',
-                    error
-                );
-
-                showMessage(
-                    error.message,
-                    'error'
-                );
-
-                return;
-            }
-
+        if (error) {
 
             showMessage(
-                'Magic Link sent! Check your email and click the link to continue.',
-                'success'
+                error.message,
+                'error'
             );
 
+            return;
         }
-    );
 
+        showMessage(
+            'Magic Link sent! Check your email and click the link.',
+            'success'
+        );
 
-    /*
-     * Listen for authentication changes.
-     *
-     * This is important when the Magic Link
-     * returns to this website.
-     */
-
-    supabaseClient.auth.onAuthStateChange(
-        function(event, session) {
-
-            console.log(
-                'Mirror Me Auth Event:',
-                event
-            );
-
-            if (
-                event === 'SIGNED_IN' &&
-                session
-            ) {
-
-                window.location.href =
-                    REDIRECT_URL;
-            }
-
-        }
-    );
-
-
-    /*
-     * Check whether the user was already
-     * logged in when this page opened.
-     */
-
-    checkExistingSession();
+    }
+);
 
 </script>
 
 </body>
 </html>
-```
