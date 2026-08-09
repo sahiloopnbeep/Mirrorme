@@ -1,11 +1,21 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mirror Me – Sign In</title>
+
+    <!-- Supabase JavaScript library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             background: #f4f7fc;
@@ -13,9 +23,9 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             padding: 20px;
         }
+
         .card {
             background: white;
             border-radius: 20px;
@@ -25,6 +35,7 @@
             width: 100%;
             border: 1px solid #e9edf4;
         }
+
         .logo {
             font-size: 28px;
             font-weight: 700;
@@ -32,7 +43,11 @@
             letter-spacing: -0.5px;
             margin-bottom: 6px;
         }
-        .logo span { color: #e67e22; }
+
+        .logo span {
+            color: #e67e22;
+        }
+
         .subhead {
             font-size: 15px;
             color: #5b6f8c;
@@ -43,6 +58,7 @@
             border-radius: 0 8px 8px 0;
             line-height: 1.4;
         }
+
         label {
             font-size: 14px;
             font-weight: 600;
@@ -50,6 +66,7 @@
             display: block;
             margin-bottom: 6px;
         }
+
         input[type="email"] {
             width: 100%;
             padding: 14px 16px;
@@ -57,14 +74,15 @@
             border: 1.5px solid #dce1ec;
             border-radius: 12px;
             background: white;
-            transition: 0.2s;
             outline: none;
             margin-bottom: 6px;
         }
+
         input[type="email"]:focus {
             border-color: #e67e22;
             box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.08);
         }
+
         .btn-primary {
             width: 100%;
             padding: 15px 0;
@@ -75,11 +93,18 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: 0.2s;
             margin-top: 8px;
         }
-        .btn-primary:hover { background: #cf711f; transform: scale(1.01); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .btn-primary:hover {
+            background: #cf711f;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .message-box {
             margin-top: 18px;
             padding: 14px 16px;
@@ -88,119 +113,320 @@
             line-height: 1.5;
             display: none;
         }
-        .message-box.show { display: block; }
-        .message-box.success { background: #e6f7ed; color: #0b6e4f; border: 1px solid #b8e0cf; }
-        .message-box.error { background: #ffe9eb; color: #b33645; border: 1px solid #fccfd4; }
+
+        .message-box.show {
+            display: block;
+        }
+
+        .message-box.success {
+            background: #e6f7ed;
+            color: #0b6e4f;
+            border: 1px solid #b8e0cf;
+        }
+
+        .message-box.error {
+            background: #ffe9eb;
+            color: #b33645;
+            border: 1px solid #fccfd4;
+        }
+
         .footer-note {
             margin-top: 20px;
             font-size: 12px;
             color: #8a9bb8;
             text-align: center;
         }
+
         .spinner {
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255,255,255,0.3);
             border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
             vertical-align: middle;
             margin-right: 8px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="card">
-        <div class="logo">Mirror <span>Me</span></div>
-        <div class="subhead">Enter your email to sign in securely</div>
-        <form id="loginForm" onsubmit="return false;">
-            <label for="emailInput">Email address</label>
-            <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" required />
-            <button type="button" class="btn-primary" id="sendBtn">Sign in with Magic Link</button>
-        </form>
-        <div id="messageBox" class="message-box"></div>
-        <div class="footer-note">You'll receive a one-click sign-in link via email.</div>
+
+<div class="card">
+
+    <div class="logo">
+        Mirror <span>Me</span>
     </div>
-    <script>
-        var SUPABASE_URL = 'https://iizpxuvojsfuulljmhkl.supabase.co';
-        var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
-        var REDIRECT_URL = 'https://mirrorme-drab.vercel.app/';
 
-        var sendBtn = document.getElementById('sendBtn');
-        var emailInput = document.getElementById('emailInput');
-        var messageBox = document.getElementById('messageBox');
+    <div class="subhead">
+        Enter your email to sign in securely
+    </div>
 
-        function showMessage(text, type) {
-            messageBox.className = 'message-box show ' + type;
-            messageBox.innerHTML = text;
+    <form id="loginForm">
+
+        <label for="emailInput">
+            Email address
+        </label>
+
+        <input
+            type="email"
+            id="emailInput"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+        />
+
+        <button
+            type="submit"
+            class="btn-primary"
+            id="sendBtn"
+        >
+            Sign in with Magic Link
+        </button>
+
+    </form>
+
+    <div
+        id="messageBox"
+        class="message-box"
+    ></div>
+
+    <div class="footer-note">
+        You'll receive a one-click sign-in link via email.
+    </div>
+
+</div>
+
+<script>
+
+    /*
+     * =========================================================
+     * MIRROR ME — SUPABASE AUTHENTICATION
+     * =========================================================
+     */
+
+    const SUPABASE_URL =
+        'https://iizpxuvojsfuulljmhkl.supabase.co';
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
+
+    /*
+     * IMPORTANT:
+     * This is your production Vercel domain.
+     */
+    const REDIRECT_URL =
+        'https://mirrorme-drab.vercel.app/';
+
+
+    /*
+     * Create the Supabase client.
+     *
+     * persistSession = true
+     * means Supabase keeps the login session
+     * in the browser.
+     *
+     * detectSessionInUrl = true
+     * allows Supabase to process the
+     * authentication information returned
+     * by the Magic Link.
+     */
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY,
+            {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true
+                }
+            }
+        );
+
+
+    const loginForm =
+        document.getElementById('loginForm');
+
+    const emailInput =
+        document.getElementById('emailInput');
+
+    const sendBtn =
+        document.getElementById('sendBtn');
+
+    const messageBox =
+        document.getElementById('messageBox');
+
+
+    function showMessage(text, type) {
+
+        messageBox.className =
+            'message-box show ' + type;
+
+        messageBox.textContent = text;
+    }
+
+
+    function setLoading(loading) {
+
+        sendBtn.disabled = loading;
+
+        if (loading) {
+
+            sendBtn.innerHTML =
+                '<span class="spinner"></span>Sending...';
+
+        } else {
+
+            sendBtn.textContent =
+                'Sign in with Magic Link';
+        }
+    }
+
+
+    /*
+     * If the user is already logged in,
+     * don't show the login page again.
+     */
+
+    async function checkExistingSession() {
+
+        const { data, error } =
+            await supabaseClient.auth.getSession();
+
+        if (error) {
+
+            console.error(
+                'Session check error:',
+                error
+            );
+
+            return;
         }
 
-        function hideMessage() {
-            messageBox.className = 'message-box';
-            messageBox.innerHTML = '';
-        }
+        if (data.session) {
 
-        function setLoading(loading) {
-            sendBtn.disabled = loading;
-            sendBtn.innerHTML = loading ? '<span class="spinner"></span>Sending...' : 'Sign in with Magic Link';
+            window.location.href =
+                REDIRECT_URL;
         }
+    }
 
-        function sendMagicLink() {
-            var email = emailInput.value.trim();
+
+    /*
+     * Send Magic Link.
+     */
+
+    loginForm.addEventListener(
+        'submit',
+        async function(event) {
+
+            event.preventDefault();
+
+            const email =
+                emailInput.value.trim();
+
             if (!email) {
-                showMessage('Please enter your email address.', 'error');
+
+                showMessage(
+                    'Please enter your email address.',
+                    'error'
+                );
+
                 return;
             }
-            if (email.indexOf('@') === -1 || email.indexOf('.') === -1) {
-                showMessage('Please enter a valid email address.', 'error');
-                return;
-            }
-            hideMessage();
+
+
             setLoading(true);
 
-            var url = SUPABASE_URL + '/auth/v1/otp';
-            var body = JSON.stringify({
-                email: email,
-                redirect_to: REDIRECT_URL
-            });
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_PUBLISHABLE_KEY
-                },
-                body: body
-            })
-            .then(function(response) {
-                return response.json().then(function(data) {
-                    return { status: response.status, data: data };
+            const { error } =
+                await supabaseClient.auth.signInWithOtp({
+
+                    email: email,
+
+                    options: {
+
+                        emailRedirectTo:
+                            REDIRECT_URL
+
+                    }
+
                 });
-            })
-            .then(function(result) {
-                if (result.status === 200 || result.status === 201) {
-                    showMessage('Magic link sent! Check your email.', 'success');
-                } else {
-                    var errorMsg = result.data.message || result.data.error || 'Something went wrong. Please try again.';
-                    showMessage(errorMsg, 'error');
-                }
-                setLoading(false);
-            })
-            .catch(function(err) {
-                showMessage('Unable to send. Please try again later.', 'error');
-                setLoading(false);
-            });
-        }
 
-        sendBtn.addEventListener('click', sendMagicLink);
-        emailInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMagicLink();
+
+            setLoading(false);
+
+
+            if (error) {
+
+                console.error(
+                    'Magic Link error:',
+                    error
+                );
+
+                showMessage(
+                    error.message,
+                    'error'
+                );
+
+                return;
             }
-        });
-    </script>
+
+
+            showMessage(
+                'Magic Link sent! Check your email and click the link to continue.',
+                'success'
+            );
+
+        }
+    );
+
+
+    /*
+     * Listen for authentication changes.
+     *
+     * This is important when the Magic Link
+     * returns to this website.
+     */
+
+    supabaseClient.auth.onAuthStateChange(
+        function(event, session) {
+
+            console.log(
+                'Mirror Me Auth Event:',
+                event
+            );
+
+            if (
+                event === 'SIGNED_IN' &&
+                session
+            ) {
+
+                window.location.href =
+                    REDIRECT_URL;
+            }
+
+        }
+    );
+
+
+    /*
+     * Check whether the user was already
+     * logged in when this page opened.
+     */
+
+    checkExistingSession();
+
+</script>
+
 </body>
 </html>
+```
