@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror Me – Signing In</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f7fc;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 20, 50, 0.08);
+            text-align: center;
+            width: 90%;
+            max-width: 420px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a2b4c;
+        }
+
+        .logo span {
+            color: #e67e22;
+        }
+
+        .message {
+            margin-top: 18px;
+            color: #5b6f8c;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .error {
+            color: #b33645;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="logo">
+        Mirror <span>Me</span>
+    </div>
+
+    <div
+        class="message"
+        id="message"
+    >
+        Signing you in...
+    </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+    'https://iizpxuvojsfuulljmhkl.supabase.co';
+
+const SUPABASE_PUBLISHABLE_KEY =
+    'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+            auth: {
+                flowType: 'pkce',
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        }
+    );
+
+const message =
+    document.getElementById('message');
+
+async function authenticate() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const code =
+        params.get('code');
+
+    if (!code) {
+
+        message.textContent =
+            'The sign-in link is missing or has expired. Please request a new Magic Link.';
+
+        message.classList.add('error');
+
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.auth.exchangeCodeForSession(
+            code
+        );
+
+    if (error) {
+
+        console.error(error);
+
+        message.textContent =
+            'We could not complete your sign in. Please request a new Magic Link.';
+
+        message.classList.add('error');
+
+        return;
+    }
+
+    if (!data.session) {
+
+        message.textContent =
+            'No active session was created. Please request a new Magic Link.';
+
+        message.classList.add('error');
+
+        return;
+    }
+
+    message.textContent =
+        'Signed in successfully. Opening your dashboard...';
+
+    window.location.replace('/');
+
+}
+
+authenticate();
+
+</script>
+
+</body>
+</html>
