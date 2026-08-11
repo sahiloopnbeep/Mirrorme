@@ -1,268 +1,222 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirror Me — Member Login</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <meta charset="UTF-8">
+body {
+font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+background: #f4f7fc;
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+.login-card {
+width: 100%;
+max-width: 430px;
+background: white;
+padding: 45px 40px;
+border-radius: 18px;
+box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+}
 
-    <title>Mirror Me — Member Login</title>
+.logo {
+text-align: center;
+font-size: 34px;
+font-weight: 700;
+margin-bottom: 12px;
+}
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+.logo span {
+font-weight: 400;
+}
 
-    <style>
+.subhead {
+text-align: center;
+color: #687386;
+font-size: 15px;
+margin-bottom: 32px;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+label {
+display: block;
+font-size: 14px;
+font-weight: 600;
+color: #303846;
+margin-bottom: 8px;
+}
 
-        body {
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: #f4f7fc;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+input {
+width: 100%;
+padding: 14px 15px;
+border: 1px solid #d8dee8;
+border-radius: 10px;
+font-size: 15px;
+outline: none;
+margin-bottom: 18px;
+}
 
-        .login-card {
-            width: 100%;
-            max-width: 430px;
-            background: white;
-            padding: 45px 40px;
-            border-radius: 18px;
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
-        }
+input:focus {
+border-color: #7b8798;
+}
 
-        .logo {
-            text-align: center;
-            font-size: 34px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
+.btn-primary {
+width: 100%;
+padding: 14px;
+border: none;
+border-radius: 10px;
+background: #202936;
+color: white;
+font-size: 15px;
+font-weight: 600;
+cursor: pointer;
+}
 
-        .logo span {
-            font-weight: 400;
-        }
+.btn-primary:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
 
-        .subhead {
-            text-align: center;
-            color: #687386;
-            font-size: 15px;
-            margin-bottom: 32px;
-        }
+.message-box {
+min-height: 22px;
+margin-top: 18px;
+text-align: center;
+font-size: 14px;
+}
 
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #303846;
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px 15px;
-            border: 1px solid #d8dee8;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-            margin-bottom: 18px;
-        }
-
-        input:focus {
-            border-color: #7b8798;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #202936;
-            color: white;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .message-box {
-            min-height: 22px;
-            margin-top: 18px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .footer-note {
-            text-align: center;
-            margin-top: 25px;
-            color: #8a94a4;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-    </style>
+.footer-note {
+text-align: center;
+margin-top: 25px;
+color: #8a94a4;
+font-size: 12px;
+line-height: 1.5;
+} </style>
 
 </head>
 
 <body>
 
-    <div class="login-card">
+<div class="login-card">
 
-        <div class="logo">
-            Mirror <span>Me</span>
-        </div>
+```
+<div class="logo">
+    Mirror <span>Me</span>
+</div>
 
-        <div class="subhead">
-            Sign in to access your personal health portal
-        </div>
+<div class="subhead">
+    Sign in to access your personal health portal
+</div>
 
-        <form id="loginForm">
+<form id="loginForm">
 
-            <label for="emailInput">
-                Email address
-            </label>
+    <label for="emailInput">
+        Email address
+    </label>
 
-            <input
-                type="email"
-                id="emailInput"
-                placeholder="you@example.com"
-                autocomplete="email"
-                required
-            >
+    <input
+        type="email"
+        id="emailInput"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+    >
 
-            <label for="passwordInput">
-                Password
-            </label>
+    <label for="passwordInput">
+        Password
+    </label>
 
-            <input
-                type="password"
-                id="passwordInput"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-                required
-            >
+    <input
+        type="password"
+        id="passwordInput"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+    >
 
-            <button
-                type="submit"
-                class="btn-primary"
-                id="loginBtn"
-            >
-                Sign In
-            </button>
+    <button
+        type="submit"
+        class="btn-primary"
+        id="loginBtn"
+    >
+        Sign In
+    </button>
 
-        </form>
+</form>
 
-        <div
-            id="messageBox"
-            class="message-box"
-        ></div>
+<div id="messageBox" class="message-box"></div>
 
-        <div class="footer-note">
-            Your personal health information is available only after secure sign-in.
-        </div>
+<div class="footer-note">
+    Your personal health information is available only after secure sign-in.
+</div>
+```
 
-    </div>
+</div>
 
-    <script>
+<script>
+const SUPABASE_URL = "https://iizpxuvojsfuulljmhkl.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54";
 
-        // ============================================================
-        // SUPABASE CONFIGURATION
-        // ============================================================
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
 
-        const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
+const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+const loginBtn = document.getElementById("loginBtn");
+const messageBox = document.getElementById("messageBox");
 
-        const SUPABASE_PUBLISHABLE_KEY =
-            "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
 
-        const supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
+    messageBox.textContent = "";
 
-        // ============================================================
-        // LOGIN
-        // ============================================================
+    if (!email || !password) {
+        messageBox.textContent = "Please enter your email and password.";
+        return;
+    }
 
-        const loginForm = document.getElementById("loginForm");
-        const emailInput = document.getElementById("emailInput");
-        const passwordInput = document.getElementById("passwordInput");
-        const loginBtn = document.getElementById("loginBtn");
-        const messageBox = document.getElementById("messageBox");
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Signing in...";
 
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
 
-        loginForm.addEventListener("submit", async function (event) {
+    if (error) {
+        messageBox.textContent = error.message;
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Sign In";
+        return;
+    }
 
-            event.preventDefault();
+    if (!data.session) {
+        messageBox.textContent = "Login could not be completed. Please try again.";
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Sign In";
+        return;
+    }
 
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
-
-            if (!email || !password) {
-                messageBox.textContent =
-                    "Please enter your email and password.";
-
-                return;
-            }
-
-            loginBtn.disabled = true;
-            loginBtn.textContent = "Signing in...";
-            messageBox.textContent = "";
-
-
-            const { data, error } =
-                await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-
-
-            if (error) {
-
-                console.error("Login error:", error);
-
-                messageBox.textContent =
-                    "Login failed. Please check your email and password.";
-
-                loginBtn.disabled = false;
-                loginBtn.textContent = "Sign In";
-
-                return;
-            }
-
-
-            if (!data.session) {
-
-                messageBox.textContent =
-                    "Login could not be completed. Please try again.";
-
-                loginBtn.disabled = false;
-                loginBtn.textContent = "Sign In";
-
-                return;
-            }
-
-
-            // Successful Supabase authentication.
-            // Supabase stores the session automatically.
-
-            window.location.href = "index.html";
-
-        });
-
-    </script>
+    window.location.href = "index.html";
+});
+</script>
 
 </body>
 </html>
