@@ -1,288 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mirror Me – Sign In</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-body {
-    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-    background: #f4f7fc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-}
+    <title>Mirror Me — Member Login</title>
 
-.card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 12px 40px rgba(0, 20, 50, 0.08);
-    padding: 40px 36px;
-    max-width: 420px;
-    width: 100%;
-    border: 1px solid #e9edf4;
-}
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-.logo {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1a2b4c;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-}
+    <style>
 
-.logo span {
-    color: #e67e22;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.subhead {
-    font-size: 15px;
-    color: #5b6f8c;
-    margin-bottom: 28px;
-    border-left: 4px solid #e67e22;
-    padding-left: 14px;
-    background: #fef9f4;
-    border-radius: 0 8px 8px 0;
-    line-height: 1.4;
-}
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1f2a44;
-    display: block;
-    margin-bottom: 6px;
-}
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            padding: 45px 40px;
+            border-radius: 18px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+        }
 
-input[type="email"] {
-    width: 100%;
-    padding: 14px 16px;
-    font-size: 15px;
-    border: 1.5px solid #dce1ec;
-    border-radius: 12px;
-    background: white;
-    outline: none;
-    margin-bottom: 6px;
-}
+        .logo {
+            text-align: center;
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
 
-input[type="email"]:focus {
-    border-color: #e67e22;
-    box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.08);
-}
+        .logo span {
+            font-weight: 400;
+        }
 
-.btn-primary {
-    width: 100%;
-    padding: 15px 0;
-    background: #e67e22;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    margin-top: 8px;
-}
+        .subhead {
+            text-align: center;
+            color: #687386;
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
 
-.btn-primary:hover {
-    background: #cf711f;
-}
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #303846;
+            margin-bottom: 8px;
+        }
 
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
+        input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #d8dee8;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 18px;
+        }
 
-.message-box {
-    margin-top: 18px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.5;
-    display: none;
-}
+        input:focus {
+            border-color: #7b8798;
+        }
 
-.message-box.show {
-    display: block;
-}
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #202936;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-.message-box.success {
-    background: #e6f7ed;
-    color: #0b6e4f;
-    border: 1px solid #b8e0cf;
-}
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
-.message-box.error {
-    background: #ffe9eb;
-    color: #b33645;
-    border: 1px solid #fccfd4;
-}
+        .message-box {
+            min-height: 22px;
+            margin-top: 18px;
+            text-align: center;
+            font-size: 14px;
+        }
 
-.footer-note {
-    margin-top: 20px;
-    font-size: 12px;
-    color: #8a9bb8;
-    text-align: center;
-}
-</style>
+        .footer-note {
+            text-align: center;
+            margin-top: 25px;
+            color: #8a94a4;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+    </style>
+
 </head>
 
 <body>
 
-<div class="card">
+    <div class="login-card">
 
-    <div class="logo">
-        Mirror <span>Me</span>
+        <div class="logo">
+            Mirror <span>Me</span>
+        </div>
+
+        <div class="subhead">
+            Sign in to access your personal health portal
+        </div>
+
+        <form id="loginForm">
+
+            <label for="emailInput">
+                Email address
+            </label>
+
+            <input
+                type="email"
+                id="emailInput"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+            >
+
+            <label for="passwordInput">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button
+                type="submit"
+                class="btn-primary"
+                id="loginBtn"
+            >
+                Sign In
+            </button>
+
+        </form>
+
+        <div
+            id="messageBox"
+            class="message-box"
+        ></div>
+
+        <div class="footer-note">
+            Your personal health information is available only after secure sign-in.
+        </div>
+
     </div>
 
-    <div class="subhead">
-        Enter your email to sign in securely
-    </div>
+    <script>
 
-    <form id="loginForm">
+        // ============================================================
+        // SUPABASE CONFIGURATION
+        // ============================================================
 
-        <label for="emailInput">
-            Email address
-        </label>
+        const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
 
-        <input
-            type="email"
-            id="emailInput"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-        >
+        const SUPABASE_PUBLISHABLE_KEY =
+            "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
 
-        <button
-            type="submit"
-            class="btn-primary"
-            id="sendBtn"
-        >
-            Sign in with Magic Link
-        </button>
-
-    </form>
-
-    <div
-        id="messageBox"
-        class="message-box"
-    ></div>
-
-    <div class="footer-note">
-        You'll receive a one-click sign-in link via email.
-    </div>
-
-</div>
-
-<script>
-
-const SUPABASE_URL =
-    'https://iizpxuvojsfuulljmhkl.supabase.co';
-
-const SUPABASE_PUBLISHABLE_KEY =
-    'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY,
-        {
-            auth: {
-                flowType: 'implicit',
-                persistSession: true,
-                autoRefreshToken: true,
-                detectSessionInUrl: true
-            }
-        }
-    );
-
-const form =
-    document.getElementById('loginForm');
-
-const emailInput =
-    document.getElementById('emailInput');
-
-const sendBtn =
-    document.getElementById('sendBtn');
-
-const messageBox =
-    document.getElementById('messageBox');
-
-function showMessage(text, type) {
-
-    messageBox.textContent = text;
-
-    messageBox.className =
-        'message-box show ' + type;
-}
-
-form.addEventListener(
-    'submit',
-    async function(event) {
-
-        event.preventDefault();
-
-        const email =
-            emailInput.value.trim();
-
-        if (!email) {
-
-            showMessage(
-                'Please enter your email address.',
-                'error'
-            );
-
-            return;
-        }
-
-        sendBtn.disabled = true;
-        sendBtn.textContent = 'Sending...';
-
-        const { error } =
-            await supabaseClient.auth.signInWithOtp({
-
-                email: email,
-
-                options: {
-                    emailRedirectTo:
-                        'https://mirrorme-drab.vercel.app/'
-                }
-
-            });
-
-        sendBtn.disabled = false;
-        sendBtn.textContent =
-            'Sign in with Magic Link';
-
-        if (error) {
-
-            showMessage(
-                error.message,
-                'error'
-            );
-
-            return;
-        }
-
-        showMessage(
-            'Magic Link sent. Please check your email.',
-            'success'
+        const supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
         );
 
-    }
-);
 
-</script>
+        // ============================================================
+        // LOGIN
+        // ============================================================
+
+        const loginForm = document.getElementById("loginForm");
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const loginBtn = document.getElementById("loginBtn");
+        const messageBox = document.getElementById("messageBox");
+
+
+        loginForm.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                messageBox.textContent =
+                    "Please enter your email and password.";
+
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Signing in...";
+            messageBox.textContent = "";
+
+
+            const { data, error } =
+                await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+
+            if (error) {
+
+                console.error("Login error:", error);
+
+                messageBox.textContent =
+                    "Login failed. Please check your email and password.";
+
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Sign In";
+
+                return;
+            }
+
+
+            if (!data.session) {
+
+                messageBox.textContent =
+                    "Login could not be completed. Please try again.";
+
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Sign In";
+
+                return;
+            }
+
+
+            // Successful Supabase authentication.
+            // Supabase stores the session automatically.
+
+            window.location.href = "index.html";
+
+        });
+
+    </script>
 
 </body>
 </html>
