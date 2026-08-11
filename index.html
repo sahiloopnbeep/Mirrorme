@@ -1,301 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mirror Me – Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirror Me – Dashboard</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Inter:wght@600;700&display=swap"
-        rel="stylesheet"
-    >
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+body {
+    background: radial-gradient(circle at center, #1a202c 0%, #080b11 100%);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
 
-        body {
-            background: radial-gradient(circle at center, #1a202c 0%, #080b11 100%);
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+.dashboard {
+    display: flex;
+    gap: 30px;
+    max-width: 1100px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-        .dashboard {
-            display: flex;
-            gap: 30px;
-            max-width: 1100px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 260px;
+}
 
-        .left-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            min-width: 260px;
-        }
+.refresh-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
 
-        .refresh-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
+.refresh-row .last-updated {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.25);
+}
 
-        .refresh-row .last-updated {
-            font-size: 0.65rem;
-            color: rgba(255, 255, 255, 0.25);
-        }
+.refresh-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
-        .refresh-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.5);
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+}
 
-        .refresh-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: white;
-        }
+.data-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: rgba(10, 14, 23, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+}
 
-        .data-btn {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            border-radius: 10px;
-            background: rgba(10, 14, 23, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            color: #ffffff;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            width: 100%;
-        }
+.data-btn:hover {
+    transform: translateX(4px);
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(18, 24, 38, 0.9);
+}
 
-        .data-btn:hover {
-            transform: translateX(4px);
-            border-color: rgba(255, 255, 255, 0.35);
-            background: rgba(18, 24, 38, 0.9);
-        }
+.data-btn .btn-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .data-btn .btn-icon {
-            width: 28px;
-            height: 28px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.data-btn .btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
 
-        .data-btn .btn-icon svg {
-            width: 100%;
-            height: 100%;
-        }
+.data-btn .btn-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    flex: 1;
+    text-align: left;
+}
 
-        .data-btn .btn-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.6);
-            flex: 1;
-            text-align: left;
-        }
+.data-btn .btn-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
 
-        .data-btn .btn-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
+.data-btn .btn-unit {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-left: 2px;
+}
 
-        .data-btn .btn-unit {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.3);
-            margin-left: 2px;
-        }
+.btn-gut {
+    border-left: 4px solid #00E5FF;
+}
 
-        .btn-gut {
-            border-left: 4px solid #00E5FF;
-        }
+.btn-gut .btn-value {
+    color: #00E5FF;
+}
 
-        .btn-gut .btn-value {
-            color: #00E5FF;
-        }
+.btn-metabolism {
+    border-left: 4px solid #00FF87;
+}
 
-        .btn-metabolism {
-            border-left: 4px solid #00FF87;
-        }
+.btn-metabolism .btn-value {
+    color: #00FF87;
+}
 
-        .btn-metabolism .btn-value {
-            color: #00FF87;
-        }
+.btn-muscular {
+    border-left: 4px solid #FFD000;
+}
 
-        .btn-muscular {
-            border-left: 4px solid #FFD000;
-        }
+.btn-muscular .btn-value {
+    color: #FFD000;
+}
 
-        .btn-muscular .btn-value {
-            color: #FFD000;
-        }
+.btn-stress {
+    border-left: 4px solid #FF1744;
+}
 
-        .btn-stress {
-            border-left: 4px solid #FF1744;
-        }
+.btn-stress .btn-value {
+    color: #FF1744;
+}
 
-        .btn-stress .btn-value {
-            color: #FF1744;
-        }
+.data-btn.active {
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.08);
+    background: rgba(18, 24, 38, 0.95);
+}
 
-        .data-btn.active {
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 24px rgba(255, 255, 255, 0.08);
-            background: rgba(18, 24, 38, 0.95);
-        }
+.right-panel {
+    flex: 1;
+    min-height: 400px;
+    background: rgba(10, 14, 23, 0.7);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
 
-        .right-panel {
-            flex: 1;
-            min-height: 400px;
-            background: rgba(10, 14, 23, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
+.right-panel .placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.95rem;
+    text-align: center;
+    line-height: 1.6;
+}
 
-        .right-panel .placeholder {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.95rem;
-            text-align: center;
-            line-height: 1.6;
-        }
+.right-panel .placeholder .icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 12px;
+}
 
-        .right-panel .placeholder .icon {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 12px;
-        }
+.treemap {
+    display: none;
+    width: 100%;
+}
 
-        .treemap {
-            display: none;
-            width: 100%;
-        }
+.treemap.show {
+    display: block;
+}
 
-        .treemap.show {
-            display: block;
-        }
+.treemap h3 {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 12px;
+}
 
-        .treemap h3 {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-            font-size: 1rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 12px;
-        }
+.treemap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
 
-        .treemap-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
+.treemap-item {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    padding: 18px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: 0.2s;
+}
 
-        .treemap-item {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            padding: 18px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: 0.2s;
-        }
+.treemap-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
 
-        .treemap-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
+.treemap-item .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 600;
+}
 
-        .treemap-item .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: rgba(255, 255, 255, 0.35);
-            font-weight: 600;
-        }
+.treemap-item .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 4px;
+    word-break: break-word;
+}
 
-        .treemap-item .value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-top: 4px;
-            word-break: break-word;
-        }
+.treemap-item .detail {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 6px;
+}
 
-        .treemap-item .detail {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 6px;
-        }
+.treemap-close {
+    margin-top: 20px;
+    padding: 10px 24px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.2s;
+    align-self: center;
+}
 
-        .treemap-close {
-            margin-top: 20px;
-            padding: 10px 24px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.2s;
-            align-self: center;
-        }
+.treemap-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+}
 
-        .treemap-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-        }
+@media (max-width: 760px) {
+    .dashboard {
+        flex-direction: column;
+    }
 
-        @media (max-width: 760px) {
-            .dashboard {
-                flex-direction: column;
-            }
+    .left-panel {
+        min-width: 0;
+    }
 
-            .left-panel {
-                min-width: 0;
-            }
-
-            .right-panel {
-                min-height: 350px;
-            }
-        }
-    </style>
+    .right-panel {
+        min-height: 350px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -305,6 +301,7 @@
     <div class="left-panel">
 
         <div class="refresh-row">
+
             <button
                 class="refresh-btn"
                 onclick="fetchDashboardData()"
@@ -318,12 +315,14 @@
             >
                 Last updated: —
             </span>
+
         </div>
 
         <button
             class="data-btn btn-gut"
             data-metric="gut"
         >
+
             <span class="btn-icon">
                 <svg
                     viewBox="0 0 24 24"
@@ -333,11 +332,11 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-                    <path d="M12 2v2" />
-                    <path d="M12 4c-3.5 0-5 1.5-5 3.5S8.5 11 12 11s5 1.5 5 3.5S15.5 18 12 18" />
-                    <path d="M8 7.5c-2.5 0-4 1.2-4 3s1.5 3 4 3 4 1.2 4 3-1.5 3-4 3" />
-                    <path d="M16 10.5c2.5 0 4 1.2 4 3-1.5 3-4 3" />
-                    <path d="M12 18v4" />
+                    <path d="M12 2v2"/>
+                    <path d="M12 4c-3.5 0-5 1.5-5 3.5S8.5 11 12 11s5 1.5 5 3.5S15.5 18 12 18"/>
+                    <path d="M8 7.5c-2.5 0-4 1.2-4 3s1.5 3 4 3 4 1.2 4 3-1.5 3-4 3"/>
+                    <path d="M16 10.5c2.5 0 4 1.2 4 3-1.5 3-4 3"/>
+                    <path d="M12 18v4"/>
                 </svg>
             </span>
 
@@ -349,12 +348,14 @@
                 <span id="gutScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
+
         </button>
 
         <button
             class="data-btn btn-metabolism"
             data-metric="metabolism"
         >
+
             <span class="btn-icon">
                 <svg
                     viewBox="0 0 24 24"
@@ -364,7 +365,7 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                 </svg>
             </span>
 
@@ -376,12 +377,14 @@
                 <span id="metabolismScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
+
         </button>
 
         <button
             class="data-btn btn-muscular"
             data-metric="muscular"
         >
+
             <span class="btn-icon">
                 <svg
                     viewBox="0 0 24 24"
@@ -391,8 +394,8 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-                    <path d="M20.5 5c-.83 0-1.5.67-1.5 1.5V9h-1c-1.1 0-2 .9-2 2v.5c-1.18-.76-2.61-1.12-4.11-.86-2.07.36-3.77 1.95-4.23 4C7.23 16.5 8.5 18 10.5 18h8c1.38 0 2.5-1.12 2.5-2.5V6.5c0-.83-.67-1.5-1.5-1.5zM7.5 13.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S6 15.83 6 15s.67-1.5 1.5-1.5z" />
-                    <path d="M3 19c2-3 4.5-4 7.5-4" />
+                    <path d="M20.5 5c-.83 0-1.5.67-1.5 1.5V9h-1c-1.1 0-2 .9-2 2v.5c-1.18-.76-2.61-1.12-4.11-.86-2.07.36-3.77 1.95-4.23 4C7.23 16.5 8.5 18 10.5 18h8c1.38 0 2.5-1.12 2.5-2.5V6.5c0-.83-.67-1.5-1.5-1.5zM7.5 13.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S6 15.83 6 15s.67-1.5 1.5-1.5z"/>
+                    <path d="M3 19c2-3 4.5-4 7.5-4"/>
                 </svg>
             </span>
 
@@ -404,12 +407,14 @@
                 <span id="muscularScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
+
         </button>
 
         <button
             class="data-btn btn-stress"
             data-metric="stress"
         >
+
             <span class="btn-icon">
                 <svg
                     viewBox="0 0 24 24"
@@ -419,8 +424,8 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-                    <path d="M12 2v3m0 14v3" />
-                    <path d="M8 6h8l-7 4 7 4-7 4h8" />
+                    <path d="M12 2v3m0 14v3"/>
+                    <path d="M8 6h8l-7 4 7 4-7 4h8"/>
                 </svg>
             </span>
 
@@ -432,6 +437,7 @@
                 <span id="stressScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
+
         </button>
 
     </div>
@@ -490,7 +496,6 @@ const supabaseClient =
         SUPABASE_PUBLISHABLE_KEY,
         {
             auth: {
-                flowType: 'pkce',
                 persistSession: true,
                 autoRefreshToken: true,
                 detectSessionInUrl: true
@@ -612,7 +617,7 @@ const treemapTitle =
 const treemapGrid =
     document.getElementById('treemapGrid');
 
-async function getCurrentUser() {
+async function getCurrentSession() {
 
     const {
         data,
@@ -620,23 +625,22 @@ async function getCurrentUser() {
     } = await supabaseClient.auth.getSession();
 
     if (error) {
-        console.error(error);
+        console.error(
+            'Session error:',
+            error
+        );
         return null;
     }
 
-    if (!data.session) {
-        return null;
-    }
-
-    return data.session.user;
+    return data.session;
 }
 
 async function fetchDashboardData() {
 
-    const user =
-        await getCurrentUser();
+    const session =
+        await getCurrentSession();
 
-    if (!user) {
+    if (!session) {
 
         window.location.replace(
             '/login.html'
@@ -645,23 +649,34 @@ async function fetchDashboardData() {
         return;
     }
 
+    const email =
+        session.user.email;
+
+    console.log(
+        'Logged in user:',
+        email
+    );
+
     const {
         data,
         error
     } = await supabaseClient
         .from('member_calculations')
         .select('*')
-        .eq('email', user.email)
+        .eq('email', email)
         .limit(1);
 
     if (error) {
 
         console.error(
-            'Dashboard data error:',
+            'Supabase data error:',
             error
         );
 
         clearUI();
+
+        lastUpdatedEl.textContent =
+            'Unable to load data';
 
         return;
     }
@@ -681,7 +696,15 @@ async function fetchDashboardData() {
 
     } else {
 
+        console.warn(
+            'No member data found for:',
+            email
+        );
+
         clearUI();
+
+        lastUpdatedEl.textContent =
+            'No report available';
 
     }
 
@@ -718,20 +741,13 @@ function updateUI(data) {
 
 function clearUI() {
 
-    gutScoreEl.textContent =
-        '-';
+    gutScoreEl.textContent = '-';
 
-    metabolismScoreEl.textContent =
-        '-';
+    metabolismScoreEl.textContent = '-';
 
-    muscularScoreEl.textContent =
-        '-';
+    muscularScoreEl.textContent = '-';
 
-    stressScoreEl.textContent =
-        '-';
-
-    lastUpdatedEl.textContent =
-        'Last updated: —';
+    stressScoreEl.textContent = '-';
 
 }
 
@@ -887,21 +903,6 @@ document
         }
     );
 
-window.fetchDashboardData =
-    fetchDashboardData;
-
-window.closeTreemap =
-    closeTreemap;
-
-window.addEventListener(
-    'DOMContentLoaded',
-    async function() {
-
-        await fetchDashboardData();
-
-    }
-);
-
 supabaseClient.auth.onAuthStateChange(
     function(event) {
 
@@ -912,6 +913,21 @@ supabaseClient.auth.onAuthStateChange(
             );
 
         }
+
+    }
+);
+
+window.fetchDashboardData =
+    fetchDashboardData;
+
+window.closeTreemap =
+    closeTreemap;
+
+window.addEventListener(
+    'DOMContentLoaded',
+    function() {
+
+        fetchDashboardData();
 
     }
 );
