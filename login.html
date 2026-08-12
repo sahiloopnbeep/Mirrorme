@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirror Me — Member Login</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 * {
     margin: 0;
@@ -14,158 +14,148 @@
 }
 
 body {
-font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-background: #f4f7fc;
-min-height: 100vh;
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 20px;
+    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    background: #f4f7fc;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
 .login-card {
-width: 100%;
-max-width: 430px;
-background: white;
-padding: 45px 40px;
-border-radius: 18px;
-box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    padding: 45px 40px;
+    border-radius: 18px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
 }
 
 .logo {
-text-align: center;
-font-size: 34px;
-font-weight: 700;
-margin-bottom: 12px;
+    text-align: center;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 12px;
 }
 
 .logo span {
-font-weight: 400;
+    font-weight: 400;
 }
 
 .subhead {
-text-align: center;
-color: #687386;
-font-size: 15px;
-margin-bottom: 32px;
+    text-align: center;
+    color: #687386;
+    font-size: 15px;
+    margin-bottom: 32px;
 }
 
 label {
-display: block;
-font-size: 14px;
-font-weight: 600;
-color: #303846;
-margin-bottom: 8px;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #303846;
+    margin-bottom: 8px;
 }
 
 input {
-width: 100%;
-padding: 14px 15px;
-border: 1px solid #d8dee8;
-border-radius: 10px;
-font-size: 15px;
-outline: none;
-margin-bottom: 18px;
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #d8dee8;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 18px;
 }
 
 input:focus {
-border-color: #7b8798;
+    border-color: #7b8798;
 }
 
 .btn-primary {
-width: 100%;
-padding: 14px;
-border: none;
-border-radius: 10px;
-background: #202936;
-color: white;
-font-size: 15px;
-font-weight: 600;
-cursor: pointer;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #202936;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .btn-primary:disabled {
-opacity: 0.6;
-cursor: not-allowed;
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .message-box {
-min-height: 22px;
-margin-top: 18px;
-text-align: center;
-font-size: 14px;
+    min-height: 22px;
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
 }
 
 .footer-note {
-text-align: center;
-margin-top: 25px;
-color: #8a94a4;
-font-size: 12px;
-line-height: 1.5;
-} </style>
-
+    text-align: center;
+    margin-top: 25px;
+    color: #8a94a4;
+    font-size: 12px;
+    line-height: 1.5;
+}
+</style>
 </head>
 
 <body>
 
 <div class="login-card">
 
-```
-<div class="logo">
-    Mirror <span>Me</span>
-</div>
+    <div class="logo">
+        Mirror <span>Me</span>
+    </div>
 
-<div class="subhead">
-    Sign in to access your personal health portal
-</div>
+    <div class="subhead">
+        Enter your email to sign in securely
+    </div>
 
-<form id="loginForm">
+    <form id="loginForm">
 
-    <label for="emailInput">
-        Email address
-    </label>
+        <label for="emailInput">
+            Email address
+        </label>
 
-    <input
-        type="email"
-        id="emailInput"
-        placeholder="you@example.com"
-        autocomplete="email"
-        required
-    >
+        <input
+            type="email"
+            id="emailInput"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+        >
 
-    <label for="passwordInput">
-        Password
-    </label>
+        <button
+            type="submit"
+            class="btn-primary"
+            id="sendBtn"
+        >
+            Sign in with Magic Link
+        </button>
 
-    <input
-        type="password"
-        id="passwordInput"
-        placeholder="Enter your password"
-        autocomplete="current-password"
-        required
-    >
+    </form>
 
-    <button
-        type="submit"
-        class="btn-primary"
-        id="loginBtn"
-    >
-        Sign In
-    </button>
+    <div
+        id="messageBox"
+        class="message-box"
+    ></div>
 
-</form>
-
-<div id="messageBox" class="message-box"></div>
-
-<div class="footer-note">
-    Your personal health information is available only after secure sign-in.
-</div>
-```
+    <div class="footer-note">
+        You'll receive a one-click sign-in link via email.
+    </div>
 
 </div>
 
 <script>
 const SUPABASE_URL = "https://iizpxuvojsfuulljmhkl.supabase.co";
+
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54";
 
 const supabaseClient = window.supabase.createClient(
@@ -175,46 +165,40 @@ const supabaseClient = window.supabase.createClient(
 
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
+const sendBtn = document.getElementById("sendBtn");
 const messageBox = document.getElementById("messageBox");
 
 loginForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     const email = emailInput.value.trim();
-    const password = passwordInput.value;
 
-    messageBox.textContent = "";
-
-    if (!email || !password) {
-        messageBox.textContent = "Please enter your email and password.";
+    if (!email) {
+        messageBox.textContent = "Please enter your email address.";
         return;
     }
 
-    loginBtn.disabled = true;
-    loginBtn.textContent = "Signing in...";
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending...";
+    messageBox.textContent = "";
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
+    const { error } = await supabaseClient.auth.signInWithOtp({
         email: email,
-        password: password
+        options: {
+            emailRedirectTo: "https://mirrorme-sahitya-s-s-projects.vercel.app/"
+        }
     });
 
     if (error) {
         messageBox.textContent = error.message;
-        loginBtn.disabled = false;
-        loginBtn.textContent = "Sign In";
+        sendBtn.disabled = false;
+        sendBtn.textContent = "Sign in with Magic Link";
         return;
     }
 
-    if (!data.session) {
-        messageBox.textContent = "Login could not be completed. Please try again.";
-        loginBtn.disabled = false;
-        loginBtn.textContent = "Sign In";
-        return;
-    }
-
-    window.location.href = "index.html";
+    messageBox.textContent = "Check your email for your secure sign-in link.";
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Link Sent";
 });
 </script>
 
