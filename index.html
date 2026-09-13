@@ -485,10 +485,10 @@ body {
 <script>
 
 const SUPABASE_URL =
-    'https://iizpxuvojsfuulljmhkl.supabase.co';
+   'https://iizpxuvojsfuulljmhkl.supabase.co';
 
 const SUPABASE_PUBLISHABLE_KEY =
-    'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
+  'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
 
 const supabaseClient =
     window.supabase.createClient(
@@ -568,7 +568,7 @@ const metricConfig = {
     stress: {
         label: 'Stress Resilience',
         color: '#FF1744',
-        scoreCol: 'stress_resilience_score',
+        scoreCol: 'stress_score',
         treemap: [
             {
                 label: 'Interpretation',
@@ -663,7 +663,7 @@ async function fetchDashboardData() {
     } = await supabaseClient
         .from('member_calculations')
         .select('*')
-        .eq('email', email)
+        .eq('email', email.toLowerCase())
         .limit(1);
 
     if (error) {
@@ -725,7 +725,7 @@ function updateUI(data) {
         '-';
 
     stressScoreEl.textContent =
-        data.stress_resilience_score ??
+        data.stress_score ??
         '-';
 
     if (activeMetric) {
@@ -936,3 +936,5 @@ window.addEventListener(
 
 </body>
 </html>
+
+
