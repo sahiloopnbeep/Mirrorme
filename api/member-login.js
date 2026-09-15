@@ -5,7 +5,9 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { email, access_key } = req.body || {};
+        const body = req.body || {};
+        const email = body.email;
+        const access_key = body.access_key;
 
         if (!email || !access_key) {
             return res.status(400).json({ error: 'Email and Access PIN are required' });
@@ -14,15 +16,20 @@ export default async function handler(req, res) {
         const normalizedEmail = String(email).trim().toLowerCase();
         const normalizedKey = String(access_key).trim();
 
-        const response = await fetch(
-            `${process.env.SUPABASE_URL}/rest/v1/member_calculations?select=email,access_key&email=eq.${encodeURIComponent(normalizedEmail)}&access_key=eq.${encodeURIComponent(normalizedKey)}&limit=1`,
-            {
-                headers: {
-                    apikey: process.env.SUPABASESERVICEROLEKEY,
-                    Authorization: `Bearer ${process.env.SUPABASESERVICEROLEKEY}`
-                }
+        const url =
+            process.env.SUPABASE_URL +
+            '/rest/v1/member_calculations?select=email,access_key&email=eq.' +
+            encodeURIComponent(normalizedEmail) +
+            '&access_key=eq.' +
+            encodeURIComponent(normalizedKey) +
+            '&limit=1';
+
+        const response = await fetch(url, {
+            headers: {
+                apikey: process.env.SUPABASESERVICEROLEKEY,
+                Authorization: 'Bearer ' + process.env.SUPABASESERVICEROLEKEY
             }
-        );
+        });
 
         if (!response.ok) {
             return res.status(500).json({ error: 'Unable to verify member details' });
@@ -39,7 +46,8 @@ export default async function handler(req, res) {
             exp: Date.now() + 8 * 60 * 60 * 1000
         };
 
-        const payloadString = Buffer.from(JSON.stringify(payload)).toString('base64url');
+        const payloadString =
+            Buffer.from(JSON.stringify(payload)).toString('base64url');
 
         const crypto = await import('node:crypto');
 
@@ -48,14 +56,17 @@ export default async function handler(req, res) {
             .update(payloadString)
             .digest('base64url');
 
-        const session = `${payloadString}.${signature}`;
+        const session = payloadString + '.' + signature;
 
         res.setHeader(
             'Set-Cookie',
-            `mirror_me_session=${session}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=28800`
+            'mirror_me_session=' +
+            session +
+            '; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=28800'
         );
 
         return res.status(200).json({ success: true });
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Server error' });
