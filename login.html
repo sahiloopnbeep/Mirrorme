@@ -1,10 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirror Me — Member Login</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 * {
@@ -115,7 +115,7 @@ input:focus {
     </div>
 
     <div class="subhead">
-        Enter your email to sign in securely
+        Enter your email and Access PIN to sign in securely
     </div>
 
     <form id="loginForm">
@@ -132,12 +132,24 @@ input:focus {
             required
         >
 
+        <label for="pinInput">
+            Access PIN
+        </label>
+
+        <input
+            type="password"
+            id="pinInput"
+            placeholder="Enter your Access PIN"
+            autocomplete="current-password"
+            required
+        >
+
         <button
             type="submit"
             class="btn-primary"
-            id="sendBtn"
+            id="loginBtn"
         >
-            Sign in with Magic Link
+            Sign In
         </button>
 
     </form>
@@ -148,59 +160,67 @@ input:focus {
     ></div>
 
     <div class="footer-note">
-        You'll receive a one-click sign-in link via email.
+        Use the email address and private Access PIN provided to you.
     </div>
 
 </div>
 
 <script>
-const SUPABASE_URL = "https://iizpxuvojsfuulljmhkl.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54";
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
-
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById("emailInput");
-const sendBtn = document.getElementById("sendBtn");
+const pinInput = document.getElementById("pinInput");
+const loginBtn = document.getElementById("loginBtn");
 const messageBox = document.getElementById("messageBox");
 
 loginForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     const email = emailInput.value.trim();
+    const access_key = pinInput.value.trim();
 
-    if (!email) {
-        messageBox.textContent = "Please enter your email address.";
+    if (!email || !access_key) {
+        messageBox.textContent = "Please enter your email and Access PIN.";
         return;
     }
 
-    sendBtn.disabled = true;
-    sendBtn.textContent = "Sending...";
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Signing in...";
     messageBox.textContent = "";
 
-    const { error } = await supabaseClient.auth.signInWithOtp({
-        email: email,
-        options: {
-            emailRedirectTo: "https://mirrorme-sahitya-s-s-projects.vercel.app/"
+    try {
+        const response = await fetch("/api/member-login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                email: email,
+                access_key: access_key
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            messageBox.textContent = result.error || "Unable to sign in.";
+            loginBtn.disabled = false;
+            loginBtn.textContent = "Sign In";
+            return;
         }
-    });
 
-    if (error) {
-        messageBox.textContent = error.message;
-        sendBtn.disabled = false;
-        sendBtn.textContent = "Sign in with Magic Link";
-        return;
+        messageBox.textContent = "Sign in successful.";
+
+        window.location.href = "/";
+
+    } catch (error) {
+        messageBox.textContent = "Unable to connect. Please try again.";
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Sign In";
     }
-
-    messageBox.textContent = "Check your email for your secure sign-in link.";
-    sendBtn.disabled = false;
-    sendBtn.textContent = "Link Sent";
 });
 </script>
 
 </body>
 </html>
+```
