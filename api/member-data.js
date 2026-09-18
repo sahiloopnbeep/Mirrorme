@@ -1,4 +1,3 @@
-
 module.exports = async function handler(req, res) {
     if (req.method !== 'GET') {
         return res.status(405).json({
@@ -9,15 +8,14 @@ module.exports = async function handler(req, res) {
     try {
         const cookieHeader = req.headers.cookie || '';
 
-        const cookies = cookieHeader
+        const sessionCookie = cookieHeader
             .split(';')
             .map(function (item) {
                 return item.trim();
+            })
+            .find(function (item) {
+                return item.startsWith('mirror_me_session=');
             });
-
-        const sessionCookie = cookies.find(function (item) {
-            return item.startsWith('mirror_me_session=');
-        });
 
         if (!sessionCookie) {
             return res.status(401).json({
@@ -42,9 +40,7 @@ module.exports = async function handler(req, res) {
 
         const crypto = require('node:crypto');
 
-        const secret = process.env.M_SESSION_SECRET;
-
-        if (!secret) {
+        if (!process.env.M_SESSION_SECRET) {
             console.error('M_SESSION_SECRET is missing');
 
             return res.status(500).json({
@@ -53,7 +49,10 @@ module.exports = async function handler(req, res) {
         }
 
         const expectedSignature = crypto
-            .createHmac('sha256', secret)
+            .createHmac(
+                'sha256',
+                process.env.M_SESSION_SECRET
+            )
             .update(payloadString)
             .digest('base64url');
 
@@ -61,7 +60,15 @@ module.exports = async function handler(req, res) {
         const expectedBuffer = Buffer.from(expectedSignature);
 
         if (
-            receivedBuffer.length !== expectedBuffer.length ||
+            receivedBuffer.length !==
+            expectedBuffer.length
+        ) {
+            return res.status(401).json({
+                error: 'Invalid session'
+            });
+        }
+
+        if (
             !crypto.timingSafeEqual(
                 receivedBuffer,
                 expectedBuffer
@@ -83,15 +90,20 @@ module.exports = async function handler(req, res) {
             );
         } catch (error) {
             return res.status(401).json({
-                error: 'Invalid session payload'
+                error: 'Invalid session data'
             });
         }
 
         if (
             !payload.email ||
-            !payload.exp ||
-            Date.now() > Number(payload.exp)
+            !payload.exp
         ) {
+            return res.status(401).json({
+                error: 'Invalid session'
+            });
+        }
+
+        if (Date.now() > Number(payload.exp)) {
             return res.status(401).json({
                 error: 'Session expired'
             });
@@ -100,6 +112,12 @@ module.exports = async function handler(req, res) {
         const email = String(payload.email)
             .trim()
             .toLowerCase();
+
+        if (!email) {
+            return res.status(401).json({
+                error: 'Invalid session email'
+            });
+        }
 
         const supabaseUrl =
             process.env.SUPABASE_URL;
@@ -119,9 +137,7 @@ module.exports = async function handler(req, res) {
 
         const url =
             supabaseUrl +
-            '/rest/v1/member_calculations' +
-            '?select=*' +
-            '&email=eq.' +
+            '/rest/v1/member_calculations?select=*&email=eq.' +
             encodeURIComponent(email) +
             '&limit=1';
 
@@ -129,8 +145,7 @@ module.exports = async function handler(req, res) {
             method: 'GET',
             headers: {
                 apikey: serviceRoleKey,
-                Authorization: 'Bearer ' + serviceRoleKey,
-                Accept: 'application/json'
+                Authorization: 'Bearer ' + serviceRoleKey
             }
         });
 
@@ -138,7 +153,7 @@ module.exports = async function handler(req, res) {
 
         if (!response.ok) {
             console.error(
-                'Supabase member_calculations error:',
+                'Supabase error:',
                 response.status,
                 responseText
             );
@@ -164,11 +179,6 @@ module.exports = async function handler(req, res) {
         }
 
         if (!Array.isArray(members) || members.length === 0) {
-            console.error(
-                'No member_calculations row found for:',
-                email
-            );
-
             return res.status(404).json({
                 error: 'No member data found'
             });
@@ -185,6 +195,7 @@ module.exports = async function handler(req, res) {
             email: member.email,
             dob: member.dob,
             sex: member.sex,
+            age: member.age,
             bmi: member.bmi,
             whr: member.whr,
             gut_health_score: member.gut_health_score,
@@ -213,7 +224,6 @@ module.exports = async function handler(req, res) {
             synergy: member.synergy,
             food_sources: member.food_sources,
             submitted_at: member.submitted_at,
-            age: member.age,
             status: member.status,
             site_url: member.site_url,
             access_key: member.access_key,
@@ -223,7 +233,7 @@ module.exports = async function handler(req, res) {
 
     } catch (error) {
         console.error(
-            'Member data API error:',
+            'Member data error:',
             error
         );
 
@@ -232,4 +242,3 @@ module.exports = async function handler(req, res) {
         });
     }
 };
-```
