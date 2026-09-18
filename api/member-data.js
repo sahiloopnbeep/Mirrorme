@@ -1,68 +1,103 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({
+            error: 'Method not allowed'
+        });
     }
 
     try {
-        const cookieHeader = req.headers.cookie || '';
+        const cookieHeader =
+            req.headers.cookie || '';
 
-        const sessionCookie = cookieHeader
-            .split(';')
-            .map(function (item) {
-                return item.trim();
-            })
-            .find(function (item) {
-                return item.startsWith('mirror_me_session=');
-            });
+        const sessionCookie =
+            cookieHeader
+                .split(';')
+                .map(function (item) {
+                    return item.trim();
+                })
+                .find(function (item) {
+                    return item.startsWith(
+                        'mirror_me_session='
+                    );
+                });
 
         if (!sessionCookie) {
-            return res.status(401).json({ error: 'Not authenticated' });
+            return res.status(401).json({
+                error: 'Not authenticated'
+            });
         }
 
-        const session = sessionCookie
-            .substring('mirror_me_session='.length);
+        const session =
+            sessionCookie.substring(
+                'mirror_me_session='.length
+            );
 
-        const parts = session.split('.');
+        const parts =
+            session.split('.');
 
         if (parts.length !== 2) {
-            return res.status(401).json({ error: 'Invalid session' });
+            return res.status(401).json({
+                error: 'Invalid session'
+            });
         }
 
         const payloadString = parts[0];
         const receivedSignature = parts[1];
 
-        const crypto = await import('node:crypto');
+        const crypto =
+            require('node:crypto');
 
-        const expectedSignature = crypto
-            .createHmac(
-                'sha256',
-                process.env.MIRROR_ME_SESSION_SECRET
-            )
-            .update(payloadString)
-            .digest('base64url');
+        const expectedSignature =
+            crypto
+                .createHmac(
+                    'sha256',
+                    process.env.M_SESSION_SECRET
+                )
+                .update(payloadString)
+                .digest('base64url');
+
+        const receivedBuffer =
+            Buffer.from(receivedSignature);
+
+        const expectedBuffer =
+            Buffer.from(expectedSignature);
+
+        if (
+            receivedBuffer.length !==
+            expectedBuffer.length
+        ) {
+            return res.status(401).json({
+                error: 'Invalid session'
+            });
+        }
 
         if (
             !crypto.timingSafeEqual(
-                Buffer.from(receivedSignature),
-                Buffer.from(expectedSignature)
+                receivedBuffer,
+                expectedBuffer
             )
         ) {
-            return res.status(401).json({ error: 'Invalid session' });
+            return res.status(401).json({
+                error: 'Invalid session'
+            });
         }
 
-        const payload = JSON.parse(
-            Buffer.from(
-                payloadString,
-                'base64url'
-            ).toString('utf8')
-        );
+        const payload =
+            JSON.parse(
+                Buffer.from(
+                    payloadString,
+                    'base64url'
+                ).toString('utf8')
+            );
 
         if (
             !payload.email ||
             !payload.exp ||
             Date.now() > payload.exp
         ) {
-            return res.status(401).json({ error: 'Session expired' });
+            return res.status(401).json({
+                error: 'Session expired'
+            });
         }
 
         const url =
@@ -71,14 +106,16 @@ export default async function handler(req, res) {
             encodeURIComponent(payload.email) +
             '&limit=1';
 
-        const response = await fetch(url, {
-            headers: {
-                apikey: process.env.SUPABASESERVICEROLEKEY,
-                Authorization:
-                    'Bearer ' +
-                    process.env.SUPABASESERVICEROLEKEY
-            }
-        });
+        const response =
+            await fetch(url, {
+                headers: {
+                    apikey:
+                        process.env.SUPABASESERVICEROLEKEY,
+                    Authorization:
+                        'Bearer ' +
+                        process.env.SUPABASESERVICEROLEKEY
+                }
+            });
 
         if (!response.ok) {
             return res.status(500).json({
@@ -86,7 +123,8 @@ export default async function handler(req, res) {
             });
         }
 
-        const members = await response.json();
+        const members =
+            await response.json();
 
         if (!members.length) {
             return res.status(404).json({
@@ -94,7 +132,9 @@ export default async function handler(req, res) {
             });
         }
 
-        return res.status(200).json(members[0]);
+        return res.status(200).json(
+            members[0]
+        );
 
     } catch (error) {
         console.error(error);
@@ -103,4 +143,4 @@ export default async function handler(req, res) {
             error: 'Server error'
         });
     }
-}
+};
