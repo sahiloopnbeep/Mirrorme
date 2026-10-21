@@ -396,6 +396,17 @@ body {
     color: #3867a6;
     text-decoration: underline;
 }
+
+    .bmi-disclaimer {
+    font-size: 11px;
+    line-height: 1.6;
+    color: #666;
+    margin-top: 12px;
+    padding: 10px;
+    background: #f5f6f8;
+    border-left: 3px solid #9ca3af;
+    border-radius: 4px;
+}
 </style>
 
 </style>
@@ -629,8 +640,49 @@ document.getElementById('allergySeverity').textContent =
         <div class="treemap-item">
             <div class="label">BMI</div>
             <div class="value" id="profileBmi">—</div>
-            <h3>BMI Interpretation</h3>
+           <h3>BMI Interpretation</h3>
 
+<div class="bar-container">
+    <div class="bmi-value">
+        BMI: <span id="bmiValueDisplay">—</span>
+    </div>
+
+    <div class="bar-labels">
+        <span>Underweight</span>
+        <span style="color:#388e3c">Normal</span>
+        <span>Overweight</span>
+        <span>Obesity</span>
+    </div>
+
+    <div class="bar-background">
+        <div class="bar-fill" id="bmiFill"></div>
+    </div>
+
+    <div id="bmiCategory"
+         style="font-weight:bold; margin-top:10px; font-size:13px;">
+    </div>
+
+    <div id="bmiDefinition"
+         style="font-size:12px; line-height:1.6; margin-top:6px; color:#555;">
+    </div>
+<div class="bmi-disclaimer">
+    <strong>Clinical Disclaimer:</strong>
+    BMI is a screening measure and not a diagnosis.
+    It should be interpreted alongside other health indicators,
+    clinical history, and an individual's circumstances.
+    Consult our healthcare professionals for a
+    comprehensive assessment.
+</div>
+    <div style="font-size:10px; line-height:1.6; margin-top:10px; color:#666;">
+        <strong>Clinical reference:</strong>
+        WHO adult BMI classification.
+        <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight"
+           target="_blank"
+           rel="noopener noreferrer">
+            View WHO reference
+        </a>
+    </div>
+</div>
 <div class="bar-container">
   <div class="bmi-value">
     BMI: <span id="bmiValueDisplay">—</span>
@@ -647,40 +699,14 @@ document.getElementById('allergySeverity').textContent =
     <div class="bar-fill" id="bmiFill"></div>
   </div>
 </div>
-            const bmi = parseFloat(data.bmi);
-const bmiValueDisplay = document.getElementById('bmiValueDisplay');
-const bmiFill = document.getElementById('bmiFill');
-
-if (Number.isFinite(bmi) && bmi > 0) {
-    bmiValueDisplay.textContent = bmi.toFixed(2);
-
-    if (bmi < 18.5) {
-        bmiFill.style.width = '25%';
-        bmiFill.style.background = '#d32f2f';
-    } else if (bmi < 25) {
-        bmiFill.style.width = '50%';
-        bmiFill.style.background = '#388e3c';
-    } else if (bmi < 30) {
-        bmiFill.style.width = '75%';
-        bmiFill.style.background = '#f57c00';
-    } else {
-        bmiFill.style.width = '100%';
-        bmiFill.style.background = '#d32f2f';
-    }
-} else {
-    bmiValueDisplay.textContent = '—';
-    bmiFill.style.width = '0%';
-}
-        </div>
-
+            
         <div class="treemap-item">
             <div class="label">Waist-to-Hip Ratio</div>
             <div class="value" id="profileWhr">—</div>
         </div>
     </div>
 
-        
-<!-- WHR Interpretation -->
+    
 <div class="whr-bar-container">
 
     <h3>Waist-to-Hip Ratio (WHR)</h3>
@@ -1140,14 +1166,71 @@ function showProfile() {
     document.getElementById('allergySeverityClassification').textContent =
     data.allergy_severity ?? '—';
 
-    document.getElementById('profileBmi').textContent =
-        data.bmi ?? '—';
+    const bmi = parseFloat(data.bmi);
+
+const bmiValueDisplay = document.getElementById('bmiValueDisplay');
+const bmiFill = document.getElementById('bmiFill');
+const bmiCategory = document.getElementById('bmiCategory');
+const bmiDefinition = document.getElementById('bmiDefinition');
+
+if (
+    Number.isFinite(bmi) &&
+    bmi > 0 &&
+    bmiValueDisplay &&
+    bmiFill &&
+    bmiCategory &&
+    bmiDefinition
+) {
+    bmiValueDisplay.textContent = bmi.toFixed(2);
+
+    let category;
+    let definition;
+    let color;
+    let width;
+
+    if (bmi < 18.5) {
+        category = 'Underweight';
+        definition = 'BMI is below 18.5. Consider reviewing nutritional status with a qualified healthcare professional.';
+        color = '#d32f2f';
+        width = '25%';
+
+    } else if (bmi < 25) {
+        category = 'Normal weight range';
+        definition = 'BMI is within the WHO adult reference range of 18.5–24.9. BMI alone does not establish overall health.';
+        color = '#388e3c';
+        width = '50%';
+
+    } else if (bmi < 30) {
+        category = 'Overweight';
+        definition = 'BMI is within the adult range of 25.0–29.9. Consider this alongside waist measurements and other health indicators.';
+        color = '#f57c00';
+        width = '75%';
+
+    } else {
+        category = 'Obesity range';
+        definition = 'BMI is 30.0 or above. Further assessment can help evaluate individual health risks.';
+        color = '#d32f2f';
+        width = '100%';
+    }
+
+    bmiFill.style.width = width;
+    bmiFill.style.backgroundColor = color;
+    bmiCategory.textContent = category;
+    bmiCategory.style.color = color;
+    bmiDefinition.textContent = definition;
+
+} else if (bmiValueDisplay && bmiFill && bmiCategory && bmiDefinition) {
+    bmiValueDisplay.textContent = '—';
+    bmiFill.style.width = '0%';
+    bmiCategory.textContent = 'BMI unavailable';
+    bmiCategory.style.color = '#666';
+    bmiDefinition.textContent =
+        'A valid BMI value is required to display an interpretation.';
+}
 
     document.getElementById('profileWhr').textContent =
         data.whr ?? '—';
     
-/* WHR Interpretation — member-specific threshold */
-
 const whr = parseFloat(data.whr);
 const sex = String(data.sex ?? '').trim().toLowerCase();
 
