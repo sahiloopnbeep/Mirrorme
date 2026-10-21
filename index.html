@@ -18,25 +18,30 @@
     box-sizing: border-box;
 }
 
+
 body {
-    background: radial-gradient(circle at center, #1a202c 0%, #080b11 100%);
+    background: #F5F8FA;
     font-family: 'Inter', sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
-    padding: 20px;
+    padding: 24px;
+    color: #243447;
 }
 
+}
+    
 .dashboard {
     display: flex;
-    gap: 30px;
+    gap: 24px;
     max-width: 1100px;
     width: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: #FFFFFF;
     padding: 24px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #E1E8ED;
+    box-shadow: 0 4px 20px rgba(35, 52, 71, 0.05);
 }
 
 .left-panel {
@@ -55,13 +60,12 @@ body {
 
 .refresh-row .last-updated {
     font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.25);
+    color: #82919C;
 }
-
 .refresh-btn {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.5);
+    background: #FFFFFF;
+    border: 1px solid #DCE5EA;
+    color: #526775;
     padding: 6px 14px;
     border-radius: 6px;
     font-size: 0.7rem;
@@ -70,10 +74,9 @@ body {
 }
 
 .refresh-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: white;
+    background: #F0F5F7;
+    color: #243447;
 }
-
 .data-btn {
     position: relative;
     display: flex;
@@ -81,21 +84,20 @@ body {
     gap: 12px;
     padding: 14px 18px;
     border-radius: 10px;
-    background: rgba(10, 14, 23, 0.85);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    color: #ffffff;
+    background: #FFFFFF;
+    border: 1px solid #E1E8ED;
+    box-shadow: 0 2px 6px rgba(35, 52, 71, 0.04);
+    color: #243447;
     cursor: pointer;
     user-select: none;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s ease;
     width: 100%;
 }
 
 .data-btn:hover {
-    transform: translateX(4px);
-    border-color: rgba(255, 255, 255, 0.35);
-    background: rgba(18, 24, 38, 0.9);
+    transform: translateY(-2px);
+    border-color: #B8CBD4;
+    background: #FAFCFD;
 }
 
 .data-btn .btn-icon {
@@ -115,9 +117,9 @@ body {
 .data-btn .btn-label {
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
+    color: #526775;
     flex: 1;
     text-align: left;
 }
@@ -130,7 +132,7 @@ body {
 
 .data-btn .btn-unit {
     font-size: 0.6rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: #82919C;
     margin-left: 2px;
 }
 
@@ -167,18 +169,18 @@ body {
 }
 
 .data-btn.active {
-    border-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 0 24px rgba(255, 255, 255, 0.08);
-    background: rgba(18, 24, 38, 0.95);
+    border-color: #91B8C2;
+    box-shadow: 0 3px 12px rgba(35, 52, 71, 0.08);
+    background: #F5FAFB;
 }
 
 .right-panel {
     flex: 1;
+    min-width: 0;
     min-height: 400px;
-    background: rgba(10, 14, 23, 0.7);
-    backdrop-filter: blur(12px);
+    background: #F9FBFC;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid #E1E8ED;
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -188,7 +190,7 @@ body {
 }
 
 .right-panel .placeholder {
-    color: rgba(255, 255, 255, 0.3);
+    color: #82919C;
     font-size: 0.95rem;
     text-align: center;
     line-height: 1.6;
@@ -210,13 +212,13 @@ body {
 }
 
 .treemap h3 {
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 600;
+    color: #243447;
+    font-weight: 700;
     font-size: 1rem;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
     margin-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid #E5EBEF;
     padding-bottom: 12px;
 }
 
@@ -227,22 +229,22 @@ body {
 }
 
 .treemap-item {
-    background: rgba(255, 255, 255, 0.04);
+    background: #FFFFFF;
     border-radius: 10px;
     padding: 18px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid #E1E8ED;
     transition: 0.2s;
 }
 
 .treemap-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: #F5F9FB;
 }
 
 .treemap-item .label {
     font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(255, 255, 255, 0.35);
+    color: #718391;
     font-weight: 600;
 }
 
@@ -256,17 +258,17 @@ body {
 
 .treemap-item .detail {
     font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: #82919C;
     margin-top: 6px;
 }
 
 .treemap-close {
     margin-top: 20px;
     padding: 10px 24px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #FFFFFF;
+    border: 1px solid #DCE5EA;
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.4);
+    color: #526775;
     cursor: pointer;
     font-size: 0.8rem;
     transition: 0.2s;
@@ -274,10 +276,9 @@ body {
 }
 
 .treemap-close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
+    background: #F0F5F7;
+    color: #243447;
 }
-
 @media (max-width: 760px) {
     .dashboard {
         flex-direction: column;
