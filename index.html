@@ -325,6 +325,16 @@ body {
 
         </div>
 
+        
+<button class="data-btn" id="profileBtn" type="button" onclick="showProfile()">
+    <span class="btn-label">View Profile</span>
+    <span class="btn-value">→</span>
+</button>
+
+document.getElementById('allergySeverity').textContent =
+    data.allergy_severity ?? '—';
+
+
         <button
             class="data-btn btn-gut"
             data-metric="gut"
@@ -484,6 +494,57 @@ body {
             </button>
 
         </div>
+        
+<div class="treemap" id="profileView">
+    <h3>My Profile</h3>
+
+    <div class="treemap-grid">
+        <div class="treemap-item">
+            <div class="label">Full Name</div>
+            <div class="value" id="profileName">—</div>
+        </div>
+
+        <div class="treemap-item">
+            <div class="label">Date of Birth</div>
+            <div class="value" id="profileDob">—</div>
+        </div>
+
+        <div class="treemap-item">
+            <div class="label">Sex</div>
+            <div class="value" id="profileSex">—</div>
+        </div>
+
+        <div class="treemap-item">
+            <div class="label">Age</div>
+            <div class="value" id="profileAge">—</div>
+        </div>
+
+        <div class="treemap-item">
+            <div class="label">BMI</div>
+            <div class="value" id="profileBmi">—</div>
+        </div>
+
+        <div class="treemap-item">
+            <div class="label">Waist-to-Hip Ratio</div>
+            <div class="value" id="profileWhr">—</div>
+        </div>
+    </div>
+    
+<h3 style="margin-top: 28px;">Allergy Details</h3>
+
+<div class="treemap-grid">
+    <div class="treemap-item">
+        <div class="label">Allergy Severity</div>
+        <div class="value" id="allergySeverity">—</div>
+    </div>
+</div>
+
+    <button class="treemap-close" type="button" onclick="closeProfile()">
+        ← Back to Dashboard
+    </button>
+
+</div>
+
 
     </div>
 
@@ -842,6 +903,51 @@ function showTreemap(
     );
 
 }
+    
+function showProfile() {
+    if (!currentMemberData) {
+        fetchDashboardData();
+        return;
+    }
+
+    const data = currentMemberData.member ||
+                 currentMemberData.data ||
+                 currentMemberData;
+
+    document.getElementById('profileName').textContent =
+        data.name ?? '—';
+
+    document.getElementById('profileDob').textContent =
+        data.dob ?? '—';
+
+    document.getElementById('profileSex').textContent =
+        data.sex ?? '—';
+
+    document.getElementById('profileAge').textContent =
+        data.age ?? '—';
+
+    document.getElementById('profileBmi').textContent =
+        data.bmi ?? '—';
+
+    document.getElementById('profileWhr').textContent =
+        data.whr ?? '—';
+
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('treemap').classList.remove('show');
+    document.getElementById('profileView').classList.add('show');
+
+    document.querySelectorAll('.data-btn').forEach(button => {
+        button.classList.remove('active');
+    });
+
+    activeMetric = null;
+}
+
+function closeProfile() {
+    document.getElementById('profileView').classList.remove('show');
+    document.getElementById('placeholder').style.display = 'block';
+}
+
 
 function closeTreemap() {
 
