@@ -292,6 +292,112 @@ body {
         min-height: 350px;
     }
 }
+    <style>
+  .bar-container {
+    width: 200px;
+    max-width: 100%;
+    margin: 10px 0 20px;
+  }
+
+  .bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+  }
+
+  .bar-background {
+    width: 100%;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.5s;
+  }
+
+  .bmi-value {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+
+.whr-bar-container {
+    width: 280px;
+    max-width: 100%;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+}
+
+.whr-metric-value {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.whr-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.whr-bar-background {
+    width: 100%;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.whr-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.5s ease;
+}
+
+.whr-category {
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.whr-definition {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #555;
+    margin-top: 12px;
+}
+
+.whr-reference {
+    font-size: 10px;
+    line-height: 1.6;
+    color: #666;
+    margin-top: 10px;
+}
+
+.whr-reference a {
+    color: #3867a6;
+    text-decoration: underline;
+}
+</style>
+
 </style>
 </head>
 
@@ -523,6 +629,48 @@ document.getElementById('allergySeverity').textContent =
         <div class="treemap-item">
             <div class="label">BMI</div>
             <div class="value" id="profileBmi">—</div>
+            <h3>BMI Interpretation</h3>
+
+<div class="bar-container">
+  <div class="bmi-value">
+    BMI: <span id="bmiValueDisplay">—</span>
+  </div>
+
+  <div class="bar-labels">
+    <span>Under</span>
+    <span style="color:#388e3c">Normal</span>
+    <span>Over</span>
+    <span>Obese</span>
+  </div>
+
+  <div class="bar-background">
+    <div class="bar-fill" id="bmiFill"></div>
+  </div>
+</div>
+            const bmi = parseFloat(data.bmi);
+const bmiValueDisplay = document.getElementById('bmiValueDisplay');
+const bmiFill = document.getElementById('bmiFill');
+
+if (Number.isFinite(bmi) && bmi > 0) {
+    bmiValueDisplay.textContent = bmi.toFixed(2);
+
+    if (bmi < 18.5) {
+        bmiFill.style.width = '25%';
+        bmiFill.style.background = '#d32f2f';
+    } else if (bmi < 25) {
+        bmiFill.style.width = '50%';
+        bmiFill.style.background = '#388e3c';
+    } else if (bmi < 30) {
+        bmiFill.style.width = '75%';
+        bmiFill.style.background = '#f57c00';
+    } else {
+        bmiFill.style.width = '100%';
+        bmiFill.style.background = '#d32f2f';
+    }
+} else {
+    bmiValueDisplay.textContent = '—';
+    bmiFill.style.width = '0%';
+}
         </div>
 
         <div class="treemap-item">
@@ -530,8 +678,59 @@ document.getElementById('allergySeverity').textContent =
             <div class="value" id="profileWhr">—</div>
         </div>
     </div>
-    
+
+        
+<!-- WHR Interpretation -->
+<div class="whr-bar-container">
+
+    <h3>Waist-to-Hip Ratio (WHR)</h3>
+
+    <div class="whr-metric-value">
+        Your WHR: <span id="whrValueDisplay">—</span>
+    </div>
+
+    <div class="whr-bar-labels">
+        <span>Below threshold</span>
+        <span>At/above threshold</span>
+    </div>
+
+    <div class="whr-bar-background">
+        <div class="whr-bar-fill" id="whrFill"></div>
+    </div>
+
+    <div class="whr-category" id="whrCategory">
+        Calculating interpretation...
+    </div>
+
+    <div class="whr-definition">
+        <strong>What this means:</strong>
+        Waist-to-hip ratio is calculated by dividing waist
+        circumference by hip circumference. It helps assess
+        abdominal fat distribution, which is associated with
+        cardiometabolic health risk. WHR alone does not diagnose
+        a medical condition.
+    </div>
+
+    <div class="whr-reference">
+        <strong>Clinical reference:</strong>
+        World Health Organization (WHO), <em>Waist circumference
+        and waist-hip ratio: report of a WHO expert consultation</em>
+        (2011).
+
+        Commonly cited thresholds associated with substantially
+        increased metabolic risk: men ≥ 0.90; women ≥ 0.85.
+
+        <a href="https://www.who.int/publications-detail-redirect/9789241501491"
+           target="_blank"
+           rel="noopener noreferrer">
+            View WHO report
+        </a>
+    </div>
+
+</div>
+
 <h3 style="margin-top: 28px;">Allergy Details</h3>
+    
 
 <div class="treemap-grid">
     <div class="treemap-item">
@@ -539,13 +738,24 @@ document.getElementById('allergySeverity').textContent =
         <div class="value" id="allergySeverity">—</div>
     </div>
 </div>
+    
+<div class="allergy-profile-note">
+    <h4>Allergy Profile Note</h4>
+    <p>
+        Your profile indicates a
+        <strong id="allergySeverityClassification">—</strong>
+        allergy tendency. This is not a restriction but an awareness
+        guide. You can confidently explore alternatives and make
+        informed choices about your diet and environment.
+    </p>
+</div>
+
 
     <button class="treemap-close" type="button" onclick="closeProfile()">
         ← Back to Dashboard
     </button>
 
 </div>
-
 
     </div>
 
@@ -927,11 +1137,98 @@ function showProfile() {
     document.getElementById('profileAge').textContent =
         data.age ?? '—';
 
+    document.getElementById('allergySeverityClassification').textContent =
+    data.allergy_severity ?? '—';
+
     document.getElementById('profileBmi').textContent =
         data.bmi ?? '—';
 
     document.getElementById('profileWhr').textContent =
         data.whr ?? '—';
+    
+/* WHR Interpretation — member-specific threshold */
+
+const whr = parseFloat(data.whr);
+const sex = String(data.sex ?? '').trim().toLowerCase();
+
+const whrValueDisplay =
+    document.getElementById('whrValueDisplay');
+
+const whrFill =
+    document.getElementById('whrFill');
+
+const whrCategory =
+    document.getElementById('whrCategory');
+
+if (
+    Number.isFinite(whr) &&
+    whr > 0 &&
+    whrValueDisplay &&
+    whrFill &&
+    whrCategory
+) {
+    whrValueDisplay.textContent = whr.toFixed(2);
+
+    let threshold = null;
+    let sexLabel = '';
+
+    // Select threshold from the member's recorded sex
+    if (['male', 'm', 'man'].includes(sex)) {
+        threshold = 0.90;
+        sexLabel = 'men';
+    } else if (['female', 'f', 'woman'].includes(sex)) {
+        threshold = 0.85;
+        sexLabel = 'women';
+    }
+
+    if (threshold !== null) {
+        const aboveThreshold = whr >= threshold;
+
+        if (aboveThreshold) {
+            whrFill.style.width = '100%';
+            whrFill.style.background = '#d32f2f';
+
+            whrCategory.textContent =
+                `Your WHR is at or above the WHO-referenced ` +
+                `threshold for ${sexLabel} (≥ ${threshold.toFixed(2)}). ` +
+                `This is associated with substantially increased ` +
+                `metabolic risk. Consider discussing your overall ` +
+                `risk factors with a healthcare professional.`;
+
+            whrCategory.style.color = '#d32f2f';
+
+        } else {
+            whrFill.style.width = '50%';
+            whrFill.style.background = '#388e3c';
+
+            whrCategory.textContent =
+                `Your WHR is below the WHO-referenced ` +
+                `threshold for ${sexLabel} (< ${threshold.toFixed(2)}). ` +
+                `This does not rule out other health risks.`;
+
+            whrCategory.style.color = '#388e3c';
+        }
+
+    } else {
+        whrFill.style.width = '0%';
+
+        whrCategory.textContent =
+            'Your WHR is available, but a sex-specific ' +
+            'threshold cannot be assigned from the recorded sex value.';
+
+        whrCategory.style.color = '#666';
+    }
+
+} else if (whrValueDisplay && whrFill && whrCategory) {
+    whrValueDisplay.textContent = '—';
+    whrFill.style.width = '0%';
+
+    whrCategory.textContent =
+        'WHR interpretation is unavailable because a valid WHR value was not found.';
+
+    whrCategory.style.color = '#666';
+}
+
 
     document.getElementById('placeholder').style.display = 'none';
     document.getElementById('treemap').classList.remove('show');
