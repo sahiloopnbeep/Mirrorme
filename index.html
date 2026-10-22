@@ -410,6 +410,184 @@ body {
 </style>
 
 </style>
+
+    
+<style>
+.ageing-profile-section {
+    width: 100%;
+    margin-top: 28px;
+    padding: 22px;
+    background: #FFFFFF;
+    border: 1px solid #E1E8ED;
+    border-radius: 14px;
+    color: #243447;
+}
+
+.ageing-profile-heading {
+    margin-bottom: 22px;
+}
+
+.ageing-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #8053A6;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.ageing-profile-heading h3 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    color: #44215D;
+    font-size: 1.15rem;
+    line-height: 1.4;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.ageing-profile-heading p {
+    color: #718391;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+.ageing-profile-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: center;
+}
+
+.ageing-pyramid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 0;
+}
+
+.ageing-level {
+    min-height: 76px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 8px;
+    text-align: center;
+    color: #FFFFFF;
+    clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%);
+}
+
+.ageing-level span {
+    font-size: 0.68rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.ageing-level strong {
+    font-size: 1.25rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.chronological-level {
+    width: 100%;
+    background: #44215D;
+}
+
+.biological-level {
+    width: 82%;
+    background: #8053A6;
+}
+
+.metabolic-level {
+    width: 64%;
+    background: #18A999;
+}
+
+.ageing-profile-insights {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ageing-insight-card {
+    padding: 16px;
+    border: 1px solid #E8E1EF;
+    border-radius: 10px;
+    background: #FBF8FD;
+    min-width: 0;
+}
+
+.ageing-card-label {
+    display: block;
+    margin-bottom: 10px;
+    color: #8053A6;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.ageing-insight-card > strong {
+    display: block;
+    color: #44215D;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.ageing-insight-card p {
+    margin: 8px 0 0;
+    color: #526775;
+    font-size: 0.78rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.interpretation-card {
+    background: #F1FBF9;
+    border-color: #D4F0EA;
+}
+
+.interpretation-card .ageing-card-label {
+    color: #137F73;
+}
+
+.ageing-profile-disclaimer {
+    margin-top: 20px;
+    padding: 12px 14px;
+    border-left: 3px solid #F4C95D;
+    border-radius: 5px;
+    background: #FFFBEE;
+    color: #655A3A;
+    font-size: 0.72rem;
+    line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+    .ageing-profile-section {
+        padding: 16px;
+    }
+
+    .ageing-profile-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .ageing-level {
+        min-height: 70px;
+    }
+
+    .ageing-profile-insights {
+        gap: 10px;
+    }
+}
+</style>
+
 </head>
 
 <body>
@@ -772,6 +950,53 @@ body {
     </p>
 </div>
 
+
+<section class="ageing-profile-section" aria-labelledby="ageingProfileTitle">
+    <div class="ageing-profile-heading">
+        <span class="ageing-eyebrow">YOUR AGE PROFILE</span>
+        <h3 id="ageingProfileTitle">Understanding Your Ageing Profile</h3>
+        <p>Three age measures, each offering a different perspective.</p>
+    </div>
+
+    <div class="ageing-profile-layout">
+        <div class="ageing-pyramid" aria-label="Chronological, biological and metabolic age">
+            <div class="ageing-level chronological-level">
+                <span>Chronological Age</span>
+                <strong id="chronologicalAgeValue">—</strong>
+            </div>
+
+            <div class="ageing-level biological-level">
+                <span>Biological Age</span>
+                <strong id="biologicalAgeValue">—</strong>
+            </div>
+
+            <div class="ageing-level metabolic-level">
+                <span>Metabolic Age</span>
+                <strong id="metabolicAgeValue">—</strong>
+            </div>
+        </div>
+
+        <div class="ageing-profile-insights">
+            <article class="ageing-insight-card">
+                <span class="ageing-card-label">AGE DIFFERENCE</span>
+                <strong id="ageDifferenceValue">—</strong>
+                <p>Difference between your biological age and chronological age, as reported in your member data.</p>
+            </article>
+
+            <article class="ageing-insight-card interpretation-card">
+                <span class="ageing-card-label">YOUR INTERPRETATION</span>
+                <p id="ageInterpretationValue">Your age interpretation will appear here when available.</p>
+            </article>
+        </div>
+    </div>
+
+    <p class="ageing-profile-disclaimer">
+        These age measures are estimates intended to support health awareness.
+        They are not diagnoses, and they should be interpreted alongside your
+        individual circumstances and other health indicators. A lower value
+        does not, by itself, establish better health.
+    </p>
+</section>
 
     <button class="treemap-close" type="button" onclick="closeProfile()">
         ← Back to Dashboard
@@ -1161,6 +1386,49 @@ function showProfile() {
 
     document.getElementById('allergySeverityClassification').textContent =
     data.allergy_severity ?? '—';
+
+    
+const formatAgeValue = (value) => {
+    if (value === null || value === undefined || String(value).trim() === '') {
+        return '—';
+    }
+
+    const age = Number(value);
+
+    if (!Number.isFinite(age) || age < 0) {
+        return '—';
+    }
+
+    return `${age} years`;
+};
+
+document.getElementById('chronologicalAgeValue').textContent =
+    formatAgeValue(data.age);
+
+document.getElementById('biologicalAgeValue').textContent =
+    formatAgeValue(data.biological_age);
+
+document.getElementById('metabolicAgeValue').textContent =
+    formatAgeValue(data.metabolic_age);
+
+const ageDifference = data.age_difference;
+const ageDifferenceNumber = Number(ageDifference);
+
+document.getElementById('ageDifferenceValue').textContent =
+    ageDifference !== null &&
+    ageDifference !== undefined &&
+    String(ageDifference).trim() !== '' &&
+    Number.isFinite(ageDifferenceNumber)
+        ? `${ageDifferenceNumber > 0 ? '+' : ''}${ageDifferenceNumber} years`
+        : '—';
+
+document.getElementById('ageInterpretationValue').textContent =
+    data.age_interpretation !== null &&
+    data.age_interpretation !== undefined &&
+    String(data.age_interpretation).trim() !== ''
+        ? String(data.age_interpretation)
+        : 'No age interpretation is available in your current report.';
+
 
     const bmi = parseFloat(data.bmi);
 
