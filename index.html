@@ -712,6 +712,60 @@ body {
         gap: 10px;
     }
 }
+    
+.micros-matrix {
+    width: 100%;
+    max-width: 500px;
+    margin: 25px 0;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.micros-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.micros-table th {
+    background: #7cb342;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px;
+    text-align: left;
+}
+
+.micros-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+
+.micros-table tr:nth-child(even) {
+    background: #f1f8e9;
+}
+
+.micros-table tr:nth-child(odd) {
+    background: white;
+}
+
+.micros-table tr:last-child td {
+    border-bottom: none;
+}
+
+.nutrient-name {
+    font-weight: 600;
+    color: #33691e;
+}
+
+.form-details {
+    font-size: 12px;
+    color: #5f6368;
+    margin-top: 4px;
+}
+
 </style>
 
 </head>
@@ -944,6 +998,26 @@ body {
             </tbody>
         </table>
     </div>
+
+<div class="micros-matrix">
+    <div class="matrix-title">
+        🔬 Deficiency Micros (Elemental/Nutritional Form)
+    </div>
+
+    <table class="micros-table">
+        <thead>
+            <tr>
+                <th>Nutrient</th>
+                <th>Recommended Form</th>
+            </tr>
+        </thead>
+        <tbody id="microsTableBody">
+            <tr>
+                <td colspan="2">Loading recommendations...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
     <button
         class="treemap-close"
@@ -2066,7 +2140,7 @@ function showNutrition() {
 
     nutritionView.style.display = 'block';
     tableBody.innerHTML = '';
-
+showDeficiencyMicros();
     var rawText = currentMemberData.nutritional_recommendations;
 
     if (
@@ -2098,6 +2172,75 @@ function showNutrition() {
 function closeNutrition() {
     document.getElementById('nutritionView').style.display = 'none';
     document.getElementById('placeholder').style.display = '';
+}
+    function showDeficiencyMicros() {
+    if (!currentMemberData) return;
+
+    const tableBody = document.getElementById('microsTableBody');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = '';
+
+    const microsText = currentMemberData.deficiency_micros;
+
+    if (
+        microsText === null ||
+        microsText === undefined ||
+        String(microsText).trim() === ''
+    ) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 2;
+        cell.textContent = 'No deficiency micronutrient recommendations available.';
+
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+        return;
+    }
+
+    const lines = String(microsText)
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
+
+    let rowsAdded = 0;
+
+    lines.forEach(line => {
+        const separator = line.indexOf(':');
+
+        if (separator === -1) return;
+
+        const nutrient = line.slice(0, separator).trim();
+        const recommendedForm = line.slice(separator + 1).trim();
+
+        if (!nutrient || !recommendedForm) return;
+
+        const row = document.createElement('tr');
+        const nutrientCell = document.createElement('td');
+        const formCell = document.createElement('td');
+
+        nutrientCell.textContent = nutrient;
+        formCell.textContent = recommendedForm;
+
+        row.appendChild(nutrientCell);
+        row.appendChild(formCell);
+        tableBody.appendChild(row);
+
+        rowsAdded++;
+    });
+
+    if (rowsAdded === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 2;
+        cell.style.whiteSpace = 'pre-wrap';
+        cell.textContent = String(microsText);
+
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+    }
 }
 
 </script>
