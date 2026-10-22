@@ -823,6 +823,70 @@ body {
     color: #5f6368;
 }
 </style>
+    
+<style>
+.food-sources {
+    width: 100%;
+    max-width: 500px;
+    margin: 25px 0;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.food-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #202124;
+}
+
+.food-list {
+    background: #fff8e1;
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid #ffb300;
+}
+
+.food-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ffe0b2;
+}
+
+.food-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.food-icon {
+    font-size: 18px;
+    margin-right: 12px;
+    margin-top: 2px;
+    color: #ff8f00;
+}
+
+.food-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.food-category {
+    font-weight: 600;
+    color: #e65100;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.food-details {
+    color: #5d4037;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+</style>
+
 </head>
 
 <body>
@@ -1093,6 +1157,16 @@ body {
         </tbody>
     </table>
 </div>
+    
+<div class="food-sources">
+    <div class="food-title">🍎 FOOD SOURCES HIGHLIGHTED</div>
+    <div class="food-list" id="foodList">
+        <div class="food-item">
+            <div class="food-details">Loading food sources...</div>
+        </div>
+    </div>
+</div>
+
     <button
         class="treemap-close"
         type="button"
@@ -2215,7 +2289,9 @@ function showNutrition() {
     nutritionView.style.display = 'block';
     tableBody.innerHTML = '';
 showDeficiencyMicros();
- showSynergy();   
+ showSynergy(); 
+    showFoodSources();
+    
     var rawText = currentMemberData.nutritional_recommendations;
 
     if (
@@ -2384,6 +2460,74 @@ function closeNutrition() {
 
         row.appendChild(cell);
         tableBody.appendChild(row);
+    }
+}
+
+function showFoodSources() {
+    if (!currentMemberData) return;
+
+    const listContainer = document.getElementById('foodList');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '';
+
+    const foodText = currentMemberData.food_sources;
+
+    if (
+        foodText === null ||
+        foodText === undefined ||
+        String(foodText).trim() === ''
+    ) {
+        listContainer.textContent = 'No highlighted food sources available.';
+        return;
+    }
+
+    const lines = String(foodText)
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
+
+    let itemsAdded = 0;
+
+    lines.forEach(line => {
+        const separator = line.indexOf(':');
+
+        if (separator === -1) return;
+
+        const category = line.slice(0, separator).trim();
+        const details = line.slice(separator + 1).trim();
+
+        if (!category || !details) return;
+
+        const foodDiv = document.createElement('div');
+        foodDiv.className = 'food-item';
+
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'food-icon';
+        iconDiv.textContent = '•';
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'food-content';
+
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'food-category';
+        categoryDiv.textContent = category;
+
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'food-details';
+        detailsDiv.textContent = details;
+
+        contentDiv.appendChild(categoryDiv);
+        contentDiv.appendChild(detailsDiv);
+        foodDiv.appendChild(iconDiv);
+        foodDiv.appendChild(contentDiv);
+        listContainer.appendChild(foodDiv);
+
+        itemsAdded++;
+    });
+
+    if (itemsAdded === 0) {
+        listContainer.textContent = String(foodText);
     }
 }
 
