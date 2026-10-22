@@ -1429,6 +1429,159 @@ function showTreemap(
         }
     }
 
+    // Metabolism interpretation
+    if (metricKey === 'metabolism') {
+        var metabolismScore = Number(scoreValue);
+
+        if (
+            scoreValue !== null &&
+            scoreValue !== undefined &&
+            scoreValue !== '' &&
+            Number.isFinite(metabolismScore) &&
+            metabolismScore >= 0 &&
+            metabolismScore <= 100
+        ) {
+            var metabolismCategory = '';
+            var metabolismColor = '';
+
+            if (metabolismScore < 60) {
+                metabolismCategory = 'Needs Attention';
+                metabolismColor = '#dc2626';
+            } else if (metabolismScore < 80) {
+                metabolismCategory = 'Moderate';
+                metabolismColor = '#f59e0b';
+            } else {
+                metabolismCategory = 'Excellent';
+                metabolismColor = '#16a34a';
+            }
+
+            itemsHtml +=
+                '<div class="score-interpretation">' +
+                    '<div class="score-interpretation-heading">' +
+                        'Metabolism Interpretation' +
+                    '</div>' +
+                    '<div class="score-interpretation-number">' +
+                        metabolismScore + '<span>%</span>' +
+                    '</div>' +
+                    '<div class="score-interpretation-track">' +
+                        '<div class="score-interpretation-fill" ' +
+                            'style="width:' + metabolismScore +
+                            '%; background-color:' + metabolismColor + ';">' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="score-interpretation-category" ' +
+                        'style="color:' + metabolismColor + ';">' +
+                        metabolismCategory +
+                    '</div>' +
+                    '<div class="score-interpretation-note">' +
+                        'Interpretation based on your current Metabolism score.' +
+                    '</div>' +
+                '</div>';
+        }
+    }
+
+    // Muscular interpretation
+    if (metricKey === 'muscular') {
+        var muscularScore = Number(scoreValue);
+
+        if (
+            scoreValue !== null &&
+            scoreValue !== undefined &&
+            scoreValue !== '' &&
+            Number.isFinite(muscularScore) &&
+            muscularScore >= 0 &&
+            muscularScore <= 100
+        ) {
+            var muscularCategory = '';
+            var muscularColor = '';
+
+            if (muscularScore < 60) {
+                muscularCategory = 'Needs Attention';
+                muscularColor = '#dc2626';
+            } else if (muscularScore < 80) {
+                muscularCategory = 'Moderate';
+                muscularColor = '#f59e0b';
+            } else {
+                muscularCategory = 'Excellent';
+                muscularColor = '#16a34a';
+            }
+
+            itemsHtml +=
+                '<div class="score-interpretation">' +
+                    '<div class="score-interpretation-heading">' +
+                        'Muscular Health Interpretation' +
+                    '</div>' +
+                    '<div class="score-interpretation-number">' +
+                        muscularScore + '<span>%</span>' +
+                    '</div>' +
+                    '<div class="score-interpretation-track">' +
+                        '<div class="score-interpretation-fill" ' +
+                            'style="width:' + muscularScore +
+                            '%; background-color:' + muscularColor + ';">' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="score-interpretation-category" ' +
+                        'style="color:' + muscularColor + ';">' +
+                        muscularCategory +
+                    '</div>' +
+                    '<div class="score-interpretation-note">' +
+                        'Interpretation based on your current Muscular score.' +
+                    '</div>' +
+                '</div>';
+        }
+    }
+
+    // Stress Resilience interpretation
+    if (metricKey === 'stress') {
+        var stressScore = Number(scoreValue);
+
+        if (
+            scoreValue !== null &&
+            scoreValue !== undefined &&
+            scoreValue !== '' &&
+            Number.isFinite(stressScore) &&
+            stressScore >= 0 &&
+            stressScore <= 100
+        ) {
+            var stressCategory = '';
+            var stressColor = '';
+
+            if (stressScore < 60) {
+                stressCategory = 'Needs Attention';
+                stressColor = '#dc2626';
+            } else if (stressScore < 80) {
+                stressCategory = 'Moderate';
+                stressColor = '#f59e0b';
+            } else {
+                stressCategory = 'Excellent';
+                stressColor = '#16a34a';
+            }
+
+            itemsHtml +=
+                '<div class="score-interpretation">' +
+                    '<div class="score-interpretation-heading">' +
+                        'Stress Resilience Interpretation' +
+                    '</div>' +
+                    '<div class="score-interpretation-number">' +
+                        stressScore + '<span>%</span>' +
+                    '</div>' +
+                    '<div class="score-interpretation-track">' +
+                        '<div class="score-interpretation-fill" ' +
+                            'style="width:' + stressScore +
+                            '%; background-color:' + stressColor + ';">' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="score-interpretation-category" ' +
+                        'style="color:' + stressColor + ';">' +
+                        stressCategory +
+                    '</div>' +
+                    '<div class="score-interpretation-note">' +
+                        'Interpretation based on your current Stress Resilience score.' +
+                    '</div>' +
+                '</div>';
+        }
+    }
+
     config.treemap.forEach(
         function(field) {
 
