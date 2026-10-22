@@ -767,7 +767,62 @@ body {
 }
 
 </style>
+<style>
+.synergy-matrix {
+    width: 100%;
+    max-width: 500px;
+    margin: 25px 0;
+    font-family: 'Roboto', Arial, sans-serif;
+}
 
+.synergy-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #202124;
+}
+
+.synergy-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.synergy-table th {
+    background: #5c6bc0;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px;
+    text-align: left;
+}
+
+.synergy-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.synergy-table tr:nth-child(even) {
+    background: #e8eaf6;
+}
+
+.synergy-table tr:nth-child(odd) {
+    background: white;
+}
+
+.system-name {
+    font-weight: 600;
+    color: #303f9f;
+}
+
+.synergy-action {
+    color: #5f6368;
+}
+</style>
 </head>
 
 <body>
@@ -1018,7 +1073,26 @@ body {
         </tbody>
     </table>
 </div>
+<div class="synergy-matrix">
+    <div class="synergy-title">
+        ⚡ STRESS + GUT + PAIN + MUSCULOSKELETAL SYNERGY
+    </div>
 
+    <table class="synergy-table">
+        <thead>
+            <tr>
+                <th>System</th>
+                <th>Synergistic Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="synergyTableBody">
+            <tr>
+                <td colspan="2">Loading synergy recommendations...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
     <button
         class="treemap-close"
         type="button"
@@ -2141,6 +2215,7 @@ function showNutrition() {
     nutritionView.style.display = 'block';
     tableBody.innerHTML = '';
 showDeficiencyMicros();
+ showSynergy();   
     var rawText = currentMemberData.nutritional_recommendations;
 
     if (
@@ -2237,6 +2312,75 @@ function closeNutrition() {
         cell.colSpan = 2;
         cell.style.whiteSpace = 'pre-wrap';
         cell.textContent = String(microsText);
+
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+    }
+}
+    function showSynergy() {
+    if (!currentMemberData) return;
+
+    const tableBody = document.getElementById('synergyTableBody');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = '';
+
+    const synergyText = currentMemberData.synergy;
+
+    if (
+        synergyText === null ||
+        synergyText === undefined ||
+        String(synergyText).trim() === ''
+    ) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 2;
+        cell.textContent = 'No synergy recommendations available.';
+
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+        return;
+    }
+
+    const lines = String(synergyText)
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
+
+    let rowsAdded = 0;
+
+    lines.forEach(line => {
+        const match = line.match(
+            /^(STRESS|GUT|PAIN|MUSCULOSKELETAL)\s*[:\-]\s*(.+)$/i
+        );
+
+        if (!match) return;
+
+        const row = document.createElement('tr');
+        const systemCell = document.createElement('td');
+        const actionCell = document.createElement('td');
+
+        systemCell.className = 'system-name';
+        actionCell.className = 'synergy-action';
+
+        systemCell.textContent = match[1].toUpperCase();
+        actionCell.textContent = match[2].trim();
+
+        row.appendChild(systemCell);
+        row.appendChild(actionCell);
+        tableBody.appendChild(row);
+
+        rowsAdded++;
+    });
+
+    if (rowsAdded === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = 2;
+        cell.style.whiteSpace = 'pre-wrap';
+        cell.textContent = String(synergyText);
 
         row.appendChild(cell);
         tableBody.appendChild(row);
