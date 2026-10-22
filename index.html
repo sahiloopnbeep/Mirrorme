@@ -467,8 +467,74 @@ body {
     border-left: 3px solid #9ca3af;
     border-radius: 4px;
 }
+    
+.nutrition-matrix {
+    width: 100%;
+    margin: 20px 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.matrix-title {
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #243447;
+    text-align: center;
+}
+
+.matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background: #FFFFFF;
+}
+
+.matrix-table th {
+    background: #44215D;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px;
+    text-align: left;
+}
+
+.matrix-table td {
+    padding: 12px;
+    border-bottom: 1px solid #E1E8ED;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.matrix-table tr:nth-child(even) {
+    background: #F8F9FA;
+}
+
+.matrix-table tr:last-child td {
+    border-bottom: none;
+}
+
+.macro-highlight {
+    font-weight: 600;
+}
+
+.unit {
+    color: #718391;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.fiber-breakdown {
+    font-size: 12px;
+    color: #718391;
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
 </style>
 
+    
 </style>
 
     
@@ -685,6 +751,17 @@ body {
 <button class="data-btn" id="profileBtn" type="button" onclick="showProfile()">
     <span class="btn-label">View Profile</span>
     <span class="btn-value">→</span>
+
+<button
+    class="data-btn"
+    id="nutritionBtn"
+    type="button"
+    onclick="showNutrition()"
+>
+    <span class="btn-label">Complete Nutritional Recommendation</span>
+    <span class="btn-value">→</span>
+</button>
+    
 </button>
 
         <button
@@ -846,6 +923,37 @@ body {
             </button>
 
         </div>
+        
+<div class="treemap" id="nutritionView" style="display:none; width:100%;">
+    <h3>Complete Nutritional Recommendation</h3>
+
+    <div class="nutrition-matrix">
+        <div class="matrix-title">📊 Nutritional Macro Matrix</div>
+
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th>Nutrient</th>
+                    <th>Daily Target</th>
+                </tr>
+            </thead>
+            <tbody id="nutritionTableBody">
+                <tr>
+                    <td colspan="2">Loading recommendations...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button
+        class="treemap-close"
+        type="button"
+        onclick="closeNutrition()"
+    >
+        ← Back to Dashboard
+    </button>
+</div>
+
         
 <div class="treemap" id="profileView">
     <h3>My Profile</h3>
@@ -1945,6 +2053,52 @@ window.addEventListener(
 
     }
 );
+
+function showNutrition() {
+    if (!currentMemberData) return;
+
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('treemap').classList.remove('show');
+    document.getElementById('profileView').style.display = 'none';
+
+    var nutritionView = document.getElementById('nutritionView');
+    var tableBody = document.getElementById('nutritionTableBody');
+
+    nutritionView.style.display = 'block';
+    tableBody.innerHTML = '';
+
+    var rawText = currentMemberData.nutritional_recommendations;
+
+    if (
+        rawText === null ||
+        rawText === undefined ||
+        String(rawText).trim() === ''
+    ) {
+        var emptyRow = document.createElement('tr');
+        var emptyCell = document.createElement('td');
+        emptyCell.colSpan = 2;
+        emptyCell.textContent = 'No nutritional recommendations are available yet.';
+        emptyRow.appendChild(emptyCell);
+        tableBody.appendChild(emptyRow);
+        return;
+    }
+
+    // Display the actual database text without losing line breaks.
+    var row = document.createElement('tr');
+    var cell = document.createElement('td');
+
+    cell.colSpan = 2;
+    cell.style.whiteSpace = 'pre-wrap';
+    cell.textContent = String(rawText);
+
+    row.appendChild(cell);
+    tableBody.appendChild(row);
+}
+
+function closeNutrition() {
+    document.getElementById('nutritionView').style.display = 'none';
+    document.getElementById('placeholder').style.display = '';
+}
 
 </script>
 
