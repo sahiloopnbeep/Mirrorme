@@ -1377,6 +1377,58 @@ function showTreemap(
         '<div class="detail">Current value</div>' +
         '</div>';
 
+    // Gut Health interpretation bar — only for Gut Health
+    if (metricKey === 'gut') {
+        var gutScoreValue = Number(scoreValue);
+
+        if (
+            scoreValue !== null &&
+            scoreValue !== undefined &&
+            scoreValue !== '' &&
+            Number.isFinite(gutScoreValue) &&
+            gutScoreValue >= 0 &&
+            gutScoreValue <= 100
+        ) {
+            var gutCategory = '';
+            var gutColor = '';
+
+            if (gutScoreValue < 60) {
+                gutCategory = 'Needs Attention';
+                gutColor = '#dc2626';
+            } else if (gutScoreValue < 80) {
+                gutCategory = 'Moderate';
+                gutColor = '#f59e0b';
+            } else {
+                gutCategory = 'Excellent';
+                gutColor = '#16a34a';
+            }
+
+            itemsHtml +=
+                '<div class="score-interpretation">' +
+                    '<div class="score-interpretation-heading">' +
+                        'Gut Health Interpretation' +
+                    '</div>' +
+                    '<div class="score-interpretation-number">' +
+                        gutScoreValue +
+                        '<span>%</span>' +
+                    '</div>' +
+                    '<div class="score-interpretation-track">' +
+                        '<div class="score-interpretation-fill" ' +
+                            'style="width:' + gutScoreValue +
+                            '%; background-color:' + gutColor + ';">' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="score-interpretation-category" ' +
+                        'style="color:' + gutColor + ';">' +
+                        gutCategory +
+                    '</div>' +
+                    '<div class="score-interpretation-note">' +
+                        'Interpretation based on your current Gut Health score.' +
+                    '</div>' +
+                '</div>';
+        }
+    }
+
     config.treemap.forEach(
         function(field) {
 
