@@ -1405,75 +1405,11 @@ function showTreemap(
 
         }
     );
-
-    treemapGrid.innerHTML =
-        itemsHtml;
+ itemsHtml = interpretationHtml + itemsHtml;
     
-    const rawInterpretationScore = data[config.scoreCol];
-    const numericInterpretationScore = Number(rawInterpretationScore);
-
-    const hasValidInterpretationScore =
-        rawInterpretationScore !== null &&
-        rawInterpretationScore !== undefined &&
-        String(rawInterpretationScore).trim() !== '' &&
-        Number.isFinite(numericInterpretationScore) &&
-        numericInterpretationScore >= 0 &&
-        numericInterpretationScore <= 100;
-
-    let interpretationCategory = 'Score unavailable';
-    let interpretationColor = '#82919C';
-    let interpretationWidth = 0;
-    let interpretationRange = 'A valid score from 0 to 100 is required.';
-
-    if (hasValidInterpretationScore) {
-        interpretationWidth = numericInterpretationScore;
-
-        if (numericInterpretationScore < 60) {
-            interpretationCategory = 'Needs Attention';
-            interpretationColor = '#D32F2F';
-            interpretationRange = 'Score range: 0–59';
-        } else if (numericInterpretationScore < 80) {
-            interpretationCategory = 'Moderate';
-            interpretationColor = '#F57C00';
-            interpretationRange = 'Score range: 60–79';
-        } else {
-            interpretationCategory = 'Excellent';
-            interpretationColor = '#388E3C';
-            interpretationRange = 'Score range: 80–100';
-        }
-    }
-
-    let interpretationHtml =
-        '<div class="score-interpretation">' +
-            '<div class="score-interpretation-heading">' +
-                '<span>' + config.label + ' Interpretation</span>' +
-                '<span class="score-interpretation-number">' +
-                    (hasValidInterpretationScore
-                        ? numericInterpretationScore + '/100'
-                        : '—') +
-                '</span>' +
-            '</div>' +
-            '<div class="score-interpretation-labels">' +
-                '<span style="color:#D32F2F">0–59</span>' +
-                '<span style="color:#F57C00">60–79</span>' +
-                '<span style="color:#388E3C">80–100</span>' +
-            '</div>' +
-            '<div class="score-interpretation-track">' +
-                '<div class="score-interpretation-fill" style="width:' +
-                    interpretationWidth + '%;background:' +
-                    interpretationColor + ';"></div>' +
-            '</div>' +
-            '<div class="score-interpretation-category" style="color:' +
-                interpretationColor + ';">' +
-                interpretationCategory +
-            '</div>' +
-            '<div class="score-interpretation-note">' +
-                interpretationRange +
-            '</div>' +
-        '</div>';
-
-    itemsHtml = interpretationHtml + itemsHtml;
-
+    treemapGrid.innerHTML =
+        
+        itemsHtml;
     treemapTitle.textContent =
         config.label +
         ' — Breakdown';
