@@ -1408,8 +1408,7 @@ function showTreemap(
 
     treemapGrid.innerHTML =
         itemsHtml;
-
-    // Added: Score interpretation bar for all four metrics
+    
     const rawInterpretationScore = data[config.scoreCol];
     const numericInterpretationScore = Number(rawInterpretationScore);
 
@@ -1473,7 +1472,6 @@ function showTreemap(
             '</div>' +
         '</div>';
 
-    // Add the new component before the existing dashboard cards
     itemsHtml = interpretationHtml + itemsHtml;
 
     treemapTitle.textContent =
