@@ -407,6 +407,81 @@ body {
     border-left: 3px solid #9ca3af;
     border-radius: 4px;
 }
+    
+.gut-score-panel {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 18px;
+    background: #FFFFFF;
+    border: 1px solid #E1E8ED;
+    border-left: 4px solid #18A999;
+    border-radius: 10px;
+    margin-bottom: 2px;
+}
+
+.gut-score-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.gut-score-title {
+    color: #243447;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.gut-score-number {
+    color: #44215D;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.gut-score-labels {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.68rem;
+}
+
+.gut-score-labels span {
+    text-align: center;
+}
+
+.gut-score-track {
+    position: relative;
+    width: 100%;
+    height: 18px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #E8EDF0;
+}
+
+.gut-score-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 20px;
+    transition: width 0.45s ease;
+}
+
+.gut-score-category {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.gut-score-note {
+    margin-top: 7px;
+    color: #718391;
+    font-size: 0.7rem;
+    line-height: 1.5;
+}
+
 </style>
 
 </style>
@@ -1306,6 +1381,37 @@ function showTreemap(
             ? scoreValue + '%'
             : '-';
 
+   
+if (metricKey === 'gut') {
+    itemsHtml +=
+        '<div class="gut-score-panel">' +
+            '<div class="gut-score-heading">' +
+                '<span class="gut-score-title">Gut Health Score</span>' +
+                '<span class="gut-score-number" id="gutScoreNumber">' +
+                    (
+                        scoreValue !== null &&
+                        scoreValue !== undefined &&
+                        String(scoreValue).trim() !== '' &&
+                        Number.isFinite(Number(scoreValue)) &&
+                        Number(scoreValue) >= 0 &&
+                        Number(scoreValue) <= 100
+                            ? Number(scoreValue) + '/100'
+                            : '—'
+                    ) +
+                '</span>' +
+            '</div>' +
+            '<div class="gut-score-labels">' +
+                '<span style="color:#d32f2f">0–59</span>' +
+                '<span style="color:#f57c00">60–79</span>' +
+                '<span style="color:#388e3c">80–100</span>' +
+            '</div>' +
+            '<div class="gut-score-track">' +
+                '<div class="gut-score-fill" id="gutScoreFill"></div>' +
+            '</div>' +
+            '<div class="gut-score-category" id="gutScoreCategory"></div>' +
+            '<div class="gut-score-note">Score interpretation based on the current dashboard's reference bands.</div>' +
+        '</div>';
+} else {
     itemsHtml +=
         '<div class="treemap-item">' +
         '<div class="label">Score</div>' +
@@ -1316,6 +1422,7 @@ function showTreemap(
         '</div>' +
         '<div class="detail">Current value</div>' +
         '</div>';
+}
 
     config.treemap.forEach(
         function(field) {
@@ -1348,6 +1455,45 @@ function showTreemap(
 
     treemapGrid.innerHTML =
         itemsHtml;
+    
+if (metricKey === 'gut') {
+    const gutScore = Number(scoreValue);
+    const validGutScore =
+        scoreValue !== null &&
+        scoreValue !== undefined &&
+        String(scoreValue).trim() !== '' &&
+        Number.isFinite(gutScore) &&
+        gutScore >= 0 &&
+        gutScore <= 100;
+
+    const gutFill = document.getElementById('gutScoreFill');
+    const gutCategory = document.getElementById('gutScoreCategory');
+
+    if (gutFill && gutCategory) {
+        if (!validGutScore) {
+            gutFill.style.width = '0%';
+            gutFill.style.backgroundColor = '#9CA3AF';
+            gutCategory.textContent = 'Score unavailable';
+            gutCategory.style.color = '#6B7280';
+        } else if (gutScore < 60) {
+            gutFill.style.width = gutScore + '%';
+            gutFill.style.backgroundColor = '#d32f2f';
+            gutCategory.textContent = 'Needs Attention';
+            gutCategory.style.color = '#d32f2f';
+        } else if (gutScore < 80) {
+            gutFill.style.width = gutScore + '%';
+            gutFill.style.backgroundColor = '#f57c00';
+            gutCategory.textContent = 'Moderate';
+            gutCategory.style.color = '#f57c00';
+        } else {
+            gutFill.style.width = gutScore + '%';
+            gutFill.style.backgroundColor = '#388e3c';
+            gutCategory.textContent = 'Excellent';
+            gutCategory.style.color = '#388e3c';
+        }
+    }
+}
+
 
     treemapTitle.textContent =
         config.label +
