@@ -260,6 +260,7 @@ body {
     font-size: 0.7rem;
     color: #82919C;
     margin-top: 6px;
+    
 }
 
 .treemap-close {
@@ -273,6 +274,65 @@ body {
     font-size: 0.8rem;
     transition: 0.2s;
     align-self: center;
+}
+
+/* Score interpretation bar */
+.score-interpretation {
+    background: #FFFFFF;
+    border: 1px solid #E1E8ED;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+}
+
+.score-interpretation-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: #243447;
+}
+
+.score-interpretation-number {
+    font-size: 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.score-interpretation-labels {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+}
+
+.score-interpretation-track {
+    width: 100%;
+    height: 16px;
+    background: #E0E0E0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.score-interpretation-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.35s ease;
+}
+
+.score-interpretation-category {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.score-interpretation-note {
+    margin-top: 6px;
+    color: #718391;
+    font-size: 0.75rem;
+    line-height: 1.5;
 }
 
 .treemap-close:hover {
@@ -1348,6 +1408,73 @@ function showTreemap(
 
     treemapGrid.innerHTML =
         itemsHtml;
+
+    // Added: Score interpretation bar for all four metrics
+    const rawInterpretationScore = data[config.scoreCol];
+    const numericInterpretationScore = Number(rawInterpretationScore);
+
+    const hasValidInterpretationScore =
+        rawInterpretationScore !== null &&
+        rawInterpretationScore !== undefined &&
+        String(rawInterpretationScore).trim() !== '' &&
+        Number.isFinite(numericInterpretationScore) &&
+        numericInterpretationScore >= 0 &&
+        numericInterpretationScore <= 100;
+
+    let interpretationCategory = 'Score unavailable';
+    let interpretationColor = '#82919C';
+    let interpretationWidth = 0;
+    let interpretationRange = 'A valid score from 0 to 100 is required.';
+
+    if (hasValidInterpretationScore) {
+        interpretationWidth = numericInterpretationScore;
+
+        if (numericInterpretationScore < 60) {
+            interpretationCategory = 'Needs Attention';
+            interpretationColor = '#D32F2F';
+            interpretationRange = 'Score range: 0–59';
+        } else if (numericInterpretationScore < 80) {
+            interpretationCategory = 'Moderate';
+            interpretationColor = '#F57C00';
+            interpretationRange = 'Score range: 60–79';
+        } else {
+            interpretationCategory = 'Excellent';
+            interpretationColor = '#388E3C';
+            interpretationRange = 'Score range: 80–100';
+        }
+    }
+
+    let interpretationHtml =
+        '<div class="score-interpretation">' +
+            '<div class="score-interpretation-heading">' +
+                '<span>' + config.label + ' Interpretation</span>' +
+                '<span class="score-interpretation-number">' +
+                    (hasValidInterpretationScore
+                        ? numericInterpretationScore + '/100'
+                        : '—') +
+                '</span>' +
+            '</div>' +
+            '<div class="score-interpretation-labels">' +
+                '<span style="color:#D32F2F">0–59</span>' +
+                '<span style="color:#F57C00">60–79</span>' +
+                '<span style="color:#388E3C">80–100</span>' +
+            '</div>' +
+            '<div class="score-interpretation-track">' +
+                '<div class="score-interpretation-fill" style="width:' +
+                    interpretationWidth + '%;background:' +
+                    interpretationColor + ';"></div>' +
+            '</div>' +
+            '<div class="score-interpretation-category" style="color:' +
+                interpretationColor + ';">' +
+                interpretationCategory +
+            '</div>' +
+            '<div class="score-interpretation-note">' +
+                interpretationRange +
+            '</div>' +
+        '</div>';
+
+    // Add the new component before the existing dashboard cards
+    itemsHtml = interpretationHtml + itemsHtml;
 
     treemapTitle.textContent =
         config.label +
