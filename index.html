@@ -407,81 +407,6 @@ body {
     border-left: 3px solid #9ca3af;
     border-radius: 4px;
 }
-    
-.gut-score-panel {
-    grid-column: 1 / -1;
-    width: 100%;
-    padding: 18px;
-    background: #FFFFFF;
-    border: 1px solid #E1E8ED;
-    border-left: 4px solid #18A999;
-    border-radius: 10px;
-    margin-bottom: 2px;
-}
-
-.gut-score-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 14px;
-}
-
-.gut-score-title {
-    color: #243447;
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
-.gut-score-number {
-    color: #44215D;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.15rem;
-    font-weight: 700;
-}
-
-.gut-score-labels {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 6px;
-    font-size: 0.68rem;
-}
-
-.gut-score-labels span {
-    text-align: center;
-}
-
-.gut-score-track {
-    position: relative;
-    width: 100%;
-    height: 18px;
-    overflow: hidden;
-    border-radius: 20px;
-    background: #E8EDF0;
-}
-
-.gut-score-fill {
-    height: 100%;
-    width: 0;
-    border-radius: 20px;
-    transition: width 0.45s ease;
-}
-
-.gut-score-category {
-    margin-top: 10px;
-    font-size: 0.8rem;
-    font-weight: 700;
-}
-
-.gut-score-note {
-    margin-top: 7px;
-    color: #718391;
-    font-size: 0.7rem;
-    line-height: 1.5;
-}
-
 </style>
 
 </style>
@@ -1381,18 +1306,16 @@ function showTreemap(
             ? scoreValue + '%'
             : '-';
 
-   
-itemsHtml +=
-    '<div class="treemap-item">' +
-    '<div class="label">Score</div>' +
-    '<div class="value" style="color:' +
-    config.color +
-    ';">' +
-    scoreDisplay +
-    '</div>' +
-    '<div class="detail">Current value</div>' +
-    '</div>';
-}
+    itemsHtml +=
+        '<div class="treemap-item">' +
+        '<div class="label">Score</div>' +
+        '<div class="value" style="color:' +
+        config.color +
+        ';">' +
+        scoreDisplay +
+        '</div>' +
+        '<div class="detail">Current value</div>' +
+        '</div>';
 
     config.treemap.forEach(
         function(field) {
@@ -1425,10 +1348,6 @@ itemsHtml +=
 
     treemapGrid.innerHTML =
         itemsHtml;
-    
-
-}
-
 
     treemapTitle.textContent =
         config.label +
@@ -1766,5 +1685,3 @@ window.addEventListener(
 
 </body>
 </html>
-
-
