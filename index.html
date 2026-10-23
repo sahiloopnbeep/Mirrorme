@@ -276,7 +276,6 @@ body {
     align-self: center;
 }
 
-/* Score interpretation bar */
 .score-interpretation {
     background: #FFFFFF;
     border: 1px solid #E1E8ED;
@@ -531,6 +530,112 @@ body {
     margin-top: 4px;
     line-height: 1.5;
 }
+    
+
+.bb-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.bb-header {
+    margin: 0 0 24px;
+    padding: 8px 4px;
+}
+
+.bb-eyebrow {
+    color: #8A6BA8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.bb-header h1 {
+    color: #44215D;
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.bb-header p {
+    color: #718391;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.bb-member-name {
+    color: #18A999;
+}
+
+.bb-search {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.bb-search input {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 14px 12px 40px;
+    border: 1px solid #E1E8ED;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #243447;
+    font: inherit;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.bb-search input:focus {
+    border-color: #8A6BA8;
+    box-shadow: 0 0 0 3px rgba(138, 107, 168, 0.12);
+}
+
+.bb-search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #82919C;
+    pointer-events: none;
+}
+
+.left-panel .data-btn {
+    min-height: 54px;
+}
+
+.left-panel .data-btn[hidden] {
+    display: none !important;
+}
+
+#profileView .treemap-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 760px) {
+    body {
+        padding: 14px;
+    }
+
+    .bb-header {
+        margin-bottom: 16px;
+    }
+
+    .dashboard {
+        padding: 16px;
+        gap: 18px;
+    }
+
+    .left-panel {
+        width: 100%;
+    }
+
+    #profileView .treemap-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 
 </style>
 
@@ -891,9 +996,37 @@ body {
 
 <body>
 
-<div class="dashboard">
+
+<div class="bb-page">
+
+    <header class="bb-header">
+        <div class="bb-eyebrow">Your transformation begins here</div>
+
+        <h1>
+            Welcome to Body Balance<span id="bbHeaderPunctuation">.</span>
+        </h1>
+
+        <p>
+            Hi, <strong class="bb-member-name" id="bbMemberName">there</strong>.
+            Explore your health dashboard and personal profile.
+        </p>
+    </header>
+
+    <div class="dashboard">
+
 
     <div class="left-panel">
+
+        <div class="bb-search">
+            <span class="bb-search-icon" aria-hidden="true">⌕</span>
+            <input
+                type="search"
+                id="dashboardSearch"
+                placeholder="Search your dashboard..."
+                aria-label="Search dashboard options"
+                autocomplete="off"
+            >
+        </div>
 
        <button
     class="refresh-btn"
@@ -1396,7 +1529,7 @@ body {
 
     </div>
 
-</div>
+</div><!-- end bb-page -->
 
 <script>
 
@@ -1630,6 +1763,15 @@ async function fetchDashboardData() {
 }
 
 function updateUI(data) {
+    
+    const member = data.member || data.data || data;
+
+    const headerName = document.getElementById('bbMemberName');
+
+    if (headerName) {
+        headerName.textContent = member.name || 'there';
+    }
+
 
     gutScoreEl.textContent =
         data.gut_health_score ??
@@ -1707,7 +1849,7 @@ function showTreemap(
         '<div class="detail">Current value</div>' +
         '</div>';
 
-    // Gut Health interpretation bar — only for Gut Health
+   
     if (metricKey === 'gut') {
         var gutScoreValue = Number(scoreValue);
 
@@ -1759,7 +1901,6 @@ function showTreemap(
         }
     }
 
-    // Metabolism interpretation
     if (metricKey === 'metabolism') {
         var metabolismScore = Number(scoreValue);
 
@@ -2530,6 +2671,21 @@ function showFoodSources() {
         listContainer.textContent = String(foodText);
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('dashboardSearch');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.trim().toLowerCase();
+
+        document.querySelectorAll('.left-panel .data-btn').forEach(function (button) {
+            const matches = button.textContent.toLowerCase().includes(query);
+            button.hidden = query !== '' && !matches;
+        });
+    });
+});
 
 </script>
 
