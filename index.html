@@ -887,91 +887,54 @@ body {
 }
 </style>
 
-
-<style>
-/* Mirror Me member portal: compact true three-circle Venn + restored sidebar */
-.dashboard { max-width:1440px; align-items:stretch; gap:22px; }
-.left-panel { width:300px; min-width:280px; flex:0 0 300px; gap:13px; padding:4px 0; transition:width .2s ease,min-width .2s ease,flex-basis .2s ease; }
-.member-heading { padding:4px 2px 8px; }
-.member-greeting { color:#44215D; font-size:1.85rem; line-height:1.12; font-weight:750; letter-spacing:-.04em; }
-.member-welcome { color:#718391; font-size:.82rem; line-height:1.4; margin-top:6px; }
-.portal-search { display:flex; align-items:center; gap:9px; padding:10px 12px; border:1px solid #E1E8ED; border-radius:9px; background:#fff; color:#718391; }
-.portal-search span { font-size:1.05rem; }
-.portal-search input { width:100%; min-width:0; border:0; outline:0; background:transparent; color:#243447; font:inherit; font-size:.8rem; }
-.sidebar-controls { display:flex; align-items:center; gap:10px; margin:2px 0 3px; }
-.sidebar-toggle { border:1px solid #E1E8ED; background:#fff; color:#526775; border-radius:8px; padding:7px 10px; cursor:pointer; }
-.sidebar-controls-label { font-size:.66rem; letter-spacing:.12em; font-weight:700; color:#82919C; }
-.left-panel > .refresh-btn, .refresh-row { display:none !important; }
-.left-panel .data-btn { min-height:56px; }
-.right-panel { flex:1 1 0; min-width:0; width:calc(100% - 322px); }
-.portal-home { display:block; width:100%; min-width:0; padding:clamp(16px,2.3vw,30px); text-align:center; }
-.portal-home .home-eyebrow { color:#7b6a91; font-size:.72rem; font-weight:700; letter-spacing:.16em; margin-bottom:10px; }
-.portal-home h1 { color:#342044; font-size:clamp(1.7rem,3vw,2.45rem); line-height:1.15; margin:0 0 14px; }
-.portal-home .home-intro { max-width:720px; color:#5c6876; line-height:1.75; margin:0 auto 12px; text-align:center; }
-.journey-circles { position:relative; width:100%; max-width:480px; height:390px; margin:4px auto 8px; }
-.journey-circle { position:absolute; width:220px; height:220px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1.5px solid rgba(255,255,255,.95); box-shadow:0 5px 18px rgba(50,35,70,.08); cursor:pointer; transition:filter .2s ease; color:#30243e; font:inherit; font-weight:700; font-size:1rem; padding:0; }
-.journey-circle span { position:relative; z-index:2; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.78); backdrop-filter:blur(5px); }
-.journey-circle:hover { filter:saturate(1.12) brightness(1.02); }
-/* Three equal circles, arranged as a triangular Venn. */
-.circle-nutrition { left:calc(50% - 185px); top:4px; background:rgba(227,193,238,.72); z-index:1; }
-.circle-movement { left:calc(50% - 35px); top:4px; background:rgba(178,220,211,.72); z-index:2; }
-.circle-mind { left:calc(50% - 110px); top:132px; background:rgba(250,218,167,.76); z-index:3; }
-.journey-detail { max-width:650px; margin:12px auto; padding:16px 18px; text-align:left; border:1px solid #e6e0ed; border-radius:12px; background:#fff; color:#43515d; line-height:1.6; }
-.home-hint { color:#82909b; font-size:.82rem; margin-top:4px; }
-#profileView { display:none; } #profileView.show { display:block !important; }
-.left-panel.collapsed { width:76px; min-width:76px; flex-basis:76px; }
-.left-panel.collapsed .member-greeting,.left-panel.collapsed .member-welcome,.left-panel.collapsed .portal-search,.left-panel.collapsed .sidebar-controls-label,.left-panel.collapsed .data-btn .btn-label,.left-panel.collapsed .data-btn .btn-value { display:none; }
-.left-panel.collapsed .data-btn { justify-content:center; padding:12px 8px; }
-@media(max-width:760px) { body{padding:12px}.dashboard{padding:14px;gap:14px;flex-direction:column}.left-panel{width:100%;min-width:0;flex:0 0 auto}.right-panel{width:100%;flex:1 1 auto}.journey-circles{max-width:420px;height:340px}.journey-circle{width:clamp(160px,48vw,190px);height:clamp(160px,48vw,190px);font-size:.9rem}.circle-nutrition{left:calc(50% - 158px);top:2px}.circle-movement{left:calc(50% - 32px);top:2px}.circle-mind{left:calc(50% - 95px);top:112px} }
-@media(max-width:390px) { .journey-circles{height:300px}.journey-circle{width:158px;height:158px}.circle-nutrition{left:calc(50% - 137px);top:0}.circle-movement{left:calc(50% - 21px);top:0}.circle-mind{left:calc(50% - 79px);top:100px} }
-
-/* Version 5: dashboard-first desktop/tablet layout and nutrition-circle interaction */
-.dashboard { max-width: 1500px; width:100%; gap:24px; padding:clamp(18px,2.2vw,30px); align-items:stretch; }
-.left-panel { width:clamp(250px,22vw,300px); min-width:250px; flex:0 0 clamp(250px,22vw,300px); }
-.right-panel { flex:1 1 auto; width:auto; min-width:0; }
-.member-greeting { font-size:clamp(1.65rem,2.1vw,2rem); line-height:1.15; }
-.member-welcome { font-size:.84rem; margin-top:6px; }
-.portal-home { min-height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:clamp(18px,2.6vw,36px); }
-.portal-home .home-eyebrow { color:#7b6a91; font-size:.75rem; font-weight:800; letter-spacing:.16em; margin:0 0 9px; }
-.portal-home h1 { margin:0 0 12px; }
-.portal-home .home-intro { max-width:680px; margin:0 auto 14px; }
-.journey-circles { flex:0 0 auto; margin-top:6px; }
-.journey-circle { transform-origin:center; }
-.journey-circle.swirl-open { animation:nutritionSwirl .82s cubic-bezier(.2,.8,.25,1) both; z-index:10 !important; }
-@keyframes nutritionSwirl { 0% { transform:rotate(0deg) scale(1); filter:saturate(1); } 45% { transform:rotate(220deg) scale(1.12); filter:saturate(1.45); } 75% { transform:rotate(330deg) scale(.92); } 100% { transform:rotate(360deg) scale(1.03); filter:saturate(1.15); } }
-#nutritionView { animation:nutritionReveal .38s ease both; }
-@keyframes nutritionReveal { from { opacity:0; transform:translateY(12px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
-@media (min-width:761px) { body { padding:clamp(14px,2vw,28px); } .dashboard { min-height:calc(100vh - 2 * clamp(14px,2vw,28px)); } .left-panel { align-self:stretch; } .right-panel { display:flex; flex-direction:column; } .portal-home { flex:1; } }
-@media (min-width:761px) and (max-width:1050px) { .dashboard { gap:16px; padding:18px; } .left-panel { width:240px; min-width:240px; flex-basis:240px; } .journey-circles { transform:scale(.88); transform-origin:top center; margin-bottom:-35px; } }
-@media(max-width:760px) { .dashboard { padding:14px; gap:14px; } .left-panel { width:100%; min-width:0; flex:0 0 auto; } .right-panel { width:100%; flex:1 1 auto; } .portal-home { min-height:0; } }
-
-</style>
-
 </head>
 
 <body>
 
 <div class="dashboard">
 
-    <div class="left-panel" id="leftPanel">
+    <div class="left-panel">
 
-        <div class="member-heading"><div class="member-greeting" id="memberGreeting">Hi</div><div class="member-welcome">Welcome to Mirror Me</div></div>
-        <label class="portal-search" aria-label="Search portal sections"><span aria-hidden="true">⌕</span><input id="portalSearch" type="search" placeholder="Search your dashboard" oninput="filterPortalItems(this.value)"></label>
-        <div class="sidebar-controls"><button class="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Collapse or expand sidebar">☰</button><span class="sidebar-controls-label">YOUR HEALTH SCORES</span></div>
-
-        <button class="data-btn" id="profileBtn" type="button" onclick="showProfile()">
-    <span class="btn-label">My Profile</span>
-    <span class="btn-value">→</span>
+       <button
+    class="refresh-btn"
+    onclick="window.location.href='/profile.html'"
+>
+    ↑ View My Profile
 </button>
+        
+        <div class="refresh-row">
+
+            <button
+                class="refresh-btn"
+                onclick="fetchDashboardData()"
+            >
+                ↻ Refresh
+            </button>
+
+            <span
+                class="last-updated"
+                id="lastUpdated"
+            >
+                Last updated: —
+            </span>
+
+        </div>
+
+        
+<button class="data-btn" id="profileBtn" type="button" onclick="showProfile()">
+    <span class="btn-label">View Profile</span>
+    <span class="btn-value">→</span>
 
 <button
     class="data-btn"
     id="nutritionBtn"
     type="button"
-    onclick="openNutritionFromCircle()"
+    onclick="showNutrition()"
 >
     <span class="btn-label">Complete Nutritional Recommendation</span>
     <span class="btn-value">→</span>
+</button>
+    
 </button>
 
         <button
@@ -1103,16 +1066,12 @@ body {
         id="rightPanel"
     >
 
-        <div class="placeholder portal-home" id="placeholder">
-            <div class="home-eyebrow">Your Transformation Begins Here</div>
-            <h1>Welcome to Mirror Me</h1>
-            <p class="home-intro">The 3 circles connected, transform you to the most desired self. Click to explore path towards your transformation</p>
-            <div class="journey-circles" aria-label="Explore Nutrition, Movement and Mind">
-                <button id="nutritionCircle" class="journey-circle circle-nutrition" type="button" onclick="openNutritionFromCircle()" aria-label="Open Nutrition Circle and recommendations"><span>Nutrition</span></button>
-                <button class="journey-circle circle-movement" type="button" onclick="showJourneySection('movement')"><span>Movement</span></button>
-                <button class="journey-circle circle-mind" type="button" onclick="showJourneySection('mind')"><span>Mind</span></button>
-            </div>
-            <div id="journeyDetail" class="journey-detail" hidden></div>
+        <div
+            class="placeholder"
+            id="placeholder"
+        >
+            <span class="icon">🧘</span>
+            Select a metric to view your detailed health treemap.
         </div>
 
         <div
@@ -1442,10 +1401,10 @@ body {
 <script>
 
 const SUPABASE_URL =
- xxxxxxx
+   'https://iizpxuvojsfuulljmhkl.supabase.co';
 
 const SUPABASE_PUBLISHABLE_KEY =
- xxxxxxxxx
+  'sb_publishable_G9Athn6C6Pjmdj3P5tGPaw_CmUuxs54';
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1574,9 +1533,6 @@ const treemapTitle =
 const treemapGrid =
     document.getElementById('treemapGrid');
 
-function toggleSidebar() { const panel=document.getElementById('leftPanel'); if(panel) panel.classList.toggle('collapsed'); }
-function filterPortalItems(query) { const term=(query||'').trim().toLowerCase(); document.querySelectorAll('#leftPanel .data-btn').forEach(button=>{button.style.display=(!term||button.textContent.toLowerCase().includes(term))?'':'none';}); }
-
 async function getCurrentSession() {
 
     const {
@@ -1596,7 +1552,6 @@ async function getCurrentSession() {
 }
 
 async function fetchDashboardData() {
-    const wasProfileOpen = document.getElementById('profileView')?.classList.contains('show');
 
     try {
 
@@ -1667,20 +1622,14 @@ async function fetchDashboardData() {
 
         clearUI();
 
-        if (lastUpdatedEl) lastUpdatedEl.textContent = 'Unable to load data';
+        lastUpdatedEl.textContent =
+            'Unable to load data';
 
-    } finally {
-        if (wasProfileOpen && currentMemberData) {
-            await showProfile();
-        }
     }
 
 }
 
 function updateUI(data) {
-    const greeting = document.getElementById('memberGreeting');
-    const memberName = data?.member?.full_name || data?.member?.name || data?.profile?.full_name || data?.profile?.name || data?.full_name || data?.name;
-    if (greeting && memberName) greeting.textContent = `Hi ${String(memberName).trim().split(/\s+/)[0]}`;
 
     gutScoreEl.textContent =
         data.gut_health_score ??
@@ -2008,19 +1957,14 @@ function showTreemap(
 
 }
     
-async function showProfile() {
+function showProfile() {
     if (!currentMemberData) {
-        await fetchDashboardData();
-    }
-    if (!currentMemberData) {
-        const lastUpdated = document.getElementById('lastUpdated');
-        if (lastUpdated) lastUpdated.textContent = 'Profile data could not be loaded. Please refresh.';
+        fetchDashboardData();
         return;
     }
 
     const data = currentMemberData.member ||
                  currentMemberData.data ||
-                 currentMemberData.profile ||
                  currentMemberData;
 
     document.getElementById('profileName').textContent =
@@ -2070,7 +2014,7 @@ document.getElementById('ageDifferenceValue').textContent =
     ageDifference !== undefined &&
     String(ageDifference).trim() !== '' &&
     Number.isFinite(ageDifferenceNumber)
-        ? `${ageDifferenceNumber > 0 ? '+' : ''}${ageDifferenceNumber} years`
+        ? `ageDifferenceNumber>0?'+':''{ageDifferenceNumber} years`
         : '—';
 
 document.getElementById('ageInterpretationValue').textContent =
@@ -2230,8 +2174,6 @@ if (
 
     document.getElementById('placeholder').style.display = 'none';
     document.getElementById('treemap').classList.remove('show');
-    document.getElementById('nutritionView').style.display = 'none';
-    document.getElementById('profileView').style.display = 'block';
     document.getElementById('profileView').classList.add('show');
 
     document.querySelectorAll('.data-btn').forEach(button => {
@@ -2243,7 +2185,6 @@ if (
 
 function closeProfile() {
     document.getElementById('profileView').classList.remove('show');
-    document.getElementById('profileView').style.display = 'none';
     document.getElementById('placeholder').style.display = 'block';
 }
 
@@ -2322,10 +2263,6 @@ document
 
 window.fetchDashboardData =
     fetchDashboardData;
-window.showProfile = showProfile;
-window.showNutrition = showNutrition;
-window.showJourneySection = showJourneySection;
-window.closeProfile = closeProfile;
 
 window.closeTreemap =
     closeTreemap;
@@ -2338,43 +2275,6 @@ window.addEventListener(
 
     }
 );
-
-function showJourneySection(section) {
-    const detail = document.getElementById('journeyDetail');
-    if (!detail) return;
-    const content = {
-        movement: '<strong>Movement</strong><p>Your movement journey will bring together activity, mobility and exercise planning. This section can be connected to your member-specific plan as that feature is built.</p>',
-        mind: '<strong>Mind</strong><p>Your mind journey will bring together stress awareness, recovery and mind-body practices. This section can be connected to your member-specific plan as that feature is built.</p>'
-    };
-    detail.innerHTML = content[section] || '';
-    detail.hidden = !content[section];
-    if (detail.hidden) detail.textContent = '';
-}
-
-function openNutritionFromCircle() {
-    const circle = document.getElementById('nutritionCircle');
-    if (!currentMemberData) {
-        // Keep the user on the dashboard if member data has not finished loading.
-        if (circle) {
-            circle.classList.remove('swirl-open');
-            void circle.offsetWidth;
-            circle.classList.add('swirl-open');
-            window.setTimeout(() => circle.classList.remove('swirl-open'), 900);
-        }
-        return;
-    }
-    if (circle) {
-        circle.classList.remove('swirl-open');
-        void circle.offsetWidth;
-        circle.classList.add('swirl-open');
-        window.setTimeout(() => {
-            circle.classList.remove('swirl-open');
-            showNutrition();
-        }, 720);
-    } else {
-        showNutrition();
-    }
-}
 
 function showNutrition() {
     if (!currentMemberData) return;
