@@ -2484,52 +2484,48 @@ function closeTreemap() {
 
 }
 
+
 document
-    .querySelectorAll('.data-btn')
-    .forEach(
-        function(button) {
+    .querySelectorAll('.data-btn[data-metric]')
+    .forEach(function(button) {
+        button.addEventListener('click', function() {
+            const metric = this.getAttribute('data-metric');
 
-            button.addEventListener(
-                'click',
-                function() {
+            if (!currentMemberData || !metric) {
+                return;
+            }
 
-                    const metric =
-                        this.getAttribute(
-                            'data-metric'
-                        );
+            // Clicking the same active metric closes it.
+            if (activeMetric === metric) {
+                document.getElementById('treemap').classList.remove('show');
+                document.getElementById('profileView').style.display = 'none';
+                document.getElementById('profileView').classList.remove('show');
+                document.getElementById('nutritionView').style.display = 'none';
+                document.getElementById('placeholder').style.display = 'block';
 
-                    if (!currentMemberData) {
-                        return;
-                    }
+                document.querySelectorAll('.data-btn[data-metric]').forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
 
-                    document
-                        .querySelectorAll('.data-btn')
-                        .forEach(
-                            function(button) {
+                activeMetric = null;
+                return;
+            }
 
-                                button.classList.remove(
-                                    'active'
-                                );
+            // Clear previous active state.
+            document.querySelectorAll('.data-btn[data-metric]').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
 
-                            }
-                        );
+            this.classList.add('active');
+            activeMetric = metric;
 
-                    this.classList.add(
-                        'active'
-                    );
+            document.getElementById('profileView').style.display = 'none';
+            document.getElementById('profileView').classList.remove('show');
+            document.getElementById('nutritionView').style.display = 'none';
 
-                    showTreemap(
-                        metric,
-                        currentMemberData
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
+            showTreemap(metric, currentMemberData);
+        });
+    });
 
 window.fetchDashboardData =
     fetchDashboardData;
