@@ -2557,33 +2557,8 @@ function closeTreemap() {
 }
 
 
+
 document
-    .querySelectorAll('.data-btn[data-metric]')
-    .forEach(function(button) {
-        button.addEventListener('click', function() {
-            const metric = this.getAttribute('data-metric');
-
-            if (!currentMemberData || !metric) {
-                return;
-            }
-
-            // Clicking the same active metric closes it.
-            if (activeMetric === metric) {
-                document.getElementById('treemap').classList.remove('show');
-                document.getElementById('profileView').style.display = 'none';
-                document.getElementById('profileView').classList.remove('show');
-                document.getElementById('nutritionView').style.display = 'none';
-                document.getElementById('placeholder').style.display = 'block';
-
-                document.querySelectorAll('.data-btn[data-metric]').forEach(function(btn) {
-                    btn.classList.remove('active');
-                });
-
-                activeMetric = null;
-                return;
-            }
-
-            document
     .querySelectorAll('.data-btn[data-metric]')
     .forEach(function(button) {
         button.addEventListener('click', function() {
@@ -2596,11 +2571,12 @@ document
             const treemapView = document.getElementById('treemap');
             const profileView = document.getElementById('profileView');
             const nutritionView = document.getElementById('nutritionView');
+            const baselineView = document.getElementById('baselineView');
             const placeholder = document.getElementById('placeholder');
 
-            // Clicking the currently active score closes its view.
+            // Clicking the active metric closes its view.
             if (activeMetric === metric) {
-                treemapView.classList.remove('show');
+                if (treemapView) treemapView.classList.remove('show');
 
                 if (profileView) {
                     profileView.style.display = 'none';
@@ -2608,11 +2584,7 @@ document
                     profileView.hidden = true;
                 }
 
-                if (nutritionView) {
-                    nutritionView.style.display = 'none';
-                }
-
-                const baselineView = document.getElementById('baselineView');
+                if (nutritionView) nutritionView.style.display = 'none';
 
                 if (baselineView) {
                     baselineView.style.display = 'none';
@@ -2620,9 +2592,7 @@ document
                     baselineView.hidden = true;
                 }
 
-                if (placeholder) {
-                    placeholder.style.display = 'block';
-                }
+                if (placeholder) placeholder.style.display = 'block';
 
                 document.querySelectorAll('.data-btn').forEach(function(btn) {
                     btn.classList.remove('active');
@@ -2633,18 +2603,14 @@ document
                 return;
             }
 
-            // Close other views before opening the selected health score.
+            // Close other views before opening the selected metric.
             if (profileView) {
                 profileView.style.display = 'none';
                 profileView.classList.remove('show');
                 profileView.hidden = true;
             }
 
-            if (nutritionView) {
-                nutritionView.style.display = 'none';
-            }
-
-            const baselineView = document.getElementById('baselineView');
+            if (nutritionView) nutritionView.style.display = 'none';
 
             if (baselineView) {
                 baselineView.style.display = 'none';
@@ -2658,13 +2624,13 @@ document
             });
 
             this.classList.add('active');
-            activeMetric = metric;
-
             this.setAttribute('aria-expanded', 'true');
+            activeMetric = metric;
 
             showTreemap(metric, currentMemberData);
         });
     });
+
 
 window.fetchDashboardData =
     fetchDashboardData;
