@@ -990,6 +990,77 @@ body {
     line-height: 1.5;
     white-space: pre-wrap;
 }
+    
+/* Mirror Me: left sidebar + right content layout */
+body {
+    padding: 24px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 24px;
+    width: 100%;
+    max-width: 1440px;
+    min-height: calc(100vh - 48px);
+    padding: 24px;
+}
+
+.left-panel {
+    flex: 0 0 280px;
+    width: 280px;
+    min-width: 0;
+}
+
+.right-panel {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-panel > .placeholder {
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+}
+
+.portal-home {
+    padding: clamp(20px, 3vw, 42px);
+    text-align: center;
+}
+
+.journey-circles {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+}
+
+/* Stack panels only on smaller screens */
+@media (max-width: 760px) {
+    body {
+        padding: 12px;
+    }
+
+    .dashboard {
+        flex-direction: column;
+        padding: 14px;
+        gap: 20px;
+    }
+
+    .left-panel {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .right-panel {
+        width: 100%;
+    }
+}
+
 </style>
 
 </head>
