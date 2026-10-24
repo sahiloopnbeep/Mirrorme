@@ -1126,7 +1126,7 @@ body {
 
         <p>
             Hi, <strong class="bb-member-name" id="bbMemberName">there</strong>.
-            Explore your health dashboard and personal profile.
+        
         </p>
     </header>
 
@@ -1145,13 +1145,6 @@ body {
                 autocomplete="off"
             >
         </div>
-
-       <button
-    class="refresh-btn"
-    onclick="showProfile()"
->
-    ↑ View My Profile
-</button>
         
         <div class="refresh-row">
 
@@ -1183,11 +1176,26 @@ body {
     <span class="btn-label">View Profile</span>
     <span class="btn-value">→</span>
 </button>
+
+<button
+    class="data-btn"
+    id="baselineBtn"
+    type="button"
+    onclick="showBaseline()"
+    aria-expanded="false"
+    aria-controls="baselineView"
+>
+    <span class="btn-label">Baseline</span>
+    <span class="btn-value">→</span>
+</button>
+
 <button
     class="data-btn"
     id="nutritionBtn"
     type="button"
     onclick="showNutrition()"
+    aria-expanded="false"
+    aria-controls="nutritionView"
 >
     <span class="btn-label">Complete Nutritional Recommendation</span>
     <span class="btn-value">→</span>
@@ -1433,13 +1441,13 @@ body {
     </button>
 </div>
 
-        
+<!-- PROFILE VIEW -->
 <div class="treemap" id="profileView" hidden>
     <h3>My Profile</h3>
 
     <div class="treemap-grid">
         <div class="treemap-item">
-            <div class="label">Full Name</div>
+            <div class="label">Name</div>
             <div class="value" id="profileName">—</div>
         </div>
 
@@ -1452,7 +1460,19 @@ body {
             <div class="label">Sex</div>
             <div class="value" id="profileSex">—</div>
         </div>
+    </div>
 
+    <button class="treemap-close" type="button" onclick="closeProfile()">
+        ← Back to Dashboard
+    </button>
+</div>
+
+
+<!-- BASELINE VIEW -->
+<div class="treemap" id="baselineView" hidden>
+    <h3>Baseline</h3>
+
+    <div class="treemap-grid">
         <div class="treemap-item">
             <div class="label">Age</div>
             <div class="value" id="profileAge">—</div>
@@ -1461,200 +1481,180 @@ body {
         <div class="treemap-item">
             <div class="label">BMI</div>
             <div class="value" id="profileBmi">—</div>
-           <h3>BMI Interpretation</h3>
-
-<div class="bar-container">
-    <div class="bmi-value">
-        BMI: <span id="bmiValueDisplay">—</span>
+        </div>
     </div>
 
-    <div class="bar-labels">
-        <span>Underweight</span>
-        <span style="color:#388e3c">Normal</span>
-        <span>Overweight</span>
-        <span>Obesity</span>
+    <h3>BMI Interpretation</h3>
+
+    <div class="bar-container">
+        <div class="bmi-value">
+            BMI: <span id="bmiValueDisplay">—</span>
+        </div>
+
+        <div class="bar-labels">
+            <span>Underweight</span>
+            <span style="color:#388e3c">Normal</span>
+            <span>Overweight</span>
+            <span>Obesity</span>
+        </div>
+
+        <div class="bar-background">
+            <div class="bar-fill" id="bmiFill"></div>
+        </div>
+
+        <div id="bmiCategory"
+             style="font-weight:bold; margin-top:10px; font-size:13px;"></div>
+
+        <div id="bmiDefinition"
+             style="font-size:12px; line-height:1.6; margin-top:6px; color:#555;"></div>
+
+        <div class="bmi-disclaimer">
+            <strong>Clinical Disclaimer:</strong>
+            BMI is a screening measure and not a diagnosis.
+            It should be interpreted alongside other health indicators,
+            clinical history, and an individual's circumstances.
+            Consult our healthcare professionals for a
+            comprehensive assessment.
+        </div>
+
+        <div style="font-size:10px; line-height:1.6; margin-top:10px; color:#666;">
+            <strong>Clinical reference:</strong>
+            WHO adult BMI classification.
+            <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight"
+               target="_blank"
+               rel="noopener noreferrer">
+                View WHO reference
+            </a>
+        </div>
     </div>
 
-    <div class="bar-background">
-        <div class="bar-fill" id="bmiFill"></div>
-    </div>
+    <div class="whr-bar-container">
+        <h3>Waist-to-Hip Ratio (WHR)</h3>
 
-    <div id="bmiCategory"
-         style="font-weight:bold; margin-top:10px; font-size:13px;">
-    </div>
-
-    <div id="bmiDefinition"
-         style="font-size:12px; line-height:1.6; margin-top:6px; color:#555;">
-    </div>
-<div class="bmi-disclaimer">
-    <strong>Clinical Disclaimer:</strong>
-    BMI is a screening measure and not a diagnosis.
-    It should be interpreted alongside other health indicators,
-    clinical history, and an individual's circumstances.
-    Consult our healthcare professionals for a
-    comprehensive assessment.
-</div>
-    <div style="font-size:10px; line-height:1.6; margin-top:10px; color:#666;">
-        <strong>Clinical reference:</strong>
-        WHO adult BMI classification.
-        <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight"
-           target="_blank"
-           rel="noopener noreferrer">
-            View WHO reference
-        </a>
-    </div>
-</div>
-<div class="bar-container">
-  <div class="bmi-value">
-    BMI: <span id="bmiValueDisplay">—</span>
-  </div>
-
-  <div class="bar-labels">
-    <span>Under</span>
-    <span style="color:#388e3c">Normal</span>
-    <span>Over</span>
-    <span>Obese</span>
-  </div>
-
-  <div class="bar-background">
-    <div class="bar-fill" id="bmiFill"></div>
-  </div>
-</div>
-            
         <div class="treemap-item">
             <div class="label">Waist-to-Hip Ratio</div>
             <div class="value" id="profileWhr">—</div>
         </div>
-    </div>
 
-    
-<div class="whr-bar-container">
-
-    <h3>Waist-to-Hip Ratio (WHR)</h3>
-
-    <div class="whr-metric-value">
-        Your WHR: <span id="whrValueDisplay">—</span>
-    </div>
-
-    <div class="whr-bar-labels">
-        <span>Below threshold</span>
-        <span>At/above threshold</span>
-    </div>
-
-    <div class="whr-bar-background">
-        <div class="whr-bar-fill" id="whrFill"></div>
-    </div>
-
-    <div class="whr-category" id="whrCategory">
-        Calculating interpretation...
-    </div>
-
-    <div class="whr-definition">
-        <strong>What this means:</strong>
-        Waist-to-hip ratio is calculated by dividing waist
-        circumference by hip circumference. It helps assess
-        abdominal fat distribution, which is associated with
-        cardiometabolic health risk. WHR alone does not diagnose
-        a medical condition.
-    </div>
-
-    <div class="whr-reference">
-        <strong>Clinical reference:</strong>
-        World Health Organization (WHO), <em>Waist circumference
-        and waist-hip ratio: report of a WHO expert consultation</em>
-        (2011).
-
-        Commonly cited thresholds associated with substantially
-        increased metabolic risk: men ≥ 0.90; women ≥ 0.85.
-
-        <a href="https://www.who.int/publications-detail-redirect/9789241501491"
-           target="_blank"
-           rel="noopener noreferrer">
-            View WHO report
-        </a>
-    </div>
-
-</div>
-
-<h3 style="margin-top: 28px;">Allergy Details</h3>
-    
-
-<div class="treemap-grid">
-    <div class="treemap-item">
-        <div class="label">Allergy Severity</div>
-        <div class="value" id="allergySeverity">—</div>
-    </div>
-</div>
-    
-<div class="allergy-profile-note">
-    <h4>Allergy Profile Note</h4>
-    <p>
-        Your profile indicates a
-        <strong id="allergySeverityClassification">—</strong>
-        allergy tendency. This is not a restriction but an awareness
-        guide. You can confidently explore alternatives and make
-        informed choices about your diet and environment.
-    </p>
-</div>
-
-
-<section class="ageing-profile-section" aria-labelledby="ageingProfileTitle">
-    <div class="ageing-profile-heading">
-        <span class="ageing-eyebrow">YOUR AGE PROFILE</span>
-        <h3 id="ageingProfileTitle">Understanding Your Ageing Profile</h3>
-        <p>Three age measures, each offering a different perspective.</p>
-    </div>
-
-    <div class="ageing-profile-layout">
-        <div class="ageing-pyramid" aria-label="Chronological, biological and metabolic age">
-            <div class="ageing-level chronological-level">
-                <span>Chronological Age</span>
-                <strong id="chronologicalAgeValue">—</strong>
-            </div>
-
-            <div class="ageing-level biological-level">
-                <span>Biological Age</span>
-                <strong id="biologicalAgeValue">—</strong>
-            </div>
-
-            <div class="ageing-level metabolic-level">
-                <span>Metabolic Age</span>
-                <strong id="metabolicAgeValue">—</strong>
-            </div>
+        <div class="whr-metric-value">
+            Your WHR: <span id="whrValueDisplay">—</span>
         </div>
 
-        <div class="ageing-profile-insights">
-            <article class="ageing-insight-card">
-                <span class="ageing-card-label">AGE DIFFERENCE</span>
-                <strong id="ageDifferenceValue">—</strong>
-                <p>Difference between your biological age and chronological age, as reported in your member data.</p>
-            </article>
+        <div class="whr-bar-labels">
+            <span>Below threshold</span>
+            <span>At/above threshold</span>
+        </div>
 
-            <article class="ageing-insight-card interpretation-card">
-                <span class="ageing-card-label">YOUR INTERPRETATION</span>
-                <p id="ageInterpretationValue">Your age interpretation will appear here when available.</p>
-            </article>
+        <div class="whr-bar-background">
+            <div class="whr-bar-fill" id="whrFill"></div>
+        </div>
+
+        <div class="whr-category" id="whrCategory">
+            Calculating interpretation...
+        </div>
+
+        <div class="whr-definition">
+            <strong>What this means:</strong>
+            Waist-to-hip ratio is calculated by dividing waist
+            circumference by hip circumference. It helps assess
+            abdominal fat distribution, which is associated with
+            cardiometabolic health risk. WHR alone does not diagnose
+            a medical condition.
+        </div>
+
+        <div class="whr-reference">
+            <strong>Clinical reference:</strong>
+            World Health Organization (WHO),
+            <em>Waist circumference and waist-hip ratio: report of a WHO expert consultation</em>
+            (2011).
+
+            Commonly cited thresholds associated with substantially
+            increased metabolic risk: men ≥ 0.90; women ≥ 0.85.
+
+            <a href="https://www.who.int/publications-detail-redirect/9789241501491"
+               target="_blank"
+               rel="noopener noreferrer">
+                View WHO report
+            </a>
         </div>
     </div>
 
-    <p class="ageing-profile-disclaimer">
-        These age measures are estimates intended to support health awareness.
-        They are not diagnoses, and they should be interpreted alongside your
-        individual circumstances and other health indicators. A lower value
-        does not, by itself, establish better health.
-    </p>
-</section>
+    <h3 style="margin-top:28px;">Allergy Details</h3>
 
-    <button class="treemap-close" type="button" onclick="closeProfile()">
+    <div class="treemap-grid">
+        <div class="treemap-item">
+            <div class="label">Allergy Severity</div>
+            <div class="value" id="allergySeverity">—</div>
+        </div>
+    </div>
+
+    <div class="allergy-profile-note">
+        <h4>Allergy Profile Note</h4>
+        <p>
+            Your profile indicates a
+            <strong id="allergySeverityClassification">—</strong>
+            allergy tendency. This is not a restriction but an awareness
+            guide. You can confidently explore alternatives and make
+            informed choices about your diet and environment.
+        </p>
+    </div>
+
+    <section class="ageing-profile-section" aria-labelledby="ageingProfileTitle">
+        <div class="ageing-profile-heading">
+            <span class="ageing-eyebrow">YOUR AGE PROFILE</span>
+            <h3 id="ageingProfileTitle">Understanding Your Ageing Profile</h3>
+            <p>Three age measures, each offering a different perspective.</p>
+        </div>
+
+        <div class="ageing-profile-layout">
+            <div class="ageing-pyramid" aria-label="Chronological, biological and metabolic age">
+                <div class="ageing-level chronological-level">
+                    <span>Chronological Age</span>
+                    <strong id="chronologicalAgeValue">—</strong>
+                </div>
+
+                <div class="ageing-level biological-level">
+                    <span>Biological Age</span>
+                    <strong id="biologicalAgeValue">—</strong>
+                </div>
+
+                <div class="ageing-level metabolic-level">
+                    <span>Metabolic Age</span>
+                    <strong id="metabolicAgeValue">—</strong>
+                </div>
+            </div>
+
+            <div class="ageing-profile-insights">
+                <article class="ageing-insight-card">
+                    <span class="ageing-card-label">AGE DIFFERENCE</span>
+                    <strong id="ageDifferenceValue">—</strong>
+                    <p>
+                        Difference between your biological age and chronological age,
+                        as reported in your member data.
+                    </p>
+                </article>
+
+                <article class="ageing-insight-card interpretation-card">
+                    <span class="ageing-card-label">YOUR INTERPRETATION</span>
+                    <p id="ageInterpretationValue">
+                        Your age interpretation will appear here when available.
+                    </p>
+                </article>
+            </div>
+        </div>
+
+        <p class="ageing-profile-disclaimer">
+            These age measures are estimates intended to support health awareness.
+            They are not diagnoses, and they should be interpreted alongside your
+            individual circumstances and other health indicators. A lower value
+            does not, by itself, establish better health.
+        </p>
+    </section>
+
+    <button class="treemap-close" type="button" onclick="closeBaseline()">
         ← Back to Dashboard
     </button>
-
 </div>
-
-    </div>
-
-</div><!-- end bb-page -->
-
 <script>
 
 const SUPABASE_URL =
@@ -2480,10 +2480,55 @@ if (
     activeMetric = null;
 }
 
+
+function showBaseline() {
+    if (!currentMemberData) {
+        fetchDashboardData().then(function () {
+            if (currentMemberData) {
+                showBaseline();
+            }
+        });
+        return;
+    }
+
+    showProfile();
+
+    document.getElementById('profileView').style.display = 'none';
+    document.getElementById('profileView').classList.remove('show');
+
+    document.getElementById('baselineView').style.display = 'block';
+    document.getElementById('baselineView').classList.add('show');
+
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('treemap').classList.remove('show');
+    document.getElementById('nutritionView').style.display = 'none';
+
+    document.querySelectorAll('.data-btn').forEach(function (button) {
+        button.classList.remove('active');
+    });
+
+    document.getElementById('baselineBtn').classList.add('active');
+    activeMetric = null;
+}
+
 function closeProfile() {
     document.getElementById('profileView').classList.remove('show');
+    document.getElementById('profileView').style.display = 'none';
+
+    document.getElementById('baselineView').classList.remove('show');
+    document.getElementById('baselineView').style.display = 'none';
+
+    document.getElementById('profileBtn').classList.remove('active');
+    document.getElementById('baselineBtn').classList.remove('active');
+
     document.getElementById('placeholder').style.display = 'block';
+    activeMetric = null;
 }
+
+function closeBaseline() {
+    closeProfile();
+}
+
 
 
 function closeTreemap() {
@@ -2538,17 +2583,84 @@ document
                 return;
             }
 
-            // Clear previous active state.
-            document.querySelectorAll('.data-btn[data-metric]').forEach(function(btn) {
+            document
+    .querySelectorAll('.data-btn[data-metric]')
+    .forEach(function(button) {
+        button.addEventListener('click', function() {
+            const metric = this.getAttribute('data-metric');
+
+            if (!currentMemberData || !metric) {
+                return;
+            }
+
+            const treemapView = document.getElementById('treemap');
+            const profileView = document.getElementById('profileView');
+            const nutritionView = document.getElementById('nutritionView');
+            const placeholder = document.getElementById('placeholder');
+
+            // Clicking the currently active score closes its view.
+            if (activeMetric === metric) {
+                treemapView.classList.remove('show');
+
+                if (profileView) {
+                    profileView.style.display = 'none';
+                    profileView.classList.remove('show');
+                    profileView.hidden = true;
+                }
+
+                if (nutritionView) {
+                    nutritionView.style.display = 'none';
+                }
+
+                const baselineView = document.getElementById('baselineView');
+
+                if (baselineView) {
+                    baselineView.style.display = 'none';
+                    baselineView.classList.remove('show');
+                    baselineView.hidden = true;
+                }
+
+                if (placeholder) {
+                    placeholder.style.display = 'block';
+                }
+
+                document.querySelectorAll('.data-btn').forEach(function(btn) {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-expanded', 'false');
+                });
+
+                activeMetric = null;
+                return;
+            }
+
+            // Close other views before opening the selected health score.
+            if (profileView) {
+                profileView.style.display = 'none';
+                profileView.classList.remove('show');
+                profileView.hidden = true;
+            }
+
+            if (nutritionView) {
+                nutritionView.style.display = 'none';
+            }
+
+            const baselineView = document.getElementById('baselineView');
+
+            if (baselineView) {
+                baselineView.style.display = 'none';
+                baselineView.classList.remove('show');
+                baselineView.hidden = true;
+            }
+
+            document.querySelectorAll('.data-btn').forEach(function(btn) {
                 btn.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
             });
 
             this.classList.add('active');
             activeMetric = metric;
 
-            document.getElementById('profileView').style.display = 'none';
-            document.getElementById('profileView').classList.remove('show');
-            document.getElementById('nutritionView').style.display = 'none';
+            this.setAttribute('aria-expanded', 'true');
 
             showTreemap(metric, currentMemberData);
         });
