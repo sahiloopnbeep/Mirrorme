@@ -1030,7 +1030,7 @@ body {
 
        <button
     class="refresh-btn"
-    onclick="window.location.href='/profile.html'"
+    onclick="showProfile()"
 >
     ↑ View My Profile
 </button>
@@ -1054,10 +1054,17 @@ body {
         </div>
 
         
-<button class="data-btn" id="profileBtn" type="button" onclick="showProfile()">
+<button
+    class="data-btn"
+    id="profileBtn"
+    type="button"
+    onclick="showProfile()"
+    aria-expanded="false"
+    aria-controls="profileView"
+>
     <span class="btn-label">View Profile</span>
     <span class="btn-value">→</span>
-
+</button>
 <button
     class="data-btn"
     id="nutritionBtn"
@@ -1068,7 +1075,6 @@ body {
     <span class="btn-value">→</span>
 </button>
     
-</button>
 
         <button
             class="data-btn btn-gut"
@@ -1310,7 +1316,7 @@ body {
 </div>
 
         
-<div class="treemap" id="profileView">
+<div class="treemap" id="profileView" hidden>
     <h3>My Profile</h3>
 
     <div class="treemap-grid">
@@ -2098,15 +2104,16 @@ function showTreemap(
 
 }
     
-function showProfile() {
+async function showProfile() {
     if (!currentMemberData) {
-        fetchDashboardData();
-        return;
+        await fetchDashboardData();
+
+        if (!currentMemberData) {
+            return;
+        }
     }
 
-    const data = currentMemberData.member ||
-                 currentMemberData.data ||
-                 currentMemberData;
+    const data = currentMemberData;
 
     document.getElementById('profileName').textContent =
         data.name ?? '—';
@@ -2155,7 +2162,7 @@ document.getElementById('ageDifferenceValue').textContent =
     ageDifference !== undefined &&
     String(ageDifference).trim() !== '' &&
     Number.isFinite(ageDifferenceNumber)
-        ? `ageDifferenceNumber>0?'+':''{ageDifferenceNumber} years`
+        ? `${ageDifferenceNumber > 0 ? '+' : ''}${ageDifferenceNumber} years`
         : '—';
 
 document.getElementById('ageInterpretationValue').textContent =
