@@ -2223,13 +2223,40 @@ function showTreemap(
 }
     
 
+
 async function showProfile() {
+    const profileView = document.getElementById('profileView');
+
+    // If Profile is already open, clicking again closes it.
+    if (
+        !profileView.hidden &&
+        profileView.style.display === 'block' &&
+        profileView.classList.contains('show')
+    ) {
+        profileView.style.display = 'none';
+        profileView.classList.remove('show');
+        profileView.hidden = true;
+        document.getElementById('placeholder').style.display = 'block';
+
+        document.querySelectorAll('.data-btn').forEach(function(button) {
+            button.classList.remove('active');
+        });
+
+        activeMetric = null;
+        return;
+    }
+
     if (!currentMemberData) {
         await fetchDashboardData();
+    }
 
-        if (!currentMemberData) {
-            return;
+    
+    if (!currentMemberData) {
+        const lastUpdated = document.getElementById('lastUpdated');
+        if (lastUpdated) {
+            lastUpdated.textContent = 'Profile data could not be loaded. Please refresh.';
         }
+        return;
     }
 
     const data = currentMemberData.member ||
