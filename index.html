@@ -992,12 +992,8 @@ body {
 }
     
 /* Mirror Me: left sidebar + right content layout */
-body {
-    padding: 24px;
-    justify-content: center;
-    align-items: flex-start;
-}
 
+/* Mirror Me dashboard layout correction */
 .dashboard {
     display: flex;
     flex-direction: row;
@@ -1018,33 +1014,55 @@ body {
 .right-panel {
     flex: 1 1 0;
     min-width: 0;
-    display: flex;
-    flex-direction: column;
+    position: relative;
 }
 
-.right-panel > .placeholder {
+#placeholder.portal-home {
+    display: block;
     width: 100%;
     min-width: 0;
-    flex: 1;
-}
-
-.portal-home {
-    padding: clamp(20px, 3vw, 42px);
+    min-height: 450px;
     text-align: center;
+    padding: 32px 20px;
 }
 
 .journey-circles {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100%;
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 430px;
+    height: 340px;
+    margin: 24px auto 12px;
+    overflow: visible;
 }
 
-/* Stack panels only on smaller screens */
-@media (max-width: 760px) {
-    body {
-        padding: 12px;
-    }
+.journey-circle {
+    width: 185px;
+    height: 185px;
+    font-size: 0.95rem;
+}
 
+.circle-nutrition {
+    left: calc(50% - 150px);
+    top: 0;
+}
+
+.circle-movement {
+    left: calc(50% - 35px);
+    top: 0;
+}
+
+.circle-mind {
+    left: 50%;
+    top: 112px;
+    transform: translateX(-50%);
+}
+
+.circle-mind:hover {
+    transform: translateX(-50%) scale(1.035);
+}
+
+@media (max-width: 760px) {
     .dashboard {
         flex-direction: column;
         padding: 14px;
@@ -1052,12 +1070,41 @@ body {
     }
 
     .left-panel {
-        flex: 1 1 auto;
+        flex: 0 0 auto;
         width: 100%;
     }
 
     .right-panel {
         width: 100%;
+    }
+
+    #placeholder.portal-home {
+        padding: 24px 10px;
+    }
+
+    .journey-circles {
+        max-width: 360px;
+        height: 300px;
+    }
+
+    .journey-circle {
+        width: 155px;
+        height: 155px;
+        font-size: 0.85rem;
+    }
+
+    .circle-nutrition {
+        left: calc(50% - 125px);
+        top: 0;
+    }
+
+    .circle-movement {
+        left: calc(50% - 30px);
+        top: 0;
+    }
+
+    .circle-mind {
+        top: 100px;
     }
 }
 
@@ -2175,6 +2222,7 @@ function showTreemap(
 
 }
     
+
 async function showProfile() {
     if (!currentMemberData) {
         await fetchDashboardData();
@@ -2184,7 +2232,10 @@ async function showProfile() {
         }
     }
 
-    const data = currentMemberData;
+    const data = currentMemberData.member ||
+                 currentMemberData.data ||
+                 currentMemberData;
+
 
     document.getElementById('profileName').textContent =
         data.name ?? '—';
