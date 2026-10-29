@@ -717,7 +717,107 @@ body {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
-    
+
+    .right-panel {
+align-items: stretch !important;
+justify-content: flex-start !important;
+min-width: 0 !important;
+width: 100%;
+box-sizing: border-box;
+}
+
+.right-panel .treemap {
+width: 100% !important;
+max-width: none !important;
+min-width: 0 !important;
+box-sizing: border-box;
+}
+
+.right-panel #baselineView {
+display: block;
+width: 100% !important;
+max-width: none !important;
+min-width: 0 !important;
+padding: 12px 4px;
+box-sizing: border-box;
+}
+
+.right-panel #baselineView[hidden] {
+display: none !important;
+}
+
+.right-panel #baselineView h3 {
+font-size: 18px;
+line-height: 1.45;
+margin: 0 0 20px;
+letter-spacing: normal;
+overflow-wrap: anywhere;
+}
+
+.right-panel #baselineView .treemap-grid {
+display: grid;
+width: 100%;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 18px;
+box-sizing: border-box;
+}
+
+.right-panel #baselineView .treemap-item {
+width: 100%;
+min-width: 0;
+padding: 22px;
+box-sizing: border-box;
+overflow-wrap: anywhere;
+}
+
+.right-panel #baselineView .bar-container,
+.right-panel #baselineView .whr-bar-container {
+display: block;
+width: 100% !important;
+max-width: none !important;
+min-width: 0;
+margin: 20px 0 28px;
+padding: 26px 28px;
+box-sizing: border-box;
+border-radius: 10px;
+}
+
+.right-panel #baselineView .bar-container h3,
+.right-panel #baselineView .whr-bar-container h3 {
+font-size: 18px;
+line-height: 1.5;
+}
+
+.right-panel #baselineView .bmi-disclaimer,
+.right-panel #baselineView .whr-definition,
+.right-panel #baselineView .whr-reference,
+.right-panel #baselineView .allergy-profile-note {
+max-width: 100%;
+font-size: 14px;
+line-height: 1.75;
+overflow-wrap: anywhere;
+}
+
+.right-panel #baselineView .bar-labels,
+.right-panel #baselineView .whr-bar-labels {
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 8px;
+width: 100%;
+}
+
+.right-panel #baselineView .bar-background,
+.right-panel #baselineView .whr-bar-background {
+width: 100%;
+}
+
+@media (max-width: 600px) {
+.right-panel #baselineView .treemap-grid {
+grid-template-columns: minmax(0, 1fr);
+}
+
+
 </style>
 
     
