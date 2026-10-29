@@ -638,32 +638,39 @@ body {
 .baseline-navigation {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-    margin: 16px 0 24px;
+    gap: 10px;
+    width: 100%;
+    margin: 18px 0 26px;
 }
 
 .baseline-tab {
+    min-width: 0;
+    min-height: 48px;
     padding: 12px 8px;
-    border: 1px solid #DCE5EA;
-    border-radius: 8px;
-    background: #EAF0F5;
-    color: #243447;
+    border: 1px solid #D4E0E8;
+    border-radius: 10px;
+    background: #EAF1F6;
+    color: #294154;
     font-family: inherit;
     font-size: 12px;
     font-weight: 700;
+    line-height: 1.35;
     cursor: pointer;
+    white-space: normal;
     transition: background 0.25s ease, color 0.25s ease,
-                border-color 0.25s ease;
+                border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .baseline-tab:hover {
-    background: #D5E5EE;
+    background: #D8E8F0;
+    border-color: #91B7C8;
 }
 
 .baseline-tab.active {
     background: #174E59;
     color: #FFFFFF;
     border-color: #00C9D8;
+    box-shadow: 0 3px 10px rgba(23, 78, 89, 0.18);
 }
 
 .baseline-panel[hidden] {
@@ -671,14 +678,33 @@ body {
 }
 
 .baseline-panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-bottom: 24px;
     animation: baselineFade 0.25s ease;
-    scroll-margin-top: 16px;
+    overflow-wrap: anywhere;
+}
+
+#baselineView {
+    width: 100%;
+    min-width: 0;
+}
+
+.baseline-panel h3,
+.baseline-panel p,
+.baseline-panel .whr-definition,
+.baseline-panel .whr-reference,
+.baseline-panel .bmi-disclaimer,
+.baseline-panel .allergy-profile-note {
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 @keyframes baselineFade {
     from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(5px);
     }
     to {
         opacity: 1;
@@ -686,7 +712,7 @@ body {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .baseline-navigation {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
