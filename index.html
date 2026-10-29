@@ -636,80 +636,57 @@ body {
     }
 }
 .baseline-navigation {
-    display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-    width: 100%;
-    margin: 18px 0 20px;
+    align-items: stretch;
 }
 
 .baseline-tab {
-    min-width: 0;
-    min-height: 38px;
-    padding: 8px 6px;
-    border: 1px solid #D4E0E8;
-    border-radius: 5px;
-    background: #EAF1F6;
-    color: #294154;
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.2;
-    cursor: pointer;
     white-space: normal;
-    transition: background 0.2s ease, color 0.2s ease,
-                border-color 0.2s ease;
-}
-
-.baseline-tab:hover {
-    background: #D8E8F0;
-    border-color: #91B7C8;
-}
-
-.baseline-tab.active {
-    background: #174E59;
-    color: #FFFFFF;
-    border-color: #00C9D8;
-    box-shadow: none;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    height: auto;
+    min-height: 44px;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 10px 8px;
 }
 
 .baseline-panel[hidden] {
     display: none !important;
 }
 
-.baseline-panel {
+#baselineView .baseline-panel {
     width: 100%;
     max-width: 100%;
-    min-width: 0;
-    margin-bottom: 24px;
-    animation: baselineFade 0.25s ease;
-    overflow-wrap: anywhere;
+    box-sizing: border-box;
 }
 
-#baselineView {
-    width: 100%;
-    min-width: 0;
+#allergyPanel h3 {
+    font-size: 1rem;
+    line-height: 1.45;
+    margin-bottom: 16px;
 }
 
-.baseline-panel h3,
-.baseline-panel p,
-.baseline-panel .whr-definition,
-.baseline-panel .whr-reference,
-.baseline-panel .bmi-disclaimer,
-.baseline-panel .allergy-profile-note {
-    max-width: 100%;
-    overflow-wrap: anywhere;
+#allergyPanel .treemap-item {
+    padding: 16px;
 }
 
-@keyframes baselineFade {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+#allergyPanel .allergy-profile-note {
+    font-size: 12px;
+    line-height: 1.6;
+    padding: 14px;
+}
+
+#allergyPanel .allergy-profile-note h4 {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+#allergyPanel .allergy-profile-note p {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
 }
 
 @media (max-width: 600px) {
@@ -717,8 +694,6 @@ body {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
-
-
 
 </style>
 
@@ -1692,7 +1667,7 @@ body {
 <div class="treemap" id="baselineView" hidden>
     <h3>Baseline</h3>
     <div class="baseline-navigation">
-    <div class="baseline-navigation">
+
     <button type="button" class="baseline-tab active"
         aria-controls="bmiPanel"
         onclick="showBaselinePanel('bmi')">BMI</button>
@@ -1710,7 +1685,7 @@ body {
         onclick="showBaselinePanel('allergy')">Allergy Details</button>
 </div>
 
-    <div id="bmiPanel" class="baseline-panel">
+    <div id="bmiPanel" class="baseline-panel" hidden>
         <div class="treemap-grid">
         <div class="treemap-item">
             <div class="label">Age</div>
@@ -2717,6 +2692,7 @@ if (
     activeMetric = null;
 }
 
+
 function showBaselinePanel(panelName) {
     const panels = {
         bmi: document.getElementById('bmiPanel'),
@@ -2728,15 +2704,20 @@ function showBaselinePanel(panelName) {
     if (!panels[panelName]) return;
 
     Object.keys(panels).forEach(function (key) {
-        panels[key].hidden = key !== panelName;
+        if (panels[key]) {
+            panels[key].hidden = key !== panelName;
+        }
     });
 
     document.querySelectorAll('.baseline-tab').forEach(function (button) {
-        const isActive = button.getAttribute('aria-controls') === panels[panelName].id;
+        const isActive =
+            button.getAttribute('aria-controls') === panels[panelName].id;
+
         button.classList.toggle('active', isActive);
         button.setAttribute('aria-expanded', String(isActive));
     });
 }
+
 function showBaseline() {
     if (!currentMemberData) {
         fetchDashboardData().then(function () {
