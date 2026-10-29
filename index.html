@@ -642,21 +642,48 @@ body {
     margin: 16px 0 24px;
 }
 
-.baseline-navigation button {
+.baseline-tab {
     padding: 12px 8px;
     border: 1px solid #DCE5EA;
     border-radius: 8px;
-    background: #FFFFFF;
+    background: #EAF0F5;
     color: #243447;
     font-family: inherit;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease,
+                border-color 0.25s ease;
 }
 
-.baseline-navigation button:hover {
-    background: #F0F5F7;
-    border-color: #B8CBD4;
+.baseline-tab:hover {
+    background: #D5E5EE;
+}
+
+.baseline-tab.active {
+    background: #174E59;
+    color: #FFFFFF;
+    border-color: #00C9D8;
+}
+
+.baseline-panel[hidden] {
+    display: none !important;
+}
+
+.baseline-panel {
+    animation: baselineFade 0.25s ease;
+    scroll-margin-top: 16px;
+}
+
+@keyframes baselineFade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 480px) {
@@ -1640,13 +1667,26 @@ body {
 <div class="treemap" id="baselineView" hidden>
     <h3>Baseline</h3>
     <div class="baseline-navigation">
-    <button type="button" onclick="document.getElementById('bmiSection').scrollIntoView({behavior:'smooth',block:'start'})">BMI</button>
-    <button type="button" onclick="document.getElementById('whrSection').scrollIntoView({behavior:'smooth',block:'start'})">WHR</button>
-    <button type="button" onclick="document.getElementById('ageingSection').scrollIntoView({behavior:'smooth',block:'start'})">Ageing Profile</button>
-    <button type="button" onclick="document.getElementById('allergySection').scrollIntoView({behavior:'smooth',block:'start'})">Allergy Details</button>
+    <div class="baseline-navigation">
+    <button type="button" class="baseline-tab active"
+        aria-controls="bmiPanel"
+        onclick="showBaselinePanel('bmi')">BMI</button>
+
+    <button type="button" class="baseline-tab"
+        aria-controls="whrPanel"
+        onclick="showBaselinePanel('whr')">WHR</button>
+
+    <button type="button" class="baseline-tab"
+        aria-controls="ageingPanel"
+        onclick="showBaselinePanel('ageing')">Ageing Profile</button>
+
+    <button type="button" class="baseline-tab"
+        aria-controls="allergyPanel"
+        onclick="showBaselinePanel('allergy')">Allergy Details</button>
 </div>
 
-    <div class="treemap-grid">
+    <div id="bmiPanel" class="baseline-panel">
+        <div class="treemap-grid">
         <div class="treemap-item">
             <div class="label">Age</div>
             <div class="value" id="profileAge">—</div>
@@ -1700,8 +1740,8 @@ body {
             </a>
         </div>
     </div>
-
-    <div class="whr-bar-container" id="whrSection">
+</div>
+    <div class="whr-bar-container baseline-panel" id="whrPanel" hidden>
         <h3>Waist-to-Hip Ratio (WHR)</h3>
 
         <div class="treemap-item">
@@ -1751,7 +1791,7 @@ body {
             </a>
         </div>
     </div>
-
+<div id="allergyPanel" class="baseline-panel" hidden>
     <h3 id="allergySection" style="margin-top:28px;">Allergy Details</h3>
     <div class="treemap-grid">
         <div class="treemap-item">
@@ -1770,8 +1810,8 @@ body {
             informed choices about your diet and environment.
         </p>
     </div>
-
-    <section class="ageing-profile-section" id="ageingSection" aria-labelledby="ageingProfileTitle">
+</div>
+    <section class="ageing-profile-section baseline-panel" id="ageingPanel" aria-labelledby="ageingProfileTitle" hidden>
         <div class="ageing-profile-heading">
             <span class="ageing-eyebrow">YOUR AGE PROFILE</span>
             <h3 id="ageingProfileTitle">Understanding Your Ageing Profile</h3>
@@ -2652,7 +2692,26 @@ if (
     activeMetric = null;
 }
 
+function showBaselinePanel(panelName) {
+    const panels = {
+        bmi: document.getElementById('bmiPanel'),
+        whr: document.getElementById('whrPanel'),
+        ageing: document.getElementById('ageingPanel'),
+        allergy: document.getElementById('allergyPanel')
+    };
 
+    if (!panels[panelName]) return;
+
+    Object.keys(panels).forEach(function (key) {
+        panels[key].hidden = key !== panelName;
+    });
+
+    document.querySelectorAll('.baseline-tab').forEach(function (button) {
+        const isActive = button.getAttribute('aria-controls') === panels[panelName].id;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-expanded', String(isActive));
+    });
+}
 function showBaseline() {
     if (!currentMemberData) {
         fetchDashboardData().then(function () {
@@ -2680,6 +2739,7 @@ function showBaseline() {
     });
 
     document.getElementById('baselineBtn').classList.add('active');
+
     activeMetric = null;
 }
 
