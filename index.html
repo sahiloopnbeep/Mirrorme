@@ -635,7 +635,35 @@ body {
         grid-template-columns: 1fr;
     }
 }
+.baseline-navigation {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0 24px;
+}
 
+.baseline-navigation button {
+    padding: 12px 8px;
+    border: 1px solid #DCE5EA;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #243447;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.baseline-navigation button:hover {
+    background: #F0F5F7;
+    border-color: #B8CBD4;
+}
+
+@media (max-width: 480px) {
+    .baseline-navigation {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
 
 </style>
 
@@ -1611,6 +1639,12 @@ body {
 <!-- BASELINE VIEW -->
 <div class="treemap" id="baselineView" hidden>
     <h3>Baseline</h3>
+    <div class="baseline-navigation">
+    <button type="button" onclick="document.getElementById('bmiSection').scrollIntoView({behavior:'smooth',block:'start'})">BMI</button>
+    <button type="button" onclick="document.getElementById('whrSection').scrollIntoView({behavior:'smooth',block:'start'})">WHR</button>
+    <button type="button" onclick="document.getElementById('ageingSection').scrollIntoView({behavior:'smooth',block:'start'})">Ageing Profile</button>
+    <button type="button" onclick="document.getElementById('allergySection').scrollIntoView({behavior:'smooth',block:'start'})">Allergy Details</button>
+</div>
 
     <div class="treemap-grid">
         <div class="treemap-item">
@@ -1624,8 +1658,7 @@ body {
         </div>
     </div>
 
-    <h3>BMI Interpretation</h3>
-
+    <h3 id="bmiSection">BMI Interpretation</h3>
     <div class="bar-container">
         <div class="bmi-value">
             BMI: <span id="bmiValueDisplay">—</span>
@@ -1668,7 +1701,7 @@ body {
         </div>
     </div>
 
-    <div class="whr-bar-container">
+    <div class="whr-bar-container" id="whrSection">
         <h3>Waist-to-Hip Ratio (WHR)</h3>
 
         <div class="treemap-item">
@@ -1719,8 +1752,7 @@ body {
         </div>
     </div>
 
-    <h3 style="margin-top:28px;">Allergy Details</h3>
-
+    <h3 id="allergySection" style="margin-top:28px;">Allergy Details</h3>
     <div class="treemap-grid">
         <div class="treemap-item">
             <div class="label">Allergy Severity</div>
@@ -1739,7 +1771,7 @@ body {
         </p>
     </div>
 
-    <section class="ageing-profile-section" aria-labelledby="ageingProfileTitle">
+    <section class="ageing-profile-section" id="ageingSection" aria-labelledby="ageingProfileTitle">
         <div class="ageing-profile-heading">
             <span class="ageing-eyebrow">YOUR AGE PROFILE</span>
             <h3 id="ageingProfileTitle">Understanding Your Ageing Profile</h3>
