@@ -1256,7 +1256,62 @@ body {
         top: 100px;
     }
 }
+.baseline-tab[aria-controls="bmiPanel"] {
+    color: #176B50;
+    border: 1px solid #278568;
+    background: #E8F5EF;
+}
 
+.baseline-tab[aria-controls="whrPanel"] {
+    color: #244E8A;
+    border: 1px solid #416FB0;
+    background: #EAF0FA;
+}
+
+.baseline-tab[aria-controls="ageingPanel"] {
+    color: #68438A;
+    border: 1px solid #8961AD;
+    background: #F2EBF8;
+}
+
+.baseline-tab[aria-controls="allergyPanel"] {
+    color: #963F50;
+    border: 1px solid #B85A6B;
+    background: #FAECEF;
+}
+
+.baseline-tab.active {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.baseline-tab[aria-controls="bmiPanel"].active {
+    background: #176B50;
+    border-color: #176B50;
+}
+
+.baseline-tab[aria-controls="whrPanel"].active {
+    background: #244E8A;
+    border-color: #244E8A;
+}
+
+.baseline-tab[aria-controls="ageingPanel"].active {
+    background: #68438A;
+    border-color: #68438A;
+}
+
+.baseline-tab[aria-controls="allergyPanel"].active {
+    background: #963F50;
+    border-color: #963F50;
+}
+    .treemap-item .detail,
+.score-interpretation-note {
+    font-family: Georgia, "Times New Roman", serif;
+    color: #364152;
+    font-size: 0.82rem;
+    font-weight: 400;
+    line-height: 1.7;
+}
 </style>
 
 </head>
@@ -1296,13 +1351,6 @@ body {
         </div>
         
         <div class="refresh-row">
-
-            <button
-                class="refresh-btn"
-                onclick="fetchDashboardData()"
-            >
-                ↻ Refresh
-            </button>
 
             <span
                 class="last-updated"
