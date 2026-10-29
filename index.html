@@ -1338,18 +1338,19 @@ body {
     <span class="btn-value">→</span>
 </button>
 
+
 <button
     class="data-btn"
-    id="nutritionBtn"
+    id="bodyBalanceBtn"
     type="button"
-    onclick="showNutrition()"
-    aria-expanded="false"
-    aria-controls="nutritionView"
+    onclick="showBodyBalance()"
+    aria-expanded="true"
+    aria-controls="placeholder"
 >
-    <span class="btn-label">Complete Nutritional Recommendation</span>
+    <span class="btn-label">Body Balance</span>
     <span class="btn-value">→</span>
 </button>
-    
+
 
         <button
             class="data-btn btn-gut"
@@ -2885,16 +2886,40 @@ window.addEventListener(
     }
 );
 
+
+function showBodyBalance() {
+    document.getElementById('placeholder').style.display = 'block';
+
+    document.getElementById('treemap').classList.remove('show');
+
+    document.getElementById('nutritionView').style.display = 'none';
+
+    document.getElementById('profileView').style.display = 'none';
+    document.getElementById('profileView').hidden = true;
+    document.getElementById('profileView').classList.remove('show');
+
+    document.getElementById('baselineView').style.display = 'none';
+    document.getElementById('baselineView').hidden = true;
+    document.getElementById('baselineView').classList.remove('show');
+
+    document.querySelectorAll('.data-btn').forEach(function(button) {
+        button.classList.remove('active');
+    });
+
+    activeMetric = null;
+}
+
 function showJourneySection(section) {
     const detail = document.getElementById('journeyDetail');
 
     if (!detail) return;
 
+    if (section === 'nutrition') {
+        showNutrition();
+        return;
+    }
+
     const content = {
-        nutrition: {
-            title: 'Nutrition',
-            description: 'Explore your nutrition recommendations and personalised guidance.'
-        },
         movement: {
             title: 'Movement',
             description: 'Build movement into your everyday life.'
