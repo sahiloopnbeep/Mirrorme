@@ -1402,9 +1402,6 @@ body {
     font-size: 1rem;
 }
 
-
-/* Journey dates - Bottom Left */
-
 /* Journey Dates - Bottom Right */
 .journey-date-strip {
     display: flex;
@@ -1502,36 +1499,7 @@ body {
                 aria-label="Search dashboard options"
                 autocomplete="off"
             >
-            <div class="journey-date-strip">
-    <div class="journey-date-item">
-        <span class="journey-date-label">Enrolled Date</span>
-        <span class="journey-date-value" id="journeyEnrolledDate">—</span>
-    </div>
-
-    <div class="journey-date-item">
-        <span class="journey-date-label">Today's Date</span>
-        <span class="journey-date-value" id="journeyTodayDate">—</span>
-    </div>
-
-    <div class="journey-date-item">
-        <span class="journey-day-count" id="journeyDayCount">
-            Day — of reflection
-        </span>
-    </div>
-</div>
-
-
-        </div>
-        
-        <div class="refresh-row">
-
-            <span
-                class="last-updated"
-                id="lastUpdated"
-            >
-                Last updated: —
-            </span>
-
+            
         </div>
 
 <div class="task-cards-section">
@@ -2184,7 +2152,31 @@ body {
         ← Back to Dashboard
     </button>
 </div>
+<div class="journey-date-strip">
 
+    <div class="journey-date-item">
+        <span class="journey-date-label">Enrolled Date</span>
+        <span class="journey-date-value" id="journeyEnrolledDate">—</span>
+    </div>
+
+    <div class="journey-date-item">
+        <span class="journey-date-label">Today's Date</span>
+        <span class="journey-date-value" id="journeyTodayDate">—</span>
+    </div>
+
+    <div class="journey-date-item">
+        <span class="journey-day-count" id="journeyDayCount">
+            Day — of reflection
+        </span>
+    </div>
+
+    <div class="refresh-row">
+        <span class="last-updated" id="lastUpdated">
+            Last updated: —
+        </span>
+    </div>
+
+</div>
 <script>
 
 const SUPABASE_URL =
