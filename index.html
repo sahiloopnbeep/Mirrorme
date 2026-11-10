@@ -1404,23 +1404,27 @@ body {
 
 
 /* Journey dates - Bottom Left */
+
+/* Journey Dates - Bottom Right */
 .journey-date-strip {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: flex-start;
     gap: 5px;
-    margin: 24px 4px 8px;
+    margin: 24px 4px 8px auto;
     padding-top: 14px;
     border-top: 1px solid rgba(130, 145, 156, 0.18);
     width: fit-content;
+    text-align: right;
 }
 
 .journey-date-item {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 2px;
-    text-align: left;
+    text-align: right;
 }
 
 .journey-date-label {
@@ -1444,10 +1448,17 @@ body {
     margin-top: 2px;
 }
 
+.journey-date-strip .refresh-row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+}
+
 @media (max-width: 600px) {
     .journey-date-strip {
-        margin-top: 20px;
-        width: 100%;
+        margin: 20px 4px 8px auto;
+        width: fit-content;
     }
 }
 
