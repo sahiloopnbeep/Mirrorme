@@ -1326,6 +1326,132 @@ body {
 
 </style>
 
+<style>
+/* Task Cards */
+.task-cards-section {
+    width: 100%;
+    margin: 4px 0 8px;
+}
+
+.task-cards-toggle {
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F7F3FA;
+    border: 1px solid #E4D9ED;
+    border-radius: 10px;
+    color: #44215D;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.task-cards-toggle:hover {
+    background: #F0EAF5;
+}
+
+.task-cards-arrow {
+    font-size: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.task-cards-toggle[aria-expanded="true"] .task-cards-arrow {
+    transform: rotate(180deg);
+}
+
+.task-card-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 4px 4px;
+}
+
+.task-card-options[hidden] {
+    display: none !important;
+}
+
+.task-card-option {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1px solid #E1E8ED;
+    border-radius: 8px;
+    color: #526775;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.task-card-option:hover {
+    background: #FAF7FC;
+    border-color: #C8B5D8;
+}
+
+.task-card-calendar-icon {
+    font-size: 1rem;
+}
+
+/* Journey dates */
+.journey-date-strip {
+    display: flex;
+    justify-content: flex-end;
+    gap: 28px;
+    align-items: flex-start;
+    margin: 0 4px 18px;
+    flex-wrap: wrap;
+}
+
+.journey-date-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: right;
+}
+
+.journey-date-label {
+    color: #82919C;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.journey-date-value {
+    color: #526272;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.journey-day-count {
+    color: #44215D;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+@media (max-width: 600px) {
+    .journey-date-strip {
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .journey-date-item {
+        text-align: left;
+    }
+}
+</style>
+
 </head>
 
 <body>
@@ -1344,9 +1470,26 @@ body {
             Hi, <strong class="bb-member-name" id="bbMemberName">there</strong>.
         
         </p>
-    </header>
+    
+</header>
 
-    <div class="dashboard">
+<div class="journey-date-strip">
+    <div class="journey-date-item">
+        <span class="journey-date-label">Today's Date</span>
+        <span class="journey-date-value" id="journeyTodayDate">—</span>
+    </div>
+
+    <div class="journey-date-item">
+        <span class="journey-date-label">Enrolled Date</span>
+        <span class="journey-date-value" id="journeyEnrolledDate">—</span>
+        <span class="journey-day-count" id="journeyDayCount">
+            Your journey
+        </span>
+    </div>
+</div>
+
+<div class="dashboard">
+
 
 
     <div class="left-panel">
@@ -1372,6 +1515,46 @@ body {
             </span>
 
         </div>
+
+<div class="task-cards-section">
+
+    <button
+        type="button"
+        class="task-cards-toggle"
+        id="taskCardsToggle"
+        aria-expanded="false"
+        aria-controls="taskCardOptions"
+        onclick="toggleTaskCards()"
+    >
+        <span>TASK CARDS</span>
+        <span class="task-cards-arrow" aria-hidden="true">⌄</span>
+    </button>
+
+    <div
+        class="task-card-options"
+        id="taskCardOptions"
+        hidden
+    >
+        <button
+            type="button"
+            class="task-card-option"
+            id="todaysReflectionBtn"
+        >
+            <span>Today's Reflection</span>
+            <span>→</span>
+        </button>
+
+        <button
+            type="button"
+            class="task-card-option"
+            id="myDailyReflectionBtn"
+        >
+            <span>My Daily Reflection</span>
+            <span class="task-card-calendar-icon">▦</span>
+        </button>
+    </div>
+
+</div>
 
         
 <button
@@ -2250,7 +2433,7 @@ function updateUI(data) {
         );
 
     }
-
+    displayJourneyDates(member, data);
 }
 
 function clearUI() {
@@ -3360,6 +3543,78 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+</script>
+
+<script>
+function toggleTaskCards() {
+    const toggle = document.getElementById('taskCardsToggle');
+    const options = document.getElementById('taskCardOptions');
+
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    options.hidden = isOpen;
+}
+
+function displayJourneyDates(member, fullData) {
+    const todayElement = document.getElementById('journeyTodayDate');
+    const enrolledElement = document.getElementById('journeyEnrolledDate');
+    const countElement = document.getElementById('journeyDayCount');
+
+    const today = new Date();
+
+    const formatDate = function(date) {
+        return date.toLocaleDateString(undefined, {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    };
+
+    todayElement.textContent = formatDate(today);
+
+    const submittedAt =
+        member.submitted_at || fullData.submitted_at;
+
+    if (!submittedAt) {
+        enrolledElement.textContent = '—';
+        countElement.textContent = 'Your journey';
+        return;
+    }
+
+    const enrolled = new Date(submittedAt);
+
+    if (Number.isNaN(enrolled.getTime())) {
+        enrolledElement.textContent = '—';
+        countElement.textContent = 'Your journey';
+        return;
+    }
+
+    enrolledElement.textContent = formatDate(enrolled);
+
+    const todayStart = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+    );
+
+    const enrolledStart = new Date(
+        enrolled.getFullYear(),
+        enrolled.getMonth(),
+        enrolled.getDate()
+    );
+
+    const difference = Math.floor(
+        (todayStart - enrolledStart) / 86400000
+    );
+
+    if (difference < 0) {
+        countElement.textContent = 'Journey not yet started';
+    } else {
+        countElement.textContent =
+            'Day ' + (difference + 1) + ' of your journey';
+    }
+}
 </script>
 
 </body>
