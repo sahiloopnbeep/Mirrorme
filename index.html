@@ -1402,21 +1402,25 @@ body {
     font-size: 1rem;
 }
 
-/* Journey dates */
+
+/* Journey dates - Bottom Left */
 .journey-date-strip {
     display: flex;
-    justify-content: flex-end;
-    gap: 28px;
+    flex-direction: column;
     align-items: flex-start;
-    margin: 0 4px 18px;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 5px;
+    margin: 24px 4px 8px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(130, 145, 156, 0.18);
+    width: fit-content;
 }
 
 .journey-date-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    text-align: right;
+    gap: 2px;
+    text-align: left;
 }
 
 .journey-date-label {
@@ -1442,14 +1446,11 @@ body {
 
 @media (max-width: 600px) {
     .journey-date-strip {
-        justify-content: space-between;
-        gap: 12px;
-    }
-
-    .journey-date-item {
-        text-align: left;
+        margin-top: 20px;
+        width: 100%;
     }
 }
+
 </style>
 
 </head>
@@ -1473,20 +1474,7 @@ body {
     
 </header>
 
-<div class="journey-date-strip">
-    <div class="journey-date-item">
-        <span class="journey-date-label">Today's Date</span>
-        <span class="journey-date-value" id="journeyTodayDate">—</span>
-    </div>
 
-    <div class="journey-date-item">
-        <span class="journey-date-label">Enrolled Date</span>
-        <span class="journey-date-value" id="journeyEnrolledDate">—</span>
-        <span class="journey-day-count" id="journeyDayCount">
-            Your journey
-        </span>
-    </div>
-</div>
 
 <div class="dashboard">
 
@@ -1503,6 +1491,25 @@ body {
                 aria-label="Search dashboard options"
                 autocomplete="off"
             >
+            <div class="journey-date-strip">
+    <div class="journey-date-item">
+        <span class="journey-date-label">Enrolled Date</span>
+        <span class="journey-date-value" id="journeyEnrolledDate">—</span>
+    </div>
+
+    <div class="journey-date-item">
+        <span class="journey-date-label">Today's Date</span>
+        <span class="journey-date-value" id="journeyTodayDate">—</span>
+    </div>
+
+    <div class="journey-date-item">
+        <span class="journey-day-count" id="journeyDayCount">
+            Day — of reflection
+        </span>
+    </div>
+</div>
+
+
         </div>
         
         <div class="refresh-row">
@@ -3556,6 +3563,7 @@ function toggleTaskCards() {
     options.hidden = isOpen;
 }
 
+
 function displayJourneyDates(member, fullData) {
     const todayElement = document.getElementById('journeyTodayDate');
     const enrolledElement = document.getElementById('journeyEnrolledDate');
@@ -3578,7 +3586,7 @@ function displayJourneyDates(member, fullData) {
 
     if (!submittedAt) {
         enrolledElement.textContent = '—';
-        countElement.textContent = 'Your journey';
+        countElement.textContent = 'Day — of reflection';
         return;
     }
 
@@ -3586,7 +3594,7 @@ function displayJourneyDates(member, fullData) {
 
     if (Number.isNaN(enrolled.getTime())) {
         enrolledElement.textContent = '—';
-        countElement.textContent = 'Your journey';
+        countElement.textContent = 'Day — of reflection';
         return;
     }
 
@@ -3609,12 +3617,13 @@ function displayJourneyDates(member, fullData) {
     );
 
     if (difference < 0) {
-        countElement.textContent = 'Journey not yet started';
+        countElement.textContent = 'Reflection not yet started';
     } else {
         countElement.textContent =
-            'Day ' + (difference + 1) + ' of your journey';
+            'Day ' + (difference + 1) + ' of reflection';
     }
 }
+
 </script>
 
 </body>
