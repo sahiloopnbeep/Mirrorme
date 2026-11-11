@@ -1411,6 +1411,88 @@ body {
     font-size: 1rem;
 }
 
+/* Daily Reflection Card */
+
+.reflection-view {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.reflection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.reflection-header h2 {
+    color: #44215D;
+    font-size: 1.35rem;
+    margin: 0 0 6px;
+}
+
+.reflection-header p {
+    color: #82919C;
+    font-size: 0.85rem;
+}
+
+.reflection-parameters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.reflection-item {
+    background: linear-gradient(145deg, #FFFFFF, #F5F0F8);
+    border: 1px solid #DED0E9;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.reflection-item h3 {
+    color: #44215D;
+    font-size: 1rem;
+    margin: 0 0 8px;
+}
+
+.reflection-item p {
+    color: #71808D;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    margin: 0 0 16px;
+}
+
+.reflection-stars {
+    display: flex;
+    gap: 8px;
+}
+
+.reflection-stars button {
+    border: none;
+    background: transparent;
+    color: #C9C0D1;
+    font-size: 1.7rem;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.reflection-stars button.active {
+    color: #C49A36;
+}
+
+@media (max-width: 700px) {
+    .reflection-parameters {
+        grid-template-columns: 1fr;
+    }
+
+    .reflection-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
 /* Journey Dates - Bottom Right */
 .journey-date-strip {
     display: flex;
@@ -1713,6 +1795,7 @@ body {
         type="button"
         class="task-card-option"
         id="todaysReflectionBtn"
+        onclick="showTodaysReflection()"
     >
         <span>Today's Reflection</span>
         <span>→</span>
@@ -1782,6 +1865,96 @@ body {
 
         <div
             class="treemap"
+            
+<div class="reflection-view" id="todaysReflectionView" style="display:none;">
+
+    <div class="reflection-header">
+        <div>
+            <h2>Mark Today's Reflection</h2>
+            <p>Take a moment to reflect on your day.</p>
+        </div>
+        <button type="button" class="treemap-close" onclick="closeTodaysReflection()">
+            ← Back to Dashboard
+        </button>
+    </div>
+
+    <div class="reflection-parameters">
+
+        <div class="reflection-item">
+            <h3>Well-being</h3>
+            <p>(A general sense of feeling positive, cheerful, and mentally balanced in your daily life)</p>
+            <div class="reflection-stars" data-rating="well_being">
+                <button type="button" aria-label="1 star">★</button>
+                <button type="button" aria-label="2 stars">★</button>
+                <button type="button" aria-label="3 stars">★</button>
+                <button type="button" aria-label="4 stars">★</button>
+                <button type="button" aria-label="5 stars">★</button>
+            </div>
+        </div>
+
+        <div class="reflection-item">
+            <h3>Sleep Quality</h3>
+            <p>(How restful, restorative, and uninterrupted your sleep feels, regardless of the exact number of hours you spent in bed.)</p>
+            <div class="reflection-stars" data-rating="sleep_quality">
+                <button type="button" aria-label="1 star">★</button>
+                <button type="button" aria-label="2 stars">★</button>
+                <button type="button" aria-label="3 stars">★</button>
+                <button type="button" aria-label="4 stars">★</button>
+                <button type="button" aria-label="5 stars">★</button>
+            </div>
+        </div>
+
+        <div class="reflection-item">
+            <h3>Active Days</h3>
+            <p>(Any day where you engage in at least 30 minutes of physical activity that intentionally raises your heart rate.)</p>
+            <div class="reflection-stars" data-rating="active_days">
+                <button type="button" aria-label="1 star">★</button>
+                <button type="button" aria-label="2 stars">★</button>
+                <button type="button" aria-label="3 stars">★</button>
+                <button type="button" aria-label="4 stars">★</button>
+                <button type="button" aria-label="5 stars">★</button>
+            </div>
+        </div>
+
+        <div class="reflection-item">
+            <h3>Physical Energy</h3>
+            <p>(Your perceived level of physical vitality, stamina, and readiness throughout the day.)</p>
+            <div class="reflection-stars" data-rating="physical_energy">
+                <button type="button" aria-label="1 star">★</button>
+                <button type="button" aria-label="2 stars">★</button>
+                <button type="button" aria-label="3 stars">★</button>
+                <button type="button" aria-label="4 stars">★</button>
+                <button type="button" aria-label="5 stars">★</button>
+            </div>
+        </div>
+
+        <div class="reflection-item">
+            <h3>Diet Quality</h3>
+            <p>(The overall nutritional value of the meals and snacks you consume, focusing on nourishment rather than just counting calories.)</p>
+            <div class="reflection-stars" data-rating="diet_quality">
+                <button type="button" aria-label="1 star">★</button>
+                <button type="button" aria-label="2 stars">★</button>
+                <button type="button" aria-label="3 stars">★</button>
+                <button type="button" aria-label="4 stars">★</button>
+                <button type="button" aria-label="5 stars">★</button>
+            </div>
+        </div>
+
+        <div class="reflection-item">
+            <h3>Food Confidence</h3>
+            <p>(Your sense of control, ease, and self-assurance in making food choices that align with your personal health goals.)</p>
+            <div class="reflection-stars" data-rating="food_confidence">
+                <button type="button" aria-label="1 star">★</button>
+                <button type="button" aria-label="2 stars">★</button>
+                <button type="button" aria-label="3 stars">★</button>
+                <button type="button" aria-label="4 stars">★</button>
+                <button type="button" aria-label="5 stars">★</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
             id="treemap"
         >
 
@@ -3634,6 +3807,31 @@ function displayJourneyDates(member, fullData) {
     }
 }
 
+</script>
+
+<script>
+function showTodaysReflection() {
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('treemap').style.display = 'none';
+    document.getElementById('todaysReflectionView').style.display = 'block';
+}
+
+function closeTodaysReflection() {
+    document.getElementById('todaysReflectionView').style.display = 'none';
+    document.getElementById('placeholder').style.display = '';
+}
+    
+document.querySelectorAll('.reflection-stars').forEach(group => {
+    const stars = group.querySelectorAll('button');
+
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            stars.forEach((item, i) => {
+                item.classList.toggle('active', i <= index);
+            });
+        });
+    });
+});
 </script>
 
 </body>
