@@ -1366,36 +1366,45 @@ body {
 
 .task-card-options {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px 4px 4px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 16px;
+    padding: 16px 4px;
+    width: 100%;
+    box-sizing: border-box;
 }
-
 .task-card-options[hidden] {
     display: none !important;
 }
 
 .task-card-option {
-    width: 100%;
-    min-height: 46px;
-    padding: 12px 14px;
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    min-height: 100px;
+    padding: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #FFFFFF;
-    border: 1px solid #E1E8ED;
-    border-radius: 8px;
-    color: #526775;
+    background: linear-gradient(135deg, #44215D, #76518A);
+    border: 1px solid #A58AB8;
+    border-radius: 14px;
+    color: #FFFFFF;
     font-family: inherit;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
     text-align: left;
     cursor: pointer;
+    box-shadow: 0 5px 16px rgba(68, 33, 93, 0.20);
+    transition: all 0.2s ease;
 }
 
 .task-card-option:hover {
-    background: #FAF7FC;
-    border-color: #C8B5D8;
+    background: linear-gradient(135deg, #563071, #8965A0);
+    border-color: #C4A8D8;
+    box-shadow: 0 7px 20px rgba(68, 33, 93, 0.28);
+    transform: translateY(-2px);
 }
 
 .task-card-calendar-icon {
