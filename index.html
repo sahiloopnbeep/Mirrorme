@@ -3819,6 +3819,14 @@ document.querySelector('.left-panel').addEventListener('click', function(event) 
     }
 
     hideTaskCards();
+
+    const rightPanel = document.getElementById('rightPanel');
+
+    if (clickedButton.id === 'bodyBalanceBtn') {
+        rightPanel.classList.remove('compact-task-cards');
+    } else {
+        rightPanel.classList.add('compact-task-cards');
+    }
 });
 function displayJourneyDates(member, fullData) {
     const todayElement = document.getElementById('journeyTodayDate');
