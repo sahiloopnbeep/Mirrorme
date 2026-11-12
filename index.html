@@ -1657,6 +1657,108 @@ body {
     height: 27px;
 }
 
+/* MY DAILY REFLECTION */
+
+.my-daily-reflection-window {
+    width: min(1050px, 96%);
+}
+
+.my-reflection-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 24px;
+    align-items: start;
+}
+
+.my-reflection-parameters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.readonly-stars {
+    pointer-events: none;
+    cursor: default;
+}
+
+.readonly-stars span {
+    color: #C9C0D1;
+    font-size: 1.7rem;
+    padding: 2px;
+}
+
+.readonly-stars span.active {
+    color: #C49A36;
+}
+
+.my-reflection-date-panel {
+    background: linear-gradient(145deg, #FFFFFF, #F5F0F8);
+    border: 1px solid #DED0E9;
+    border-radius: 14px;
+    padding: 18px;
+}
+
+.my-reflection-date-panel h3 {
+    color: #44215D;
+    font-size: 1rem;
+    margin: 0 0 16px;
+}
+
+.reflection-date-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reflection-date-btn {
+    background: #FFFFFF;
+    border: 1px solid #DED0E9;
+    border-radius: 9px;
+    padding: 11px;
+    color: #44215D;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.85rem;
+}
+
+.reflection-date-btn.active {
+    background: #44215D;
+    border-color: #44215D;
+    color: #FFFFFF;
+}
+
+.reflection-last-updated {
+    border-top: 1px solid #DED0E9;
+    margin-top: 22px;
+    padding-top: 16px;
+}
+
+.reflection-last-updated span {
+    color: #82919C;
+    font-size: 0.75rem;
+}
+
+.reflection-last-updated p {
+    color: #44215D;
+    font-size: 0.85rem;
+    margin-top: 6px;
+}
+
+.reflection-history-message {
+    color: #82919C;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin-top: 16px;
+}
+
+@media (max-width: 700px) {
+    .my-reflection-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .my-reflection-parameters {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 
 </head>
@@ -2123,6 +2225,127 @@ body {
             </div>
 
         </div>
+
+<!-- MY DAILY REFLECTION POP-UP -->
+<div
+    class="reflection-view"
+    id="myDailyReflectionView"
+    style="display:none;"
+>
+    <div class="reflection-window my-daily-reflection-window">
+
+        <div class="reflection-header">
+            <div>
+                <h2>My Daily Reflection</h2>
+                <p>Review your reflections and observe your daily progress.</p>
+            </div>
+
+            <button
+                type="button"
+                class="treemap-close"
+                onclick="closeMyDailyReflection()"
+            >
+                ← Back to Dashboard
+            </button>
+        </div>
+
+        <div class="my-reflection-layout">
+
+            <!-- LEFT: REFLECTION PARAMETERS -->
+            <div class="reflection-parameters my-reflection-parameters">
+
+                <div class="reflection-item">
+                    <h3>Well-being</h3>
+                    <p>A general sense of feeling positive, cheerful, and mentally balanced in your daily life.</p>
+                    <div class="reflection-stars readonly-stars" id="history_well_being"></div>
+                </div>
+
+                <div class="reflection-item">
+                    <h3>Sleep Quality</h3>
+                    <p>How restful, restorative, and uninterrupted your sleep feels.</p>
+                    <div class="reflection-stars readonly-stars" id="history_sleep_quality"></div>
+                </div>
+
+                <div class="reflection-item">
+                    <h3>Active Days</h3>
+                    <p>Your engagement in physical activity that intentionally raises your heart rate.</p>
+                    <div class="reflection-stars readonly-stars" id="history_active_days"></div>
+                </div>
+
+                <div class="reflection-item">
+                    <h3>Physical Energy</h3>
+                    <p>Your perceived level of physical vitality, stamina, and readiness throughout the day.</p>
+                    <div class="reflection-stars readonly-stars" id="history_physical_energy"></div>
+                </div>
+
+                <div class="reflection-item">
+                    <h3>Diet Quality</h3>
+                    <p>The overall nutritional value of the meals and snacks you consume.</p>
+                    <div class="reflection-stars readonly-stars" id="history_diet_quality"></div>
+                </div>
+
+                <div class="reflection-item">
+                    <h3>Food Confidence</h3>
+                    <p>Your sense of control, ease, and self-assurance in making food choices.</p>
+                    <div class="reflection-stars readonly-stars" id="history_food_confidence"></div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: DATE SELECTION -->
+            <div class="my-reflection-date-panel">
+
+                <h3>Select Date</h3>
+
+                <div class="reflection-date-options">
+
+                    <button
+                        type="button"
+                        class="reflection-date-btn active"
+                        id="reflectionDate0"
+                        onclick="selectMyReflectionDate(0)"
+                    >
+                        Today
+                    </button>
+
+                    <button
+                        type="button"
+                        class="reflection-date-btn"
+                        id="reflectionDate1"
+                        onclick="selectMyReflectionDate(1)"
+                    >
+                        Yesterday
+                    </button>
+
+                    <button
+                        type="button"
+                        class="reflection-date-btn"
+                        id="reflectionDate2"
+                        onclick="selectMyReflectionDate(2)"
+                    >
+                        Previous Day
+                    </button>
+
+                </div>
+
+                <div class="reflection-last-updated">
+                    <span>Last Updated</span>
+                    <p id="reflectionLastUpdated">--</p>
+                </div>
+
+                <p
+                    class="reflection-history-message"
+                    id="reflectionHistoryMessage"
+                >
+                    Select a date to view your reflection.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
     </div>
 
