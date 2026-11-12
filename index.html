@@ -1584,6 +1584,29 @@ body {
 #rightPanel.compact-task-cards .task-card-option span {
     font-size: 11px !important;
 }
+    #rightPanel.compact-task-cards .task-card-option {
+    justify-content: flex-start;
+    text-align: left;
+    white-space: normal;
+    font-weight: 400;
+    padding: 10px 12px;
+    gap: 8px;
+}
+
+#rightPanel.compact-task-cards .task-card-option span:first-child {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+#rightPanel.compact-task-cards .task-card-option span:last-child {
+    flex-shrink: 0;
+    font-weight: 400;
+}
 </style>
 
 </head>
