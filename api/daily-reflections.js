@@ -220,7 +220,7 @@ async function fetchJson(url, options = {}) {
 async function getMemberId(email, config) {
     const url =
         config.url +
-        '/rest/v1/members?select=id&email=eq.' +
+        '/rest/v1/member_calculations?select=id&email=eq.' +
         encodeURIComponent(email) +
         '&limit=1';
 
@@ -238,7 +238,6 @@ async function getMemberId(email, config) {
 
     return members[0].id;
 }
-
 function validateReflection(body) {
     if (!isValidDate(body.log_date)) {
         throw Object.assign(
