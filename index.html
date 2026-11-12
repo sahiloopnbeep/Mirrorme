@@ -2274,8 +2274,6 @@ body {
 <div
     class="reflection-view"
     id="myDailyReflectionView"
-    class="reflection-view"
-    id="myDailyReflectionView"
     style="display:none;"
 >
     <div class="reflection-window my-daily-reflection-window">
@@ -4289,6 +4287,7 @@ function displayJourneyDates(member, fullData) {
 </script>
 
 
+
 <script>
 const reflectionFields = [
     'well_being',
@@ -4304,7 +4303,6 @@ let reflectionHistory = [];
 
 function getLocalReflectionDate(daysAgo = 0) {
     const date = new Date();
-
     date.setDate(date.getDate() - daysAgo);
 
     const year = date.getFullYear();
@@ -4316,16 +4314,30 @@ function getLocalReflectionDate(daysAgo = 0) {
 
 function showTodaysReflection() {
     const historyView = document.getElementById('myDailyReflectionView');
+    const todayView = document.getElementById('todaysReflectionView');
 
-    if (historyView) {
-        historyView.style.display = 'none';
-    }
+    if (historyView) historyView.style.display = 'none';
+    if (todayView) todayView.style.display = 'flex';
 
-    document.getElementById('todaysReflectionView').style.display = 'flex';
+    const message = document.getElementById('reflectionSaveMessage');
+
+    if (message) message.textContent = 'Loading your reflection...';
+
+    loadMyDailyReflection()
+        .then(() => {
+            if (message) message.textContent = '';
+        })
+        .catch(error => {
+            console.error('Unable to load today’s reflection:', error);
+            if (message) {
+                message.textContent = 'Unable to load your saved reflection. Please try again.';
+            }
+        });
 }
 
 function closeTodaysReflection() {
-    document.getElementById('todaysReflectionView').style.display = 'none';
+    const view = document.getElementById('todaysReflectionView');
+    if (view) view.style.display = 'none';
 }
 
 function showMyDailyReflection() {
@@ -4336,23 +4348,27 @@ function showMyDailyReflection() {
         return;
     }
 
-    document.getElementById('todaysReflectionView').style.display = 'none';
+    const todayView = document.getElementById('todaysReflectionView');
+    if (todayView) todayView.style.display = 'none';
 
     view.style.display = 'flex';
-
     selectedReflectionDate = 0;
-
     updateReflectionDateButtons();
 
-    loadMyDailyReflection();
+    const message = document.getElementById('reflectionHistoryMessage');
+    if (message) message.textContent = 'Loading your reflections...';
+
+    loadMyDailyReflection().catch(error => {
+        console.error('Unable to load reflection history:', error);
+        if (message) {
+            message.textContent = 'Unable to load your reflections. Please try again.';
+        }
+    });
 }
 
 function closeMyDailyReflection() {
     const view = document.getElementById('myDailyReflectionView');
-
-    if (view) {
-        view.style.display = 'none';
-    }
+    if (view) view.style.display = 'none';
 }
 
 function updateReflectionDateButtons() {
@@ -4360,36 +4376,75 @@ function updateReflectionDateButtons() {
         const button = document.getElementById(`reflectionDate${i}`);
 
         if (button) {
-            button.classList.toggle(
-                'active',
-                i === selectedReflectionDate
-            );
+            button.classList.toggle('active', i === selectedReflectionDate);
         }
     }
 }
 
 function selectMyReflectionDate(daysAgo) {
-    if (![0, 1, 2].includes(daysAgo)) {
-        return;
-    }
+    if (![0, 1, 2].includes(daysAgo)) return;
 
     selectedReflectionDate = daysAgo;
-
     updateReflectionDateButtons();
-
     displaySelectedReflection();
+}
+
+function setTodaysReflectionStars(reflection) {
+    reflectionFields.forEach(field => {
+        const group = document.querySelector(
+            `#todaysReflectionView [data-rating="${field}"]`
+        );
+
+        if (!group) return;
+
+        const rating = reflection ? Number(reflection[field]) : 0;
+        const stars = group.querySelectorAll('button');
+
+        stars.forEach((star, index) => {
+            star.classList.toggle('active', index < rating);
+        });
+    });
 }
 
 function clearHistoricalStars() {
     reflectionFields.forEach(field => {
         const container = document.getElementById(`history_${field}`);
 
-        if (container) {
-            container.replaceChildren();
-        }
+        if (container) container.replaceChildren();
     });
 }
 
+async function loadMyDailyReflection() {
+    const today = getLocalReflectionDate();
+
+    const response = await fetch(
+        `/api/daily-reflections?today=${encodeURIComponent(today)}`,
+        {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store'
+        }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || result.success !== true) {
+        throw new Error(result.error || 'Unable to load your reflections.');
+    }
+
+    reflectionHistory = Array.isArray(result.reflections)
+        ? result.reflections
+        : [];
+
+    const todaysEntry = reflectionHistory.find(
+        item => item.log_date === today
+    );
+
+    setTodaysReflectionStars(todaysEntry);
+    displaySelectedReflection();
+
+    return reflectionHistory;
+}
 
 function displaySelectedReflection() {
     const selectedDate = getLocalReflectionDate(selectedReflectionDate);
@@ -4409,7 +4464,6 @@ function displaySelectedReflection() {
 
     reflectionFields.forEach(field => {
         const container = document.getElementById(`history_${field}`);
-
         if (!container) return;
 
         const rating = reflection ? Number(reflection[field]) : 0;
@@ -4421,9 +4475,7 @@ function displaySelectedReflection() {
             star.textContent = '★';
             star.setAttribute('aria-label', `${i} star`);
 
-            if (i <= rating) {
-                star.classList.add('active');
-            }
+            if (i <= rating) star.classList.add('active');
 
             if (isToday) {
                 star.disabled = true;
@@ -4443,25 +4495,22 @@ function displaySelectedReflection() {
         saveButton.style.display = isToday ? 'none' : 'block';
     }
 
-    if (saveMessage) {
-        saveMessage.textContent = '';
-    }
+    if (saveMessage) saveMessage.textContent = '';
 
     if (!reflection) {
         if (message) {
-            message.textContent = 'No daily reflections marked for this date. You can add your reflection now.';
+            message.textContent = isToday
+                ? 'You have not entered today’s reflection yet.'
+                : 'No daily reflections marked for this date. You can add your reflection now.';
         }
 
-        if (lastUpdated) {
-            lastUpdated.textContent = '--';
-        }
-
+        if (lastUpdated) lastUpdated.textContent = '--';
         return;
     }
 
     if (message) {
         message.textContent = isToday
-            ? 'Your reflection for today.'
+            ? 'Today’s saved reflection.'
             : 'You can review or update your reflection for this date.';
     }
 
@@ -4477,21 +4526,15 @@ function displaySelectedReflection() {
 document.querySelectorAll(
     '#todaysReflectionView .reflection-stars[data-rating]'
 ).forEach(group => {
-
     const stars = group.querySelectorAll('button');
 
     stars.forEach((star, index) => {
-
         star.addEventListener('click', () => {
-
             stars.forEach((item, i) => {
                 item.classList.toggle('active', i <= index);
             });
-
         });
-
     });
-
 });
 
 async function saveTodaysReflection() {
@@ -4506,9 +4549,7 @@ async function saveTodaysReflection() {
         );
 
         if (!group) {
-            if (message) {
-                message.textContent = 'A reflection rating could not be found.';
-            }
+            if (message) message.textContent = 'A reflection rating could not be found.';
             return;
         }
 
@@ -4526,20 +4567,12 @@ async function saveTodaysReflection() {
 
     const today = getLocalReflectionDate();
 
-    const payload = {
-        today: today,
-        log_date: today,
-        ...ratings
-    };
-
     if (saveButton) {
         saveButton.disabled = true;
         saveButton.textContent = 'Saving...';
     }
 
-    if (message) {
-        message.textContent = 'Saving your reflection...';
-    }
+    if (message) message.textContent = 'Saving your reflection...';
 
     try {
         const response = await fetch('/api/daily-reflections', {
@@ -4548,7 +4581,11 @@ async function saveTodaysReflection() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                today: today,
+                log_date: today,
+                ...ratings
+            })
         });
 
         const result = await response.json();
@@ -4561,7 +4598,11 @@ async function saveTodaysReflection() {
             message.textContent = 'Your daily reflection has been saved successfully.';
         }
 
-        await loadMyDailyReflection();
+        try {
+            await loadMyDailyReflection();
+        } catch (refreshError) {
+            console.error('Reflection saved, but refresh failed:', refreshError);
+        }
 
     } catch (error) {
         console.error('Daily reflection save error:', error);
@@ -4577,22 +4618,22 @@ async function saveTodaysReflection() {
         }
     }
 }
-    
+
 async function saveHistoricalReflection() {
     const saveButton = document.getElementById('saveHistoricalReflectionBtn');
     const message = document.getElementById('historicalReflectionSaveMessage');
 
-   if (selectedReflectionDate === 0) {
-    if (message) {
-        message.textContent = "Use Today's Reflection to save today's entry.";
+    if (selectedReflectionDate === 0) {
+        if (message) {
+            message.textContent = "Use Today's Reflection to save today's entry.";
+        }
+        return;
     }
-    return;
-}
 
-if (!saveButton || !message) {
-    console.error('Historical reflection save controls were not found.');
-    return;
-}
+    if (!saveButton || !message) {
+        console.error('Historical reflection save controls were not found.');
+        return;
+    }
 
     const today = getLocalReflectionDate();
     const selectedDate = getLocalReflectionDate(selectedReflectionDate);
@@ -4640,7 +4681,13 @@ if (!saveButton || !message) {
             throw new Error(result.error || 'Your reflection could not be saved.');
         }
 
-        await loadMyDailyReflection();
+        message.textContent = 'Your reflection has been saved successfully.';
+
+        try {
+            await loadMyDailyReflection();
+        } catch (refreshError) {
+            console.error('Historical reflection saved, but refresh failed:', refreshError);
+        }
 
         message.textContent = 'Your reflection has been saved successfully.';
 
