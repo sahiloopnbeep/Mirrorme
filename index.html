@@ -4026,6 +4026,31 @@ document.querySelectorAll('.reflection-stars').forEach(group => {
         });
     });
 });
+    
+function showMyDailyReflection() {
+    const view = document.getElementById('myDailyReflectionView');
+
+    if (!view) {
+        console.error('My Daily Reflection view was not found.');
+        return;
+    }
+
+    view.style.display = 'flex';
+
+    if (typeof loadMyDailyReflection === 'function') {
+        loadMyDailyReflection();
+    }
+}
+
+function closeMyDailyReflection() {
+    const view = document.getElementById('myDailyReflectionView');
+
+    if (view) {
+        view.style.display = 'none';
+    }
+}
+
+    
 </script>
 
 </body>
