@@ -1759,6 +1759,38 @@ body {
     }
 }
 
+/* DAILY REFLECTION STAR RATINGS */
+.reflection-stars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.reflection-stars button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: #C9C0D1;
+    font-size: 1.7rem;
+    line-height: 1;
+    padding: 4px;
+    cursor: pointer;
+    opacity: 1;
+    visibility: visible;
+}
+
+.reflection-stars button.active {
+    color: #C49A36;
+}
+
+.reflection-stars button:focus-visible {
+    outline: 2px solid #C49A36;
+    outline-offset: 3px;
+}
+
 </style>
 
 </head>
@@ -2123,112 +2155,125 @@ body {
 
     </div>
 
-    <!-- TODAY'S REFLECTION POP-UP -->
-    <div
-        class="reflection-view"
-        id="todaysReflectionView"
-        style="display:none;"
-    >
+    
+<!-- TODAY'S REFLECTION POP-UP -->
+<div
+    class="reflection-view"
+    id="todaysReflectionView"
+    style="display:none;"
+>
+    <div class="reflection-window">
 
-        <div class="reflection-window">
-
-            <div class="reflection-header">
-
-                <div>
-                    <h2>Mark Today's Reflection</h2>
-                    <p>Take a moment to reflect on your day.</p>
-                </div>
-
-                <button
-                    type="button"
-                    class="treemap-close"
-                    onclick="closeTodaysReflection()"
-                >
-                    ← Back to Dashboard
-                </button>
-
+        <div class="reflection-header">
+            <div>
+                <h2>Mark Today's Reflection</h2>
+                <p>Take a moment to reflect on your day.</p>
             </div>
 
-            <div class="reflection-parameters">
+            <button
+                type="button"
+                class="treemap-close"
+                onclick="closeTodaysReflection()"
+            >
+                ← Back to Dashboard
+            </button>
+        </div>
 
-                <div class="reflection-item">
-                    <h3>Well-being</h3>
-                    <p>(A general sense of feeling positive, cheerful, and mentally balanced in your daily life)</p>
-                    <div class="reflection-stars" data-rating="well_being">
-                        <button type="button" aria-label="1 star">★</button>
-                        <button type="button" aria-label="2 stars">★</button>
-                        <button type="button" aria-label="3 stars">★</button>
-                        <button type="button" aria-label="4 stars">★</button>
-                        <button type="button" aria-label="5 stars">★</button>
-                    </div>
+        <div class="reflection-parameters">
+
+            <div class="reflection-item">
+                <h3>Well-being</h3>
+                <p>(A general sense of feeling positive, cheerful, and mentally balanced in your daily life)</p>
+                <div class="reflection-stars" data-rating="well_being">
+                    <button type="button" aria-label="1 star">★</button>
+                    <button type="button" aria-label="2 stars">★</button>
+                    <button type="button" aria-label="3 stars">★</button>
+                    <button type="button" aria-label="4 stars">★</button>
+                    <button type="button" aria-label="5 stars">★</button>
                 </div>
+            </div>
 
-                <div class="reflection-item">
-                    <h3>Sleep Quality</h3>
-                    <p>(How restful, restorative, and uninterrupted your sleep feels, regardless of the exact number of hours you spent in bed.)</p>
-                    <div class="reflection-stars" data-rating="sleep_quality">
-                        <button type="button" aria-label="1 star">★</button>
-                        <button type="button" aria-label="2 stars">★</button>
-                        <button type="button" aria-label="3 stars">★</button>
-                        <button type="button" aria-label="4 stars">★</button>
-                        <button type="button" aria-label="5 stars">★</button>
-                    </div>
+            <div class="reflection-item">
+                <h3>Sleep Quality</h3>
+                <p>(How restful, restorative, and uninterrupted your sleep feels, regardless of the exact number of hours you spent in bed.)</p>
+                <div class="reflection-stars" data-rating="sleep_quality">
+                    <button type="button" aria-label="1 star">★</button>
+                    <button type="button" aria-label="2 stars">★</button>
+                    <button type="button" aria-label="3 stars">★</button>
+                    <button type="button" aria-label="4 stars">★</button>
+                    <button type="button" aria-label="5 stars">★</button>
                 </div>
+            </div>
 
-                <div class="reflection-item">
-                    <h3>Active Days</h3>
-                    <p>(Any day where you engage in at least 30 minutes of physical activity that intentionally raises your heart rate.)</p>
-                    <div class="reflection-stars" data-rating="active_days">
-                        <button type="button" aria-label="1 star">★</button>
-                        <button type="button" aria-label="2 stars">★</button>
-                        <button type="button" aria-label="3 stars">★</button>
-                        <button type="button" aria-label="4 stars">★</button>
-                        <button type="button" aria-label="5 stars">★</button>
-                    </div>
+            <div class="reflection-item">
+                <h3>Active Days</h3>
+                <p>(Any day where you engage in at least 30 minutes of physical activity that intentionally raises your heart rate.)</p>
+                <div class="reflection-stars" data-rating="active_days">
+                    <button type="button" aria-label="1 star">★</button>
+                    <button type="button" aria-label="2 stars">★</button>
+                    <button type="button" aria-label="3 stars">★</button>
+                    <button type="button" aria-label="4 stars">★</button>
+                    <button type="button" aria-label="5 stars">★</button>
                 </div>
+            </div>
 
-                <div class="reflection-item">
-                    <h3>Physical Energy</h3>
-                    <p>(Your perceived level of physical vitality, stamina, and readiness throughout the day.)</p>
-                    <div class="reflection-stars" data-rating="physical_energy">
-                        <button type="button" aria-label="1 star">★</button>
-                        <button type="button" aria-label="2 stars">★</button>
-                        <button type="button" aria-label="3 stars">★</button>
-                        <button type="button" aria-label="4 stars">★</button>
-                        <button type="button" aria-label="5 stars">★</button>
-                    </div>
+            <div class="reflection-item">
+                <h3>Physical Energy</h3>
+                <p>(Your perceived level of physical vitality, stamina, and readiness throughout the day.)</p>
+                <div class="reflection-stars" data-rating="physical_energy">
+                    <button type="button" aria-label="1 star">★</button>
+                    <button type="button" aria-label="2 stars">★</button>
+                    <button type="button" aria-label="3 stars">★</button>
+                    <button type="button" aria-label="4 stars">★</button>
+                    <button type="button" aria-label="5 stars">★</button>
                 </div>
+            </div>
 
-                <div class="reflection-item">
-                    <h3>Diet Quality</h3>
-                    <p>(The overall nutritional value of the meals and snacks you consume, focusing on nourishment rather than just counting calories.)</p>
-                    <div class="reflection-stars" data-rating="diet_quality">
-                        <button type="button" aria-label="1 star">★</button>
-                        <button type="button" aria-label="2 stars">★</button>
-                        <button type="button" aria-label="3 stars">★</button>
-                        <button type="button" aria-label="4 stars">★</button>
-                        <button type="button" aria-label="5 stars">★</button>
-                    </div>
+            <div class="reflection-item">
+                <h3>Diet Quality</h3>
+                <p>(The overall nutritional value of the meals and snacks you consume, focusing on nourishment rather than just counting calories.)</p>
+                <div class="reflection-stars" data-rating="diet_quality">
+                    <button type="button" aria-label="1 star">★</button>
+                    <button type="button" aria-label="2 stars">★</button>
+                    <button type="button" aria-label="3 stars">★</button>
+                    <button type="button" aria-label="4 stars">★</button>
+                    <button type="button" aria-label="5 stars">★</button>
                 </div>
+            </div>
 
-                <div class="reflection-item">
-                    <h3>Food Confidence</h3>
-                    <p>(Your sense of control, ease, and self-assurance in making food choices that align with your personal health goals.)</p>
-                    <div class="reflection-stars" data-rating="food_confidence">
-                        <button type="button" aria-label="1 star">★</button>
-                        <button type="button" aria-label="2 stars">★</button>
-                        <button type="button" aria-label="3 stars">★</button>
-                        <button type="button" aria-label="4 stars">★</button>
-                        <button type="button" aria-label="5 stars">★</button>
-                    </div>
+            <div class="reflection-item">
+                <h3>Food Confidence</h3>
+                <p>(Your sense of control, ease, and self-assurance in making food choices that align with your personal health goals.)</p>
+                <div class="reflection-stars" data-rating="food_confidence">
+                    <button type="button" aria-label="1 star">★</button>
+                    <button type="button" aria-label="2 stars">★</button>
+                    <button type="button" aria-label="3 stars">★</button>
+                    <button type="button" aria-label="4 stars">★</button>
+                    <button type="button" aria-label="5 stars">★</button>
                 </div>
-
             </div>
 
         </div>
 
+        <div class="reflection-actions">
+            <button
+                type="button"
+                id="saveDailyReflectionBtn"
+                onclick="saveTodaysReflection()"
+            >
+                Save Reflection
+            </button>
+            <p id="reflectionSaveMessage"></p>
+        </div>
+
+    </div>
+</div>
+
+
 <!-- MY DAILY REFLECTION POP-UP -->
 <div
+    class="reflection-view"
+    id="myDailyReflectionView"
     class="reflection-view"
     id="myDailyReflectionView"
     style="display:none;"
@@ -4230,27 +4275,46 @@ function displayJourneyDates(member, fullData) {
 
 </script>
 
+
 <script>
+const reflectionFields = [
+    'well_being',
+    'sleep_quality',
+    'active_days',
+    'physical_energy',
+    'diet_quality',
+    'food_confidence'
+];
+
+let selectedReflectionDate = 0;
+let reflectionHistory = [];
+
+function getLocalReflectionDate(daysAgo = 0) {
+    const date = new Date();
+
+    date.setDate(date.getDate() - daysAgo);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
 function showTodaysReflection() {
+    const historyView = document.getElementById('myDailyReflectionView');
+
+    if (historyView) {
+        historyView.style.display = 'none';
+    }
+
     document.getElementById('todaysReflectionView').style.display = 'flex';
 }
 
 function closeTodaysReflection() {
     document.getElementById('todaysReflectionView').style.display = 'none';
 }
-    
-document.querySelectorAll('.reflection-stars').forEach(group => {
-    const stars = group.querySelectorAll('button');
 
-    stars.forEach((star, index) => {
-        star.addEventListener('click', () => {
-            stars.forEach((item, i) => {
-                item.classList.toggle('active', i <= index);
-            });
-        });
-    });
-});
-    
 function showMyDailyReflection() {
     const view = document.getElementById('myDailyReflectionView');
 
@@ -4259,11 +4323,15 @@ function showMyDailyReflection() {
         return;
     }
 
+    document.getElementById('todaysReflectionView').style.display = 'none';
+
     view.style.display = 'flex';
 
-    if (typeof loadMyDailyReflection === 'function') {
-        loadMyDailyReflection();
-    }
+    selectedReflectionDate = 0;
+
+    updateReflectionDateButtons();
+
+    loadMyDailyReflection();
 }
 
 function closeMyDailyReflection() {
@@ -4274,9 +4342,243 @@ function closeMyDailyReflection() {
     }
 }
 
-    
+function updateReflectionDateButtons() {
+    for (let i = 0; i <= 2; i++) {
+        const button = document.getElementById(`reflectionDate${i}`);
+
+        if (button) {
+            button.classList.toggle(
+                'active',
+                i === selectedReflectionDate
+            );
+        }
+    }
+}
+
+function selectMyReflectionDate(daysAgo) {
+    if (![0, 1, 2].includes(daysAgo)) {
+        return;
+    }
+
+    selectedReflectionDate = daysAgo;
+
+    updateReflectionDateButtons();
+
+    displaySelectedReflection();
+}
+
+function clearHistoricalStars() {
+    reflectionFields.forEach(field => {
+        const container = document.getElementById(`history_${field}`);
+
+        if (container) {
+            container.replaceChildren();
+        }
+    });
+}
+
+function displaySelectedReflection() {
+    const selectedDate = getLocalReflectionDate(selectedReflectionDate);
+
+    const reflection = reflectionHistory.find(
+        item => item.log_date === selectedDate
+    );
+
+    const message = document.getElementById('reflectionHistoryMessage');
+    const lastUpdated = document.getElementById('reflectionLastUpdated');
+
+    clearHistoricalStars();
+
+    if (!reflection) {
+        if (message) {
+            message.textContent = 'No daily reflections marked for this date.';
+        }
+
+        if (lastUpdated) {
+            lastUpdated.textContent = '--';
+        }
+
+        return;
+    }
+
+    reflectionFields.forEach(field => {
+        const container = document.getElementById(`history_${field}`);
+
+        if (!container) {
+            return;
+        }
+
+        const rating = Number(reflection[field]);
+
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('button');
+
+            star.type = 'button';
+            star.textContent = '★';
+            star.disabled = true;
+            star.setAttribute('aria-label', `${i} star`);
+
+            if (i <= rating) {
+                star.classList.add('active');
+            }
+
+            container.appendChild(star);
+        }
+    });
+
+    if (message) {
+        message.textContent = 'Your reflection for this date.';
+    }
+
+    if (lastUpdated) {
+        const timestamp = reflection.confirmed_at || reflection.created_at;
+
+        lastUpdated.textContent = timestamp
+            ? new Date(timestamp).toLocaleString()
+            : '--';
+    }
+}
+
+async function loadMyDailyReflection() {
+    const message = document.getElementById('reflectionHistoryMessage');
+
+    if (message) {
+        message.textContent = 'Loading your reflections...';
+    }
+
+    try {
+        const today = getLocalReflectionDate();
+
+        const response = await fetch(
+            `/api/daily-reflections?today=${encodeURIComponent(today)}`,
+            {
+                method: 'GET',
+                credentials: 'same-origin'
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || result.success !== true) {
+            throw new Error(result.error || 'Unable to load reflections.');
+        }
+
+        reflectionHistory = Array.isArray(result.reflections)
+            ? result.reflections
+            : [];
+
+        displaySelectedReflection();
+
+    } catch (error) {
+        console.error('Daily reflection history error:', error);
+
+        if (message) {
+            message.textContent = error.message || 'Unable to load your reflections.';
+        }
+    }
+}
+
+document.querySelectorAll(
+    '#todaysReflectionView .reflection-stars[data-rating]'
+).forEach(group => {
+
+    const stars = group.querySelectorAll('button');
+
+    stars.forEach((star, index) => {
+
+        star.addEventListener('click', () => {
+
+            stars.forEach((item, i) => {
+                item.classList.toggle('active', i <= index);
+            });
+
+        });
+
+    });
+
+});
+
+async function saveTodaysReflection() {
+    const saveButton = document.getElementById('saveDailyReflectionBtn');
+    const message = document.getElementById('reflectionSaveMessage');
+
+    const ratings = {};
+
+    for (const field of reflectionFields) {
+        const group = document.querySelector(
+            `#todaysReflectionView [data-rating="${field}"]`
+        );
+
+        if (!group) {
+            if (message) {
+                message.textContent = 'A reflection rating could not be found.';
+            }
+            return;
+        }
+
+        const rating = group.querySelectorAll('button.active').length;
+
+        if (rating < 1 || rating > 5) {
+            if (message) {
+                message.textContent = 'Please rate all six reflection parameters before saving.';
+            }
+            return;
+        }
+
+        ratings[field] = rating;
+    }
+
+    const today = getLocalReflectionDate();
+
+    const payload = {
+        today: today,
+        log_date: today,
+        ...ratings
+    };
+
+    if (saveButton) {
+        saveButton.disabled = true;
+        saveButton.textContent = 'Saving...';
+    }
+
+    if (message) {
+        message.textContent = 'Saving your reflection...';
+    }
+
+    try {
+        const response = await fetch('/api/daily-reflections', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.success !== true) {
+            throw new Error(result.error || 'Your reflection could not be saved.');
+        }
+
+        if (message) {
+            message.textContent = 'Your daily reflection has been saved successfully.';
+        }
+
+        await loadMyDailyReflection();
+
+    } catch (error) {
+        console.error('Daily reflection save error:', error);
+
+        if (message) {
+            message.textContent = error.message || 'Unable to save your reflection.';
+        }
+
+    } finally {
+        if (saveButton) {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Save Reflection';
+        }
+    }
+}
 </script>
-
-</body>
-</html>
-
