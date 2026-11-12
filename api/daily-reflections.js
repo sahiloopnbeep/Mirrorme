@@ -45,9 +45,8 @@ function isValidDate(value) {
     );
 }
 
-function isFutureDate(value) {
-    const today = new Date().toISOString().slice(0, 10);
-    return value > today;
+function isAfterDate(value, referenceDate) {
+    return value > referenceDate;
 }
 
 function getSessionEmail(req) {
@@ -248,13 +247,19 @@ function validateReflection(body) {
         );
     }
 
-    if (isFutureDate(body.log_date)) {
-        throw Object.assign(
-            new Error('Future reflection dates are not allowed'),
-            { status: 400 }
-        );
-    }
+   if (!isValidDate(body.today)) {
+    throw Object.assign(
+        new Error('A valid local today date is required'),
+        { status: 400 }
+    );
+}
 
+if (isAfterDate(body.log_date, body.today)) {
+    throw Object.assign(
+        new Error('Future reflection dates are not allowed'),
+        { status: 400 }
+    );
+}
     const reflection = {
         log_date: body.log_date
     };
@@ -333,6 +338,7 @@ async function saveReflection(
     return saved[0];
 }
 
+
 async function getReflectionHistory(
     memberId,
     today,
@@ -341,13 +347,6 @@ async function getReflectionHistory(
     if (!isValidDate(today)) {
         throw Object.assign(
             new Error('A valid today date is required'),
-            { status: 400 }
-        );
-    }
-
-    if (isFutureDate(today)) {
-        throw Object.assign(
-            new Error('Future dates are not allowed'),
             { status: 400 }
         );
     }
