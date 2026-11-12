@@ -1798,7 +1798,8 @@ body {
                 <span id="stressScore">—</span>
                 <span class="btn-unit">%</span>
             </span>
-<button
+</button>
+        <button
     class="data-btn"
     id="knowledgeBankBtn"
     type="button"
@@ -1820,9 +1821,10 @@ body {
 
     <!-- PERMANENT REFLECTION TABS -->
     <div
-        class="task-card-options"
-        id="taskCardOptions"
-    >
+    class="task-card-options"
+    id="taskCardOptions"
+    hidden
+>
         <button
             type="button"
             class="task-card-option"
@@ -3801,7 +3803,23 @@ function toggleTaskCards() {
     options.hidden = isOpen;
 }
 
+function hideTaskCards() {
+    const options = document.getElementById('taskCardOptions');
+    const toggle = document.getElementById('taskCardsToggle');
 
+    options.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+}
+
+document.querySelector('.left-panel').addEventListener('click', function(event) {
+    const clickedButton = event.target.closest('button');
+
+    if (!clickedButton || clickedButton.id === 'taskCardsToggle') {
+        return;
+    }
+
+    hideTaskCards();
+});
 function displayJourneyDates(member, fullData) {
     const todayElement = document.getElementById('journeyTodayDate');
     const enrolledElement = document.getElementById('journeyEnrolledDate');
