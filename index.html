@@ -2372,10 +2372,23 @@ body {
                         Previous Day
                     </button>
 
+                
                 </div>
+
+                <button
+                    type="button"
+                    id="saveHistoricalReflectionBtn"
+                    onclick="saveHistoricalReflection()"
+                    style="display:none;"
+                >
+                    Save Reflection
+                </button>
+
+                <p id="historicalReflectionSaveMessage"></p>
 
                 <div class="reflection-last-updated">
                     <span>Last Updated</span>
+
                     <p id="reflectionLastUpdated">--</p>
                 </div>
 
@@ -4377,6 +4390,7 @@ function clearHistoricalStars() {
     });
 }
 
+
 function displaySelectedReflection() {
     const selectedDate = getLocalReflectionDate(selectedReflectionDate);
 
@@ -4386,12 +4400,56 @@ function displaySelectedReflection() {
 
     const message = document.getElementById('reflectionHistoryMessage');
     const lastUpdated = document.getElementById('reflectionLastUpdated');
+    const saveButton = document.getElementById('saveHistoricalReflectionBtn');
+    const saveMessage = document.getElementById('historicalReflectionSaveMessage');
+
+    const isToday = selectedReflectionDate === 0;
 
     clearHistoricalStars();
 
+    reflectionFields.forEach(field => {
+        const container = document.getElementById(`history_${field}`);
+
+        if (!container) return;
+
+        const rating = reflection ? Number(reflection[field]) : 0;
+
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('button');
+
+            star.type = 'button';
+            star.textContent = '★';
+            star.setAttribute('aria-label', `${i} star`);
+
+            if (i <= rating) {
+                star.classList.add('active');
+            }
+
+            if (isToday) {
+                star.disabled = true;
+            } else {
+                star.addEventListener('click', () => {
+                    container.querySelectorAll('button').forEach((item, index) => {
+                        item.classList.toggle('active', index < i);
+                    });
+                });
+            }
+
+            container.appendChild(star);
+        }
+    });
+
+    if (saveButton) {
+        saveButton.style.display = isToday ? 'none' : 'block';
+    }
+
+    if (saveMessage) {
+        saveMessage.textContent = '';
+    }
+
     if (!reflection) {
         if (message) {
-            message.textContent = 'No daily reflections marked for this date.';
+            message.textContent = 'No daily reflections marked for this date. You can add your reflection now.';
         }
 
         if (lastUpdated) {
@@ -4401,33 +4459,10 @@ function displaySelectedReflection() {
         return;
     }
 
-    reflectionFields.forEach(field => {
-        const container = document.getElementById(`history_${field}`);
-
-        if (!container) {
-            return;
-        }
-
-        const rating = Number(reflection[field]);
-
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('button');
-
-            star.type = 'button';
-            star.textContent = '★';
-            star.disabled = true;
-            star.setAttribute('aria-label', `${i} star`);
-
-            if (i <= rating) {
-                star.classList.add('active');
-            }
-
-            container.appendChild(star);
-        }
-    });
-
     if (message) {
-        message.textContent = 'Your reflection for this date.';
+        message.textContent = isToday
+            ? 'Your reflection for today.'
+            : 'You can review or update your reflection for this date.';
     }
 
     if (lastUpdated) {
@@ -4436,45 +4471,6 @@ function displaySelectedReflection() {
         lastUpdated.textContent = timestamp
             ? new Date(timestamp).toLocaleString()
             : '--';
-    }
-}
-
-async function loadMyDailyReflection() {
-    const message = document.getElementById('reflectionHistoryMessage');
-
-    if (message) {
-        message.textContent = 'Loading your reflections...';
-    }
-
-    try {
-        const today = getLocalReflectionDate();
-
-        const response = await fetch(
-            `/api/daily-reflections?today=${encodeURIComponent(today)}`,
-            {
-                method: 'GET',
-                credentials: 'same-origin'
-            }
-        );
-
-        const result = await response.json();
-
-        if (!response.ok || result.success !== true) {
-            throw new Error(result.error || 'Unable to load reflections.');
-        }
-
-        reflectionHistory = Array.isArray(result.reflections)
-            ? result.reflections
-            : [];
-
-        displaySelectedReflection();
-
-    } catch (error) {
-        console.error('Daily reflection history error:', error);
-
-        if (message) {
-            message.textContent = error.message || 'Unable to load your reflections.';
-        }
     }
 }
 
@@ -4581,4 +4577,81 @@ async function saveTodaysReflection() {
         }
     }
 }
+    
+async function saveHistoricalReflection() {
+    const saveButton = document.getElementById('saveHistoricalReflectionBtn');
+    const message = document.getElementById('historicalReflectionSaveMessage');
+
+   if (selectedReflectionDate === 0) {
+    if (message) {
+        message.textContent = "Use Today's Reflection to save today's entry.";
+    }
+    return;
+}
+
+if (!saveButton || !message) {
+    console.error('Historical reflection save controls were not found.');
+    return;
+}
+
+    const today = getLocalReflectionDate();
+    const selectedDate = getLocalReflectionDate(selectedReflectionDate);
+    const ratings = {};
+
+    for (const field of reflectionFields) {
+        const group = document.getElementById(`history_${field}`);
+
+        if (!group) {
+            message.textContent = 'A reflection rating could not be found.';
+            return;
+        }
+
+        const rating = group.querySelectorAll('button.active').length;
+
+        if (rating < 1 || rating > 5) {
+            message.textContent = 'Please rate all six reflection parameters before saving.';
+            return;
+        }
+
+        ratings[field] = rating;
+    }
+
+    saveButton.disabled = true;
+    saveButton.textContent = 'Saving...';
+    message.textContent = 'Saving your reflection...';
+
+    try {
+        const response = await fetch('/api/daily-reflections', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                today: today,
+                log_date: selectedDate,
+                ...ratings
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.success !== true) {
+            throw new Error(result.error || 'Your reflection could not be saved.');
+        }
+
+        await loadMyDailyReflection();
+
+        message.textContent = 'Your reflection has been saved successfully.';
+
+    } catch (error) {
+        console.error('Historical reflection save error:', error);
+        message.textContent = error.message || 'Unable to save your reflection.';
+
+    } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = 'Save Reflection';
+    }
+}
+
 </script>
