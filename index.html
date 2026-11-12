@@ -1607,6 +1607,56 @@ body {
     flex-shrink: 0;
     font-weight: 400;
 }
+    
+/* Task Card icon styling */
+
+.task-card-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-card-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #44215D;
+}
+
+.task-card-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.task-card-arrow {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* Compact icon-only layout on other navigation panels */
+
+#rightPanel.compact-task-cards .task-card-option {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 5px;
+    justify-content: center;
+    gap: 0;
+    border-radius: 10px;
+}
+
+#rightPanel.compact-task-cards .task-card-option > span:not(.task-card-icon) {
+    display: none;
+}
+
+#rightPanel.compact-task-cards .task-card-icon {
+    width: 27px;
+    height: 27px;
+}
+
 </style>
 
 </head>
@@ -1851,24 +1901,64 @@ body {
     id="taskCardOptions"
     hidden
 >
-        <button
-            type="button"
-            class="task-card-option"
-            id="todaysReflectionBtn"
-            onclick="showTodaysReflection()"
-        >
-            <span>Today's Reflection</span>
-            <span>→</span>
-        </button>
+        
+<button
+    type="button"
+    class="task-card-option"
+    id="todaysReflectionBtn"
+    onclick="showTodaysReflection()"
+    aria-label="Today's Reflection"
+>
+    <span class="task-card-icon">
+        <svg viewBox="0 0 48 48" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <rect x="22" y="4" width="22" height="36"
+                  rx="2" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="15" r="5"
+                    fill="#8C62B5"/>
+            <path d="M3 35C3 27 7 23 12 23C17 23 20 27 20 35V39H3V35Z"
+                  fill="#8C62B5"/>
+            <circle cx="33" cy="15" r="5"
+                    fill="#C49A36"/>
+            <path d="M25 35C25 27 28 23 33 23C38 23 41 27 41 35V37H25V35Z"
+                  fill="#C49A36"/>
+        </svg>
+    </span>
+    <span>Today's Reflection</span>
+    <span class="task-card-arrow">→</span>
+</button>
 
-        <button
-            type="button"
-            class="task-card-option"
-            id="myDailyReflectionBtn"
-        >
-            <span>My Daily Reflection</span>
-            <span class="task-card-calendar-icon">▦</span>
-        </button>
+<button
+    type="button"
+    class="task-card-option"
+    id="myDailyReflectionBtn"
+    aria-label="My Daily Reflection"
+>
+    <span class="task-card-icon">
+        <svg viewBox="0 0 48 48" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="10" width="36" height="33"
+                  rx="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M6 19H42" stroke="currentColor" stroke-width="2"/>
+            <path d="M15 5V14M33 5V14"
+                  stroke="#C49A36" stroke-width="3"
+                  stroke-linecap="round"/>
+            <path d="M14 26H19V31H14V26Z"
+                  fill="#8C62B5"/>
+            <path d="M24 26H29V31H24V26Z"
+                  fill="#8C62B5"/>
+            <path d="M14 35H19V40H14V35Z"
+                  fill="#8C62B5"/>
+            <path d="M25 36L29 40L36 32"
+                  stroke="#C49A36" stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </svg>
+    </span>
+    <span>My Daily Reflection</span>
+    <span class="task-card-arrow">→</span>
+</button>
+
     </div>
 
     <!-- BODY BALANCE HOME DASHBOARD -->
