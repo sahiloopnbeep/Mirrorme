@@ -339,9 +339,9 @@ body {
     color: #243447;
 }
 @media (max-width: 600px) {
-    .dashboard {
-        flex-direction: column;
-    }
+   .dashboard {
+    flex-direction: row;
+}
 
     .left-panel {
         min-width: 0;
@@ -1067,11 +1067,11 @@ body {
 }
 
 .right-panel {
-    flex: 0 0 480px;
-    width: 480px;
+    flex: 1 1 0;
+    width: auto;
+    max-width: none;
     min-width: 0;
     position: relative;
-    box-sizing: border-box;
 }
 
 .journey-circles {
