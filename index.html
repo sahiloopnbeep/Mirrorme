@@ -4410,6 +4410,36 @@ function setTodaysReflectionStars(reflection) {
     });
 }
 
+// Enable star selection in Today's Reflection
+const todaysReflectionView = document.getElementById('todaysReflectionView');
+
+if (
+    todaysReflectionView &&
+    !todaysReflectionView.dataset.starClickBound
+) {
+    todaysReflectionView.dataset.starClickBound = 'true';
+
+    todaysReflectionView.addEventListener('click', function(event) {
+        const star = event.target.closest('.reflection-stars button');
+
+        if (!star) return;
+
+        const group = star.closest('.reflection-stars');
+        const stars = Array.from(group.querySelectorAll('button'));
+        const selectedIndex = stars.indexOf(star);
+
+        const currentRating = group.querySelectorAll('button.active').length;
+
+        const newRating = currentRating === selectedIndex + 1
+            ? 0
+            : selectedIndex + 1;
+
+        stars.forEach((item, index) => {
+            item.classList.toggle('active', index < newRating);
+        });
+    });
+}
+
 function clearHistoricalStars() {
     reflectionFields.forEach(field => {
         const container = document.getElementById(`history_${field}`);
