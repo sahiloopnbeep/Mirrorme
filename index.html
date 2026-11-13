@@ -1072,6 +1072,8 @@ body {
     max-width: none;
     min-width: 0;
     position: relative;
+    align-items: stretch;
+    justify-content: flex-start;
 }
 
 .journey-circles {
@@ -1214,19 +1216,22 @@ body {
 
 @media (max-width: 760px) {
     .dashboard {
-        flex-direction: column;
-        padding: 14px;
-        gap: 20px;
-    }
+    flex-direction: row;
+    padding: 14px;
+    gap: 20px;
+}
 
-    .left-panel {
-        flex: 0 0 auto;
-        width: 100%;
-    }
+.left-panel {
+    flex: 0 0 200px;
+    width: 200px;
+}
 
-    .right-panel {
-        width: 100%;
-    }
+.right-panel {
+    flex: 1 1 0;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+}
 
     #placeholder.portal-home {
         padding: 24px 10px;
@@ -2053,6 +2058,24 @@ body {
     class="right-panel"
     id="rightPanel"
 >
+<div class="journey-date-strip">
+
+    <div class="journey-date-item">
+        <span class="journey-date-label">Enrolled Date</span>
+        <span class="journey-date-value" id="journeyEnrolledDate">—</span>
+    </div>
+
+    <div class="journey-date-item">
+        <span class="journey-date-label">Today's Date</span>
+        <span class="journey-date-value" id="journeyTodayDate">—</span>
+    </div>
+
+    <div class="journey-date-item">
+        <span class="journey-day-count" id="journeyDayCount">
+            Day — of reflection
+        </span>
+    </div>
+
 
     <!-- PERMANENT REFLECTION TABS -->
     <div
@@ -2809,23 +2832,7 @@ body {
         ← Back to Dashboard
     </button>
 </div>
-<div class="journey-date-strip">
 
-    <div class="journey-date-item">
-        <span class="journey-date-label">Enrolled Date</span>
-        <span class="journey-date-value" id="journeyEnrolledDate">—</span>
-    </div>
-
-    <div class="journey-date-item">
-        <span class="journey-date-label">Today's Date</span>
-        <span class="journey-date-value" id="journeyTodayDate">—</span>
-    </div>
-
-    <div class="journey-date-item">
-        <span class="journey-day-count" id="journeyDayCount">
-            Day — of reflection
-        </span>
-    </div>
 
     <div class="refresh-row">
         <span class="last-updated" id="lastUpdated">
