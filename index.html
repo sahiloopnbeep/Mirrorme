@@ -4299,6 +4299,7 @@ const reflectionFields = [
 
 let selectedReflectionDate = 0;
 let reflectionHistory = [];
+let isEditingHistoricalReflection = false;
 
 function getLocalReflectionDate(daysAgo = 0) {
     const date = new Date();
@@ -4351,8 +4352,9 @@ function showMyDailyReflection() {
     if (todayView) todayView.style.display = 'none';
 
     view.style.display = 'flex';
-    selectedReflectionDate = 0;
-    updateReflectionDateButtons();
+selectedReflectionDate = 0;
+isEditingHistoricalReflection = false;
+updateReflectionDateButtons();
 
     const message = document.getElementById('reflectionHistoryMessage');
     if (message) message.textContent = 'Loading your reflections...';
@@ -4384,9 +4386,12 @@ function selectMyReflectionDate(daysAgo) {
     if (![0, 1, 2].includes(daysAgo)) return;
 
     selectedReflectionDate = daysAgo;
+    isEditingHistoricalReflection = false;
+
     updateReflectionDateButtons();
     displaySelectedReflection();
 }
+
 
 function setTodaysReflectionStars(reflection) {
     reflectionFields.forEach(field => {
@@ -4458,14 +4463,46 @@ function displaySelectedReflection() {
     const saveMessage = document.getElementById('historicalReflectionSaveMessage');
 
     const isToday = selectedReflectionDate === 0;
+    const isEditing = !isToday && isEditingHistoricalReflection;
 
     clearHistoricalStars();
+
+    // Create the Re-enter button beside the historical save control.
+    let reenterButton = document.getElementById('reenterHistoricalReflectionBtn');
+
+    if (!reenterButton && saveButton) {
+        reenterButton = document.createElement('button');
+        reenterButton.type = 'button';
+        reenterButton.id = 'reenterHistoricalReflectionBtn';
+        reenterButton.className = saveButton.className;
+
+        saveButton.parentNode.insertBefore(
+            reenterButton,
+            saveButton
+        );
+    }
+
+    if (reenterButton) {
+        reenterButton.textContent = reflection
+            ? 'Re-enter Reflection'
+            : 'Enter Reflection';
+
+        reenterButton.style.display =
+            !isToday && !isEditing ? 'block' : 'none';
+
+        reenterButton.onclick = () => {
+            isEditingHistoricalReflection = true;
+            displaySelectedReflection();
+        };
+    }
 
     reflectionFields.forEach(field => {
         const container = document.getElementById(`history_${field}`);
         if (!container) return;
 
-        const rating = reflection ? Number(reflection[field]) : 0;
+        const rating = reflection && reflection[field] !== null
+            ? Number(reflection[field])
+            : 0;
 
         for (let i = 1; i <= 5; i++) {
             const star = document.createElement('button');
@@ -4473,16 +4510,32 @@ function displaySelectedReflection() {
             star.type = 'button';
             star.textContent = '★';
             star.setAttribute('aria-label', `${i} star`);
+            star.setAttribute('aria-pressed', i <= rating ? 'true' : 'false');
 
-            if (i <= rating) star.classList.add('active');
+            if (i <= rating) {
+                star.classList.add('active');
+            }
 
-            if (isToday) {
-                star.disabled = true;
-            } else {
+            star.disabled = !isEditing;
+
+            if (isEditing) {
                 star.addEventListener('click', () => {
-                    container.querySelectorAll('button').forEach((item, index) => {
-                        item.classList.toggle('active', index < i);
-                    });
+                    const currentRating =
+                        container.querySelectorAll('button.active').length;
+
+                    const newRating = currentRating === i ? 0 : i;
+
+                    container.querySelectorAll('button').forEach(
+                        (item, index) => {
+                            const active = index < newRating;
+
+                            item.classList.toggle('active', active);
+                            item.setAttribute(
+                                'aria-pressed',
+                                active ? 'true' : 'false'
+                            );
+                        }
+                    );
                 });
             }
 
@@ -4491,26 +4544,33 @@ function displaySelectedReflection() {
     });
 
     if (saveButton) {
-        saveButton.style.display = isToday ? 'none' : 'block';
+        saveButton.style.display = isEditing ? 'block' : 'none';
     }
 
-    if (saveMessage) saveMessage.textContent = '';
+    if (saveMessage) {
+        saveMessage.textContent = '';
+    }
 
     if (!reflection) {
         if (message) {
             message.textContent = isToday
                 ? 'You have not entered today’s reflection yet.'
-                : 'No daily reflections marked for this date. You can add your reflection now.';
+                : 'No reflection has been saved for this date. You can enter one whenever you are ready.';
         }
 
-        if (lastUpdated) lastUpdated.textContent = '--';
+        if (lastUpdated) {
+            lastUpdated.textContent = '--';
+        }
+
         return;
     }
 
     if (message) {
         message.textContent = isToday
             ? 'Today’s saved reflection.'
-            : 'You can review or update your reflection for this date.';
+            : isEditing
+                ? 'You can now update your reflection. Any parameter can be left blank.'
+                : 'Your saved reflection for this date. Select Re-enter Reflection to make changes.';
     }
 
     if (lastUpdated) {
@@ -4522,19 +4582,6 @@ function displaySelectedReflection() {
     }
 }
 
-document.querySelectorAll(
-    '#todaysReflectionView .reflection-stars[data-rating]'
-).forEach(group => {
-    const stars = group.querySelectorAll('button');
-
-    stars.forEach((star, index) => {
-        star.addEventListener('click', () => {
-            stars.forEach((item, i) => {
-                item.classList.toggle('active', i <= index);
-            });
-        });
-    });
-});
 
 async function saveTodaysReflection() {
     const saveButton = document.getElementById('saveDailyReflectionBtn');
@@ -4634,6 +4681,11 @@ async function saveHistoricalReflection() {
         return;
     }
 
+    if (!isEditingHistoricalReflection) {
+        message.textContent = 'Select Re-enter Reflection before saving.';
+        return;
+    }
+
     const today = getLocalReflectionDate();
     const selectedDate = getLocalReflectionDate(selectedReflectionDate);
     const ratings = {};
@@ -4648,12 +4700,7 @@ async function saveHistoricalReflection() {
 
         const rating = group.querySelectorAll('button.active').length;
 
-        if (rating < 1 || rating > 5) {
-            message.textContent = 'Please rate all six reflection parameters before saving.';
-            return;
-        }
-
-        ratings[field] = rating;
+        ratings[field] = rating === 0 ? null : rating;
     }
 
     saveButton.disabled = true;
@@ -4677,26 +4724,40 @@ async function saveHistoricalReflection() {
         const result = await response.json();
 
         if (!response.ok || result.success !== true) {
-            throw new Error(result.error || 'Your reflection could not be saved.');
+            throw new Error(
+                result.error || 'Your reflection could not be saved.'
+            );
         }
 
-        message.textContent = 'Your reflection has been saved successfully.';
+        isEditingHistoricalReflection = false;
 
         try {
             await loadMyDailyReflection();
         } catch (refreshError) {
-            console.error('Historical reflection saved, but refresh failed:', refreshError);
+            console.error(
+                'Historical reflection saved, but refresh failed:',
+                refreshError
+            );
         }
 
-        message.textContent = 'Your reflection has been saved successfully.';
+        message.textContent =
+            'Your reflection has been saved successfully.';
 
     } catch (error) {
         console.error('Historical reflection save error:', error);
-        message.textContent = error.message || 'Unable to save your reflection.';
+
+        message.textContent =
+            error.message || 'Unable to save your reflection.';
 
     } finally {
         saveButton.disabled = false;
         saveButton.textContent = 'Save Reflection';
+
+        if (!isEditingHistoricalReflection) {
+            displaySelectedReflection();
+            message.textContent =
+                'Your reflection has been saved successfully.';
+        }
     }
 }
 
