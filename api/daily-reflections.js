@@ -238,6 +238,7 @@ async function getMemberId(email, config) {
 
     return members[0].id;
 }
+
 function validateReflection(body) {
     if (!isValidDate(body.log_date)) {
         throw Object.assign(
@@ -246,25 +247,31 @@ function validateReflection(body) {
         );
     }
 
-   if (!isValidDate(body.today)) {
-    throw Object.assign(
-        new Error('A valid local today date is required'),
-        { status: 400 }
-    );
-}
+    if (!isValidDate(body.today)) {
+        throw Object.assign(
+            new Error('A valid local today date is required'),
+            { status: 400 }
+        );
+    }
 
-if (isAfterDate(body.log_date, body.today)) {
-    throw Object.assign(
-        new Error('Future reflection dates are not allowed'),
-        { status: 400 }
-    );
-}
+    if (isAfterDate(body.log_date, body.today)) {
+        throw Object.assign(
+            new Error('Future reflection dates are not allowed'),
+            { status: 400 }
+        );
+    }
+
     const reflection = {
         log_date: body.log_date
     };
 
     for (const field of FIELDS) {
         const value = body[field];
+
+        if (value === null || value === undefined || value === '') {
+            reflection[field] = null;
+            continue;
+        }
 
         if (
             !Number.isInteger(value) ||
@@ -273,7 +280,7 @@ if (isAfterDate(body.log_date, body.today)) {
         ) {
             throw Object.assign(
                 new Error(
-                    'All six reflection ratings must be whole numbers from 1 to 5'
+                    'Reflection ratings must be whole numbers from 1 to 5, or left blank'
                 ),
                 { status: 400 }
             );
