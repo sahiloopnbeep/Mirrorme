@@ -1067,11 +1067,12 @@ body {
 }
 
 .right-panel {
-    flex: 1 1 0;
+    flex: 0 0 480px;
+    width: 480px;
     min-width: 0;
     position: relative;
+    box-sizing: border-box;
 }
-
 
 .journey-circles {
     position: relative;
@@ -1211,7 +1212,7 @@ body {
     font-size: 0.82rem;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 760px) {
     .dashboard {
         flex-direction: column;
         padding: 14px;
